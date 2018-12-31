@@ -68,6 +68,7 @@ namespace ThermoGroupSample
             }
 
             comboBoxOnlineDevice.Items.Clear();
+            cmbDisplay.Items.Clear();
             _LstComboIP.Clear();
 
             string sItem = "";
