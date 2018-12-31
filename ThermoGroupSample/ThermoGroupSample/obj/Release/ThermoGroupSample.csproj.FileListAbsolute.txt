@@ -1,0 +1,12 @@
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.exe
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\bin\Release\ThermoGroupSample.exe
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\bin\Release\ThermoGroupSample.pdb
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormControl.resources
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplay.resources
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplayBG.resources
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormMain.resources
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.Properties.Resources.resources
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.Cache
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojResolveAssemblyReference.cache
+E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormMainSc.resources

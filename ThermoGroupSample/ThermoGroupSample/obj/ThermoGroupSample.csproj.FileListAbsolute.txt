@@ -1,0 +1,40 @@
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\bin\Debug\ThermoGroupSample.exe
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\bin\Debug\ThermoGroupSample.pdb
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\obj\Debug\ResolveAssemblyReference.cache
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\obj\Debug\ThermoGroupSample.Properties.Resources.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\obj\Debug\ThermoGroupSample.csproj.GenerateResource.Cache
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\obj\Debug\ThermoGroupSample.exe
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample\ThermoGroupSample\obj\Debug\ThermoGroupSample.pdb
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\bin\Debug\ThermoGroupSample.exe
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\bin\Debug\ThermoGroupSample.pdb
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ResolveAssemblyReference.cache
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.FormControl.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.FormDisplay.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.FormDisplayBG.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.Properties.Resources.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.csproj.GenerateResource.Cache
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.exe
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.pdb
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Debug\ThermoGroupSample.FormMain.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\bin\Release\ThermoGroupSample.exe
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\bin\Release\ThermoGroupSample.pdb
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ResolveAssemblyReference.cache
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.FormControl.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplay.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplayBG.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.FormMain.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.Properties.Resources.resources
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.Cache
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.exe
+F:\MAG项目\ThermoGroup\ThermoGroup Samples\ThermoGroupSample(C #)\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.exe
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ResolveAssemblyReference.cache
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormControl.resources
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplay.resources
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplayBG.resources
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormMain.resources
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.Properties.Resources.resources
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.Cache
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\bin\Release\ThermoGroupSample.exe
+C:\Users\JessenXu\Desktop\ThermoGroup SDK\Sample\C#\VS2005\ThermoGroupSample\bin\Release\ThermoGroupSample.pdb
