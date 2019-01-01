@@ -88,6 +88,7 @@ namespace ThermoGroupSample
             _DataDisplay.GetDevice().Unlock();
 
         }
+        #region 属性
         public bool darwFalge;
         public bool darwMaxt;
         private int inputWidth ;
@@ -175,7 +176,7 @@ namespace ThermoGroupSample
                 dY = value;
             }
         }
-
+        #endregion
         /// <summary>
         /// 绘制需要检测的区域（圆）
         /// </summary>
@@ -287,7 +288,7 @@ namespace ThermoGroupSample
                 intTemp = device.FixTemperature(intTemp, param.fEmissivity, (uint)intFPAx, (uint)intFPAy);
             }
 
-            string sText = (intTemp * 0.001f).ToString("0.0") + "坐标X：" + intFPAx + "坐标X：" + intFPAy;
+            string sText = (intTemp * 0.001f).ToString("0.0") + "坐标X：" + intFPAx + "坐标Y：" + intFPAy;
 
             int cx = (int)graphic.MeasureString(sText, this.Font).Width;
             int cy = (int)graphic.MeasureString(sText , this.Font).Height;

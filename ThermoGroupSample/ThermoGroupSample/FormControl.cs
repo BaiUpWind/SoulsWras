@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using SDK;
+using System.Threading.Tasks;
 
 namespace ThermoGroupSample
 {
@@ -38,11 +39,11 @@ namespace ThermoGroupSample
 
         private void FormControl_Load(object sender, EventArgs e)
         {
-            _DataControl.SetDisplayWndNum(1, 2 );//控制有几个画面
+            _DataControl.SetDisplayWndNum(1, 2);//控制有几个画面
 
             RefreshOnlineDevice();
 
-            
+
         }
 
         void OnDestroy()
@@ -89,7 +90,7 @@ namespace ThermoGroupSample
                 }
 
                 comboBoxOnlineDevice.Items.Add(sItem);
-          
+
                 _LstComboIP.Add(_LstEnumInfo[i].intCamIp);
 
                 if (_LstEnumInfo[i].intCamIp == ip)
@@ -104,7 +105,7 @@ namespace ThermoGroupSample
                 cmbDisplay.Items.Add(Globals.GetMainFrm().GetFormDisplay((uint)i).Name);//添加
             }
 
-            
+
             cmbSelect(comboBoxOnlineDevice);
             cmbSelect(cmbDisplay);
             //if (cmbDisplay.Items.Count == 0)
@@ -284,7 +285,8 @@ namespace ThermoGroupSample
 
             }
         }
-        bool stop =true;
+        bool stop = true;
+        private MagDevice _MagDevice = new MagDevice(IntPtr.Zero);
         /// <summary>
         /// 获取一个区域内大于阈值的最大温度
         /// </summary>
@@ -299,28 +301,28 @@ namespace ThermoGroupSample
                 }
 
                 int[] infos = new int[5];
-                bool falge = device.GetRectTemperatureInfo(0, 0,40, 40, infos);
+                bool falge = device.GetRectTemperatureInfo(0, 0, 40, 40, infos);
 
                 if (falge)
                 {
-                   
-                    int intFPAx = (int)(infos[3] * 0.01);//X
-                    int intFPAy = (int)(infos[4] * 0.01);//Y
+                    GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
+                    int intFPAMin = (int)(infos[3] * 0.01);//MinTemperLoc
+                    int intFPAMax = (int)(infos[4]);//MaxTmperLoc
                     int MaxTemper = (int)(infos[1] * 0.001f);//最高温度
                     frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
-                    frmDisplay.DX = intFPAx;
-                    frmDisplay.DY = intFPAy;
+                    frmDisplay.DX = intFPAMin;
+                    frmDisplay.DY = intFPAMax;
                     frmDisplay.darwMaxt = true;
                     //GroupSDK.FIX_PARAM param = new GroupSDK.FIX_PARAM();
                     //device.GetFixPara(ref param);
                     //MaxTemper = device.FixTemperature(MaxTemper, param.fEmissivity, (uint)intFPAx, (uint)intFPAy);//获取温度修正后的温度
-                    
-                    updateListBox(""+MaxTemper + " X" + intFPAx + "  Y  " + intFPAy);
+                    //+ "MinTemperLoc" + intFPAx
+                    updateListBox(MaxTemper + " MTL:" + intFPAMax + "  " + cAMERA_INFO.intFPAWidth);
                     if (stop)
                     {
                         btnTake.Enabled = true;
                         th.Abort();
-                       
+
                     }
 
                 }
@@ -333,64 +335,61 @@ namespace ThermoGroupSample
         Thread th;
         private void btnTake_Click(object sender, EventArgs e)
         {
-            if (!stop) { 
-            th = new Thread(new ThreadStart(GetMaxTemperatureInfo));
-            th.Start();
-            btnTake.Enabled = false;
+            if (!stop)
+            {
+                th = new Thread(new ThreadStart(GetMaxTemperatureInfo));
+                th.Start();
+                btnTake.Enabled = false;
             }
         }
-
-       
-        void GetAutoRefesh()
+      
+            void GetRefesh()
         {
-          
-                frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
-                if (frmDisplay != null)
+            int index = cmbDisplay.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+            frmDisplay = Globals.GetMainFrm().GetFormDisplay((uint)index);
+            if (frmDisplay != null)
+            {
+
+                // btnSelect.Text = "确认";
+
+
+
+                int inputWidth = 0, inputHeight = 0, inputX = 0, inputY = 0;
+                if (!string.IsNullOrEmpty(txtL.Text) && !string.IsNullOrEmpty(txtW.Text) && !string.IsNullOrEmpty(txtX.Text) && !string.IsNullOrEmpty(txtY.Text))
                 {
-                    int index = cmbDisplay.SelectedIndex;
-                    if (index < 0)
-                    {
-                        return;
-                    }
-                    // btnSelect.Text = "确认";
+                    inputWidth = Convert.ToInt32(txtW.Text);
+                    inputHeight = Convert.ToInt32(txtL.Text);
+                    inputX = Convert.ToInt32(txtX.Text);
+                    inputY = Convert.ToInt32(txtY.Text);
+                }
 
 
+                if (btnSelect.Text == "开始")
+                {
+                    frmDisplay.darwFalge = true;
 
-                    int inputWidth = 0, inputHeight = 0, inputX = 0, inputY = 0;
-                    if (!string.IsNullOrEmpty(txtL.Text) && !string.IsNullOrEmpty(txtW.Text) && !string.IsNullOrEmpty(txtX.Text) && !string.IsNullOrEmpty(txtY.Text))
-                    {
-                        inputWidth = Convert.ToInt32(txtW.Text);
-                        inputHeight = Convert.ToInt32(txtL.Text);
-                        inputX = Convert.ToInt32(txtX.Text);
-                        inputY = Convert.ToInt32(txtY.Text);
-                    }
-
-
-                    if (btnSelect.Text == "开始")
-                    {
-                        frmDisplay.darwFalge = true;
-
-                        frmDisplay.InputWidth = inputWidth;
-                        frmDisplay.InputHeight = inputHeight;
-                        frmDisplay.InputX = inputX;
-                        frmDisplay.InputY = inputY;
-                        btnSelect.Text = "取消";
-                    }
+                    frmDisplay.InputWidth = inputWidth;
+                    frmDisplay.InputHeight = inputHeight;
+                    frmDisplay.InputX = inputX;
+                    frmDisplay.InputY = inputY;
+                    btnSelect.Text = "取消";
+                }
                 else if (btnSelect.Text == "取消")
                 {
                     frmDisplay.darwFalge = false;
                     btnSelect.Text = "开始";
                 }
             }
-         
-         
+
+
         }
         private void btnSelect_Click(object sender, EventArgs e)
         {
-
-
-            GetAutoRefesh();
-
+            GetRefesh();
         }
 
         /// <summary>
@@ -398,7 +397,7 @@ namespace ThermoGroupSample
         /// </summary>
         /// <param name="txt"></param>
         /// <param name="isorNot"></param>
-        void TextBoxVis(TextBox txt ,bool isorNot)
+        void TextBoxVis(TextBox txt, bool isorNot)
         {
             txt.Visible = isorNot;
         }
@@ -426,6 +425,90 @@ namespace ThermoGroupSample
             TextBoxVis(txtW, true);
             LableBoxVis(lblL, true);
             LableBoxVis(lblW, true);
+        }
+
+        private void btnConnection_Click(object sender, EventArgs e)
+        {
+            asyncConnectionPlc();
+        }
+        /// <summary>
+        /// 异步开启连接PLC 并且监听DB块值的变化
+        /// </summary>
+        async void asyncConnectionPlc()
+        {
+            try
+            {
+                await GetConneection();
+            }
+            catch (NotSupportedException EX)
+            { 
+                updateListBox("错误:" + EX.Message);
+            }
+        }
+
+        private  async Task GetConneection()
+        {
+            try
+            {
+                if (OpcServer.Create())
+                {
+                    updateListBox("OPC创建成功!");
+                }
+                else
+                {
+                    updateListBox("OPC创建失败!请检查网络");
+                }
+                updateListBox("PLC连接中...");
+                string info = OpcServer.Connection();
+                if (string.IsNullOrWhiteSpace(info))
+                {
+                    updateListBox("PLC连接成功,开始工作!");
+                }
+                else
+                {
+                    updateListBox("PLC连接失败" + info);
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                updateListBox("OPC创建失败!请检查网络"+ex.Message); 
+            }
+          
+        }
+
+        private void btnDis_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        void GetInfo()
+        {
+            frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
+            device = frmDisplay.GetDateDisplay().GetDevice();
+            List<string> list = new List<string>();
+            for (int i = 0; i < 60; i++)
+            {
+                for (int j = 0; j < 80; j++)
+                {
+                   int temper = device.GetTemperatureProbe((uint)j, (uint)i, 1);
+                    if( temper > 20)
+                    {
+                        list.Add(temper + " X" + j + " Y" +i);
+                    }
+                }
+            }
+            list.Sort();
+            foreach (var item in list)
+            {
+                updateListBox(item );
+            }
+            updateListBox("一共有"+list.Count + "个点");
+        }
+
+        private void btnEnter_Click(object sender, EventArgs e)
+        {
+            GetInfo();
         }
     }
 }

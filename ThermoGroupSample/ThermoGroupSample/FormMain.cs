@@ -199,6 +199,7 @@ namespace ThermoGroupSample
             if (OnDestroy != null)
             {
                 OnDestroy.Invoke();
+                OpcServer.DisConnection(); 
             }
         }
     }
