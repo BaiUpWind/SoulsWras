@@ -5,29 +5,34 @@ using System.Web;
 using OpcRcw.Da;
 using ThermoGroupSample.Modle;
 using Pub;
+using System.Threading;
 
 namespace ThermoGroupSample
 {
-    public static class OpcServer
+    public  class OpcServer   
     {
 
         public static IOPCServer pIOPCServer;  //定义opcServer对象
         internal const string SERVER_NAME = "OPC.SimaticNET";
         internal const int LOCALE_ID = 0x409;
-        public static Group Robot1, Robot2;
+        public static Group Robot1, Robot2,SpyGroup;
         static RWIniFile rad;
-        public  static void DisConnection()
+        public   void DisConnection()
         {
             if(Robot1 != null) { Robot1.Release(); }
             if(Robot2 != null) { Robot2.Release(); }
           
         }
+  
         /// <summary>
         /// 建立OPC
         /// </summary>
         /// <returns></returns>
-        public static bool Create()
+        public  bool Create()
         {
+
+            //Thread.Sleep(1000);
+            //return true;
             if (pIOPCServer == null)
             {
                 try
@@ -38,12 +43,13 @@ namespace ThermoGroupSample
                     pIOPCServer = (IOPCServer)Activator.CreateInstance(svrComponenttyp);
                     Robot1 = new Group(pIOPCServer, 1, "group1", 1, LOCALE_ID);//一号机器人
                     Robot2 = new Group(pIOPCServer, 2, "group2", 1, LOCALE_ID);//二号机器人
-                    rad = new RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini"); 
+                    SpyGroup= new Group(pIOPCServer, 3, "group3", 1, LOCALE_ID);//标志位监控
+                    rad = new RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
                     //添加DB块地址
                     Robot1.addItem(ItemCollection.GetRobotItem1());//一号机器人交互地址
                     Robot1.addItem(ItemCollection.GetRobotItem2());//二号机器人交互地址
+                    SpyGroup.addItem(ItemCollection.GetFlagItem());//标志位监控
 
-                   
                     return true;
                 }
                 catch (Exception ex)
@@ -56,23 +62,33 @@ namespace ThermoGroupSample
             {
                 return false;
             }
-           
 
-        }
-        public static string Connection()
+
+        } 
+        public  void onDateChange(string info)
         {
-            string info ="";
+            FormControl.GetOPCTaskInfo(info);
+            WriteLog.GetLog().Write("触发formcontrolONDATECHANGE" + info);
+
+           
+        }
+        public  string Connection()
+        {
+
+            //Thread.Sleep(1000);
+            //FormControl.callback += onDateChange;
+            //return "";
+            string info = "";
             int flag1 = Robot1.ReadD(0).CastTo<int>(-1);
             int flag2 = Robot2.ReadD(0).CastTo<int>(-1);
-            if( flag1 != -1 && flag2 != -1)
+            if (flag1 != -1 && flag2 != -1)
             {
-                Robot1.callback += OnDataChange;
-                Robot2.callback += OnDataChange;
+                SpyGroup.callback += OnDataChange;
                 return info;
             }
-            if(flag1 == -1)
+            if (flag1 == -1)
             {
-                info += "一号机器人读取不到DB块值为,请检查网络";
+                info += "一号机器人读取不到DB块,请检查网络";
                 return info;
             }
             if (flag2 == -1)
@@ -89,49 +105,57 @@ namespace ThermoGroupSample
         /// <param name="group"></param>
         /// <param name="clientId"></param>
         /// <param name="values"></param>
-        public static void OnDataChange(int group, int[] clientId, object[] values)
+        public  void OnDataChange(int group, int[] clientId, object[] values)
         {
-            if (group == 1)//1号机器人
+            if (group == 3)//1号机器人
             {
+             
                 for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
                 {
-                    int tempvalue = int.Parse((values[i].ToString()));//标志位
-                    if(tempvalue == 0)//如果等于0 就是已经处理
+                    if (clientId[i] == 1)//一号机器人
                     {
-                        if(rad != null)
+                        int tempvalue = int.Parse((values[i].ToString()));//标志位
+                        if (tempvalue == 0)//如果等于0 就是已经处理
                         {
-                            int[] info = new int[5];
-                            uint x0 = uint.Parse( rad.IniReadValue("Robot1", "X0"));
-                            uint y0 = uint.Parse(rad.IniReadValue("Robot1", "YO"));
-                            uint x1 = uint.Parse(rad.IniReadValue("Robot1", "X1"));
-                            uint y1 = uint.Parse(rad.IniReadValue("Robot1", "X1"));
-                            device.GetRectTemperatureInfo(x0, y0, x1, y1, info);
-                             
-                            SendLoactionAndTmper(Robot1, tempvalue, info1);
-                        }
-                         
-                        
-                  
+                            if (rad != null)
+                            {
+                                 
+                                frmDisplay = Globals.GetMainFrm().GetFormDisplay(0);
+                                device = frmDisplay.GetDateDisplay().GetDevice();
+                                 
+                                int[] info = new int[5];
+                                uint x0 = uint.Parse(rad.IniReadValue("Robot1", "X0"));
+                                uint y0 = uint.Parse(rad.IniReadValue("Robot1", "YO"));
+                                uint x1 = uint.Parse(rad.IniReadValue("Robot1", "X1"));
+                                uint y1 = uint.Parse(rad.IniReadValue("Robot1", "X1"));
+                                device.GetRectTemperatureInfo(x0, y0, x1, y1, info);
+                                FormControl.GetOPCTaskInfo("这是将任务信息写入到操控窗口");
+                                SendLoactionAndTmper(Robot1, tempvalue, info1);
+                            }
+                        } 
                     }
-                }
-            }
-            else if (group == 2)//2号机器人
-            {
-                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
-                {
-                    int tempvalue = int.Parse((values[i].ToString()));//标志位
-                    if (tempvalue == 0)//如果等于0 就是已经处理
+                    else if (clientId[i] == 2)//二号机器人
                     {
-                       // device.GetRectTemperatureInfo()
-                        SendLoactionAndTmper(Robot2, tempvalue, info2); 
+                        int tempvalue = int.Parse((values[i].ToString()));//标志位
+                        if (tempvalue == 0)//如果等于0 就是已经处理
+                        {
+                            frmDisplay = Globals.GetMainFrm().GetFormDisplay(1);
+                            device = frmDisplay.GetDateDisplay().GetDevice();
+                            // device.GetRectTemperatureInfo()
+                            SendLoactionAndTmper(Robot2, tempvalue, info2);
+                        }
+                    }
+                    else
+                    {
+                        WriteLog.GetLog().Write("跳变未找到Group组");
                     }
                 }
-            }
+            } 
         }
         static MagDevice device;
+        static FormDisplay frmDisplay;
         public static object[] info1 = new object[5];
-        public static object[] info2 = new object[5];
-        static bool issendone = false;
+        public static object[] info2 = new object[5]; 
         static void SendLoactionAndTmper(Group group,int falge , object[] info)
         {
             try

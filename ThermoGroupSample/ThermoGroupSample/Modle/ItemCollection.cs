@@ -6,7 +6,7 @@ namespace ThermoGroupSample.Modle
 {
     public static class ItemCollection
     {
-        public static String OpcUnionServer = "S7:[UnionConnection]";
+        public static String OpcServer = "S7:[RobotConnection]";
 
 
         /// <summary>
@@ -16,11 +16,11 @@ namespace ThermoGroupSample.Modle
         public static List<string> GetRobotItem1()
         {
             List<string> list = new List<string>();
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 10; i++)
             {
-                list.Add(OpcUnionServer + "DB30,DINT"+(850 + (i * 10)));
-                list.Add(OpcUnionServer + "DB30,DINT"+(854 + (i * 10)));
-                list.Add(OpcUnionServer + "DB30,INT"+(858 + (i * 10))); 
+                list.Add(OpcServer + "DB30,REAL" +(( i * 8)));
+                list.Add(OpcServer + "DB30,INT" + (4 + (i * 8) ));
+                list.Add(OpcServer + "DB30,INT"+ (6 + (i * 8)));
             }
             return list;
         }
@@ -33,14 +33,20 @@ namespace ThermoGroupSample.Modle
             List<string> list = new List<string>();
             for (int i = 0; i < 40; i++)
             {
-                list.Add(OpcUnionServer + "DB30,DINT" + (850 + (i * 10)));
-                list.Add(OpcUnionServer + "DB30,DINT" + (854 + (i * 10)));
-                list.Add(OpcUnionServer + "DB30,INT" + (858 + (i * 10)));
+                list.Add(OpcServer + "DB31,REAL" + ((i * 8)));
+                list.Add(OpcServer + "DB31,INT" + (4 + (i * 8)));
+                list.Add(OpcServer + "DB31,INT" + (6 + (i * 8)));
             }
             return list;
         }
 
-
+        public static List<string> GetFlagItem()
+        {
+            List<string> list = new List<string>(); 
+            list.Add(OpcServer + "DB30,INT80");
+            list.Add(OpcServer + "DB31,INT80"); 
+            return list;
+        }
 
 
     }

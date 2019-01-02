@@ -17,24 +17,41 @@ namespace ThermoGroupSample
 
         DataControl _DataControl = null;
         List<uint> _LstComboIP = new List<uint>();
-
+        FormControl _FormControl = null;
         const int MAX_ENUMDEVICE = 32;
         GroupSDK.ENUM_INFO[] _LstEnumInfo = new GroupSDK.ENUM_INFO[MAX_ENUMDEVICE];
-
+        OpcServer opcServer = new OpcServer();
+        FormDisplay frmDisplay;
+        MagDevice device;
+        Thread th;
         public DataControl GetDataControl()
         {
             return _DataControl;
         }
-
+        #region  获取OPC发送任务的信息 在主窗体显示
+        delegate void HandleUpDate(string info);
+        static   HandleUpDate handle;
+        public static void GetOPCTaskInfo(string Info)
+        { 
+            handle(Info);
+        }
+        void upDateList(string info)
+        {
+            updateListBox(info);
+        }
+        #endregion
         public FormControl()
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
             _DataControl = new DataControl();
             _DataControl.CreateService();//必须调用
+            handle += upDateList;
             _DataControl.GetService().EnableAutoReConnect(true);//使能断线重连
-
+            _FormControl =this;
+            
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
+            
         }
 
         private void FormControl_Load(object sender, EventArgs e)
@@ -108,22 +125,7 @@ namespace ThermoGroupSample
 
             cmbSelect(comboBoxOnlineDevice);
             cmbSelect(cmbDisplay);
-            //if (cmbDisplay.Items.Count == 0)
-            //{
-            //    cmbDisplay.SelectedIndex = -1;
-            //}
-            //else if (cmbDisplay.SelectedIndex < 0)
-            //{
-            //    cmbDisplay.SelectedIndex = 0;
-            //}
-            //if (comboBoxOnlineDevice.Items.Count == 0)
-            //{
-            //    comboBoxOnlineDevice.SelectedIndex = -1;
-            //}
-            //else if (comboBoxOnlineDevice.SelectedIndex < 0)
-            //{
-            //    comboBoxOnlineDevice.SelectedIndex = 0;
-            //}
+
         }
         void cmbSelect(ComboBox cmb)
         {
@@ -270,7 +272,7 @@ namespace ThermoGroupSample
 
         private delegate void HandleDelegate(string strshow);
 
-        public void updateListBox(string info)
+        public  void updateListBox(string info)
         {
             String time = DateTime.Now.ToLongTimeString();
 
@@ -286,7 +288,7 @@ namespace ThermoGroupSample
             }
         }
         bool stop = true;
-        private MagDevice _MagDevice = new MagDevice(IntPtr.Zero);
+     
         /// <summary>
         /// 获取一个区域内大于阈值的最大温度
         /// </summary>
@@ -301,23 +303,29 @@ namespace ThermoGroupSample
                 }
 
                 int[] infos = new int[5];
-                bool falge = device.GetRectTemperatureInfo(0, 0, 40, 40, infos);
-
+                bool falge = device.GetRectTemperatureInfo(0, 0, 50, 50, infos);
+               
                 if (falge)
                 {
                     GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
-                    int intFPAMin = (int)(infos[3] * 0.01);//MinTemperLoc
+                    FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
+                    int intFPAMin = (int)(infos[3]  );//MinTemperLoc
                     int intFPAMax = (int)(infos[4]);//MaxTmperLoc
-                    int MaxTemper = (int)(infos[1] * 0.001f);//最高温度
+                    float MaxTemper = infos[1] * 0.001f;//最高温度
                     frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
-                    frmDisplay.DX = intFPAMin;
-                    frmDisplay.DY = intFPAMax;
+                    uint x = 80, y = 60;
+                    device.ConvertPos2XY((uint)intFPAMax,ref x,ref y );
+
+                   // uint union = device.ConvertXY2Pos(x, y);
+                    frmDisplay.DX =(uint)( x * cAMERA_INFO.intFPAWidth / frmDisplay.Width);//int.Parse( intFPAMax.ToString().Substring(0,2));
+                    frmDisplay.DY = (uint)(cAMERA_INFO.intFPAHeight - y * cAMERA_INFO.intFPAHeight / frmDisplay.Height -1); // int.Parse(intFPAMax.ToString().Substring(2, 2));
                     frmDisplay.darwMaxt = true;
+                    float temper = device.GetTemperatureProbe(x, y, 1) * 0.001f;
                     //GroupSDK.FIX_PARAM param = new GroupSDK.FIX_PARAM();
                     //device.GetFixPara(ref param);
                     //MaxTemper = device.FixTemperature(MaxTemper, param.fEmissivity, (uint)intFPAx, (uint)intFPAy);//获取温度修正后的温度
                     //+ "MinTemperLoc" + intFPAx
-                    updateListBox(MaxTemper + " MTL:" + intFPAMax + "  " + cAMERA_INFO.intFPAWidth);
+                    updateListBox(MaxTemper + " X:" + x + "Y:" + y);
                     if (stop)
                     {
                         btnTake.Enabled = true;
@@ -330,17 +338,12 @@ namespace ThermoGroupSample
             }
 
         }
-        FormDisplay frmDisplay;
-        MagDevice device;
-        Thread th;
+    
         private void btnTake_Click(object sender, EventArgs e)
         {
-            if (!stop)
-            {
-                th = new Thread(new ThreadStart(GetMaxTemperatureInfo));
-                th.Start();
-                btnTake.Enabled = false;
-            }
+            frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
+            frmDisplay.stop = true;
+            btnTake.Enabled = false;
         }
       
             void GetRefesh()
@@ -438,19 +441,23 @@ namespace ThermoGroupSample
         {
             try
             {
-                await GetConneection();
+                await Task.Run( GetConneection );
             }
             catch (NotSupportedException EX)
             { 
                 updateListBox("错误:" + EX.Message);
             }
         }
+        //public delegate void HandleOnDateChange(string info);
 
+        //public static HandleOnDateChange callback;
+
+       
         private  async Task GetConneection()
         {
             try
             {
-                if (OpcServer.Create())
+                if (opcServer.Create())
                 {
                     updateListBox("OPC创建成功!");
                 }
@@ -459,7 +466,7 @@ namespace ThermoGroupSample
                     updateListBox("OPC创建失败!请检查网络");
                 }
                 updateListBox("PLC连接中...");
-                string info = OpcServer.Connection();
+                string info = opcServer.Connection();
                 if (string.IsNullOrWhiteSpace(info))
                 {
                     updateListBox("PLC连接成功,开始工作!");
@@ -476,23 +483,20 @@ namespace ThermoGroupSample
             }
           
         }
-
-        private void btnDis_Click(object sender, EventArgs e)
-        {
-           
-        }
+ 
 
         void GetInfo()
         {
             frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
             device = frmDisplay.GetDateDisplay().GetDevice();
             List<string> list = new List<string>();
-            for (int i = 0; i < 60; i++)
+            for (int i = 0; i < 60; i++)//Y 宽
             {
-                for (int j = 0; j < 80; j++)
+                for (int j = 0; j < 80; j++)//x 长
                 {
-                   int temper = device.GetTemperatureProbe((uint)j, (uint)i, 1);
-                    if( temper > 20)
+                    float temper = device.GetTemperatureProbe((uint)j, (uint)i, 1) * 0.001f;
+                  
+                    if ( temper > 20)
                     {
                         list.Add(temper + " X" + j + " Y" +i);
                     }
@@ -509,6 +513,13 @@ namespace ThermoGroupSample
         private void btnEnter_Click(object sender, EventArgs e)
         {
             GetInfo();
+        }
+ 
+
+        private void 一号甑锅ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormDateSet fds = new FormDateSet();
+            fds.Show();
         }
     }
 }

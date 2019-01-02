@@ -14,13 +14,14 @@ namespace ThermoGroupSample
         DataDisplay _DataDisplay;
 
         Point _ptMouse = new Point();
-
+        public delegate void HadnleGetMaxTmper();
+       public HadnleGetMaxTmper GetMaxTmper;
         public DataDisplay GetDateDisplay()
         {
             return _DataDisplay;
         }
-        int index = -1;
-        FormDisplay frmDisplay; //相机窗口
+        
+        
 
         public Graphics g;
         public string ss ="aa";
@@ -31,6 +32,7 @@ namespace ThermoGroupSample
 
             _DataDisplay = new DataDisplay();
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
+          
         }
         /// <summary>
         /// 鼠标单击选中窗口
@@ -82,7 +84,8 @@ namespace ThermoGroupSample
                 return;
             }
 
-            DrawMouseTemp(graphic, this.Width, this.Height);//鼠标测温
+            DrawMouseTemp(graphic, this.Width, this.Height);//鼠标测温 
+            GetMaxTemperatureInfo();
             DarwDetectRegion(graphic);
             DarwMaxTempPoint(graphic);
             _DataDisplay.GetDevice().Unlock();
@@ -96,8 +99,8 @@ namespace ThermoGroupSample
         
         int inputX;
         int inputY;
-        int dX;
-        int dY;
+        uint dX;
+        uint dY;
 
         public int InputHeight
         {
@@ -151,7 +154,7 @@ namespace ThermoGroupSample
             }
         }
 
-        public int DX
+        public uint DX
         {
             get
             {
@@ -164,7 +167,7 @@ namespace ThermoGroupSample
             }
         }
 
-        public int DY
+        public uint DY
         {
             get
             {
@@ -198,6 +201,43 @@ namespace ThermoGroupSample
            
             
         }
+        public bool stop =false;
+        /// <summary>
+        /// 获取一个区域内大于阈值的最大温度
+        /// </summary>
+        void GetMaxTemperatureInfo()
+        {
+            if (stop)
+            {
+                MagDevice device = _DataDisplay.GetDevice();
+                int[] infos = new int[5];
+                bool falge = device.GetRectTemperatureInfo(0, 0, 50, 50, infos);
+
+                if (falge)
+                {
+                    GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
+                
+                   // int intFPAMin = (int)(infos[3]);//MinTemperLoc
+                    int intFPAMax = (int)(infos[4]);//MaxTmperLoc
+                    float MaxTemper = infos[1] * 0.001f;//最高温度
+                    uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
+                    device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);
+
+                    this.DX = (uint)(x * this.Width  / cAMERA_INFO.intFPAWidth);//int.Parse( intFPAMax.ToString().Substring(0,2));
+                    this.DY = (uint)((cAMERA_INFO.intFPAHeight -(y + 1)) * this.Height / cAMERA_INFO.intFPAHeight   ); // int.Parse(intFPAMax.ToString().Substring(2, 2));
+                    this.darwMaxt = true;
+                    float temper = device.GetTemperatureProbe(x, y, 1) * 0.001f;
+                 
+                    FormControl.GetOPCTaskInfo(MaxTemper + " X:" + x + "Y:" + y + "temper" + temper);
+                  
+                        
+                         
+                    } 
+                }
+               
+             
+
+        }
         /// <summary>
         /// 绘制温度最高的位置的点
         /// </summary>
@@ -207,8 +247,8 @@ namespace ThermoGroupSample
             if (darwMaxt)
             {
                 SolidBrush redBrush;
-                redBrush = new SolidBrush(Color.Green);
-                graphic.FillEllipse(redBrush, dX, dX, 5, 5);
+                redBrush = new SolidBrush(Color.Black);
+                graphic.FillEllipse(redBrush, dX, dY, 5, 5);
             }
             else
             {
@@ -242,13 +282,14 @@ namespace ThermoGroupSample
             }
 
             GroupSDK.CAMERA_INFO info = _DataDisplay.GetDevice().GetCamInfo();
-
+          
             IntPtr hDC = graphic.GetHdc();
-
+           
             WINAPI.SetStretchBltMode(hDC, WINAPI.StretchMode.STRETCH_HALFTONE);
             WINAPI.StretchDIBits(hDC, 0, 0, w, h, 0, 0, info.intVideoWidth,
                     info.intVideoHeight, pIrData, pIrInfo, (uint)WINAPI.PaletteMode.DIB_RGB_COLORS, 
                     (uint)WINAPI.ExecuteOption.SRCCOPY);
+
 
             graphic.ReleaseHdc();
 
@@ -287,6 +328,13 @@ namespace ThermoGroupSample
             {
                 intTemp = device.FixTemperature(intTemp, param.fEmissivity, (uint)intFPAx, (uint)intFPAy);
             }
+            //MagDevice device = _DataDisplay.GetDevice();
+            //int[] infos = new int[5];
+            //int intFPAMax = (int)(infos[4]);//MaxTmperLoc
+            //bool falge = device.GetRectTemperatureInfo(0, 0, 50, 50, infos);
+            //uint FPAx = (uint)info.intFPAWidth, FPAy = (uint)info.intFPAHeight;
+            //device.ConvertPos2XY((uint)intFPAMax, ref FPAx, ref FPAy);
+
 
             string sText = (intTemp * 0.001f).ToString("0.0") + "坐标X：" + intFPAx + "坐标Y：" + intFPAy;
 

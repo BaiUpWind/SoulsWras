@@ -37,3 +37,4 @@ D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Rele
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormMainSc.resources
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.Properties.Resources.resources
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.Cache
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDateSet.resources

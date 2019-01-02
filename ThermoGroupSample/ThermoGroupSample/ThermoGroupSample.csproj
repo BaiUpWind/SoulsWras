@@ -66,6 +66,12 @@
     <Compile Include="FormControl.Designer.cs">
       <DependentUpon>FormControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormDateSet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormDateSet.Designer.cs">
+      <DependentUpon>FormDateSet.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDisplay.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +109,9 @@
     <EmbeddedResource Include="FormControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormDateSet.resx">
+      <DependentUpon>FormDateSet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDisplay.resx">
       <SubType>Designer</SubType>

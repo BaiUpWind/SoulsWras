@@ -401,8 +401,8 @@ namespace ThermoGroupSample
 
 	        if (w != 0)
 	        {
-		        x = intPos / w;
-		        y = intPos - y * w;
+		        y = intPos / w;
+		        x =  intPos - y  * w;
 	        }
         }
 

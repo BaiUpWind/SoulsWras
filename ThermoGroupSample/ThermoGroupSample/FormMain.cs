@@ -20,7 +20,7 @@ namespace ThermoGroupSample
         const uint DISPLAYWND_GAP = 5;
         const uint DISPLAYWND_MARGIN = 6;
         const uint DISPLAYWND_BORDER_WIDTH = DISPLAYWND_GAP / 2;
-        const uint MAX_DEVWINDOW_NUM = 36;
+        const uint MAX_DEVWINDOW_NUM = 2;
 
         FormControl _FormControl;
         FormDisplay[] _FormDisplayLst;
@@ -81,6 +81,7 @@ namespace ThermoGroupSample
 
             //¿ØÖÆ´°¿Ú
             _FormControl = new FormControl();
+
             _FormControl.TopLevel = false;
             _FormControl.Parent = this;
             _FormControl.FormBorderStyle = FormBorderStyle.Fixed3D;
@@ -191,15 +192,15 @@ namespace ThermoGroupSample
             }
          
         }
- 
- 
 
+
+        OpcServer opcServer = new OpcServer();
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (OnDestroy != null)
             {
                 OnDestroy.Invoke();
-                OpcServer.DisConnection(); 
+                opcServer.DisConnection(); 
             }
         }
     }
