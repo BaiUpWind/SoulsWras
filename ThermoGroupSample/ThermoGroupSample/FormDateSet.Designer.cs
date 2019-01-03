@@ -41,11 +41,13 @@
             this.txtZgname = new System.Windows.Forms.TextBox();
             this.lblname = new System.Windows.Forms.Label();
             this.groupBoxAturbit = new System.Windows.Forms.GroupBox();
+            this.btnSave = new System.Windows.Forms.Button();
             this.comboBoxZG = new System.Windows.Forms.ComboBox();
             this.lblSelect = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.txtcentpoint = new System.Windows.Forms.TextBox();
+            this.lblCP = new System.Windows.Forms.Label();
             this.groupBoxAturbit.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,7 +71,7 @@
             // txtgkzj
             // 
             this.txtgkzj.Enabled = false;
-            this.txtgkzj.Location = new System.Drawing.Point(184, 75);
+            this.txtgkzj.Location = new System.Drawing.Point(184, 102);
             this.txtgkzj.Name = "txtgkzj";
             this.txtgkzj.Size = new System.Drawing.Size(100, 21);
             this.txtgkzj.TabIndex = 3;
@@ -77,7 +79,7 @@
             // lblgkzj
             // 
             this.lblgkzj.AutoSize = true;
-            this.lblgkzj.Location = new System.Drawing.Point(27, 78);
+            this.lblgkzj.Location = new System.Drawing.Point(27, 105);
             this.lblgkzj.Name = "lblgkzj";
             this.lblgkzj.Size = new System.Drawing.Size(59, 12);
             this.lblgkzj.TabIndex = 2;
@@ -86,7 +88,7 @@
             // txtgdzj
             // 
             this.txtgdzj.Enabled = false;
-            this.txtgdzj.Location = new System.Drawing.Point(184, 102);
+            this.txtgdzj.Location = new System.Drawing.Point(184, 129);
             this.txtgdzj.Name = "txtgdzj";
             this.txtgdzj.Size = new System.Drawing.Size(100, 21);
             this.txtgdzj.TabIndex = 5;
@@ -94,7 +96,7 @@
             // lblgdzj
             // 
             this.lblgdzj.AutoSize = true;
-            this.lblgdzj.Location = new System.Drawing.Point(27, 105);
+            this.lblgdzj.Location = new System.Drawing.Point(27, 132);
             this.lblgdzj.Name = "lblgdzj";
             this.lblgdzj.Size = new System.Drawing.Size(59, 12);
             this.lblgdzj.TabIndex = 4;
@@ -103,7 +105,7 @@
             // txtsd
             // 
             this.txtsd.Enabled = false;
-            this.txtsd.Location = new System.Drawing.Point(184, 129);
+            this.txtsd.Location = new System.Drawing.Point(184, 156);
             this.txtsd.Name = "txtsd";
             this.txtsd.Size = new System.Drawing.Size(100, 21);
             this.txtsd.TabIndex = 7;
@@ -111,7 +113,7 @@
             // lblsd
             // 
             this.lblsd.AutoSize = true;
-            this.lblsd.Location = new System.Drawing.Point(27, 132);
+            this.lblsd.Location = new System.Drawing.Point(27, 159);
             this.lblsd.Name = "lblsd";
             this.lblsd.Size = new System.Drawing.Size(35, 12);
             this.lblsd.TabIndex = 6;
@@ -120,7 +122,7 @@
             // txtlimitTmper
             // 
             this.txtlimitTmper.Enabled = false;
-            this.txtlimitTmper.Location = new System.Drawing.Point(184, 156);
+            this.txtlimitTmper.Location = new System.Drawing.Point(184, 183);
             this.txtlimitTmper.Name = "txtlimitTmper";
             this.txtlimitTmper.Size = new System.Drawing.Size(100, 21);
             this.txtlimitTmper.TabIndex = 9;
@@ -128,7 +130,7 @@
             // lbljxwd
             // 
             this.lbljxwd.AutoSize = true;
-            this.lbljxwd.Location = new System.Drawing.Point(27, 159);
+            this.lbljxwd.Location = new System.Drawing.Point(27, 186);
             this.lbljxwd.Name = "lbljxwd";
             this.lbljxwd.Size = new System.Drawing.Size(59, 12);
             this.lbljxwd.TabIndex = 8;
@@ -153,6 +155,8 @@
             // 
             // groupBoxAturbit
             // 
+            this.groupBoxAturbit.Controls.Add(this.txtcentpoint);
+            this.groupBoxAturbit.Controls.Add(this.lblCP);
             this.groupBoxAturbit.Controls.Add(this.txtgkzj);
             this.groupBoxAturbit.Controls.Add(this.btnSave);
             this.groupBoxAturbit.Controls.Add(this.lblname);
@@ -173,29 +177,10 @@
             this.groupBoxAturbit.TabStop = false;
             this.groupBoxAturbit.Text = "甑锅属性";
             // 
-            // comboBoxZG
-            // 
-            this.comboBoxZG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxZG.FormattingEnabled = true;
-            this.comboBoxZG.Location = new System.Drawing.Point(83, 30);
-            this.comboBoxZG.Name = "comboBoxZG";
-            this.comboBoxZG.Size = new System.Drawing.Size(107, 20);
-            this.comboBoxZG.TabIndex = 13;
-            this.comboBoxZG.SelectedIndexChanged += new System.EventHandler(this.comboBoxZG_SelectedIndexChanged);
-            // 
-            // lblSelect
-            // 
-            this.lblSelect.AutoSize = true;
-            this.lblSelect.Location = new System.Drawing.Point(13, 33);
-            this.lblSelect.Name = "lblSelect";
-            this.lblSelect.Size = new System.Drawing.Size(59, 12);
-            this.lblSelect.TabIndex = 14;
-            this.lblSelect.Text = "选择甑锅:";
-            // 
             // btnSave
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSave.Location = new System.Drawing.Point(115, 201);
+            this.btnSave.Location = new System.Drawing.Point(116, 216);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 12;
@@ -204,10 +189,29 @@
             this.btnSave.Visible = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // comboBoxZG
+            // 
+            this.comboBoxZG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxZG.FormattingEnabled = true;
+            this.comboBoxZG.Location = new System.Drawing.Point(83, 14);
+            this.comboBoxZG.Name = "comboBoxZG";
+            this.comboBoxZG.Size = new System.Drawing.Size(107, 20);
+            this.comboBoxZG.TabIndex = 13;
+            this.comboBoxZG.SelectedIndexChanged += new System.EventHandler(this.comboBoxZG_SelectedIndexChanged);
+            // 
+            // lblSelect
+            // 
+            this.lblSelect.AutoSize = true;
+            this.lblSelect.Location = new System.Drawing.Point(13, 17);
+            this.lblSelect.Name = "lblSelect";
+            this.lblSelect.Size = new System.Drawing.Size(59, 12);
+            this.lblSelect.TabIndex = 14;
+            this.lblSelect.Text = "选择甑锅:";
+            // 
             // btnChange
             // 
             this.btnChange.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnChange.Location = new System.Drawing.Point(196, 28);
+            this.btnChange.Location = new System.Drawing.Point(196, 12);
             this.btnChange.Name = "btnChange";
             this.btnChange.Size = new System.Drawing.Size(75, 23);
             this.btnChange.TabIndex = 13;
@@ -218,13 +222,30 @@
             // btnAdd
             // 
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAdd.Location = new System.Drawing.Point(277, 28);
+            this.btnAdd.Location = new System.Drawing.Point(277, 12);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(75, 23);
             this.btnAdd.TabIndex = 13;
             this.btnAdd.Text = "新增";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // txtcentpoint
+            // 
+            this.txtcentpoint.Enabled = false;
+            this.txtcentpoint.Location = new System.Drawing.Point(184, 75);
+            this.txtcentpoint.Name = "txtcentpoint";
+            this.txtcentpoint.Size = new System.Drawing.Size(100, 21);
+            this.txtcentpoint.TabIndex = 14;
+            // 
+            // lblCP
+            // 
+            this.lblCP.AutoSize = true;
+            this.lblCP.Location = new System.Drawing.Point(27, 78);
+            this.lblCP.Name = "lblCP";
+            this.lblCP.Size = new System.Drawing.Size(59, 12);
+            this.lblCP.TabIndex = 13;
+            this.lblCP.Text = "圆心坐标:";
             // 
             // FormDateSet
             // 
@@ -236,9 +257,11 @@
             this.Controls.Add(this.comboBoxZG);
             this.Controls.Add(this.groupBoxAturbit);
             this.Controls.Add(this.btnChange);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "FormDateSet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "参数输入";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDateSet_FormClosing);
             this.groupBoxAturbit.ResumeLayout(false);
             this.groupBoxAturbit.PerformLayout();
             this.ResumeLayout(false);
@@ -266,5 +289,7 @@
         private System.Windows.Forms.Label lblSelect;
         private System.Windows.Forms.Button btnChange;
         private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.TextBox txtcentpoint;
+        private System.Windows.Forms.Label lblCP;
     }
 }

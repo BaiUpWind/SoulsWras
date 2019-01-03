@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using SDK;
 
@@ -29,10 +30,13 @@ namespace ThermoGroupSample
         public FormDisplay()
         {
             InitializeComponent();
-
+         
             _DataDisplay = new DataDisplay();
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
           
+        }
+        public void Startasync() {
+            AutoDraw();
         }
         /// <summary>
         /// 鼠标单击选中窗口
@@ -85,8 +89,6 @@ namespace ThermoGroupSample
             }
 
             DrawMouseTemp(graphic, this.Width, this.Height);//鼠标测温 
-            GetMaxTemperatureInfo();
-            DarwDetectRegion(graphic);
             DarwMaxTempPoint(graphic);
             _DataDisplay.GetDevice().Unlock();
 
@@ -94,91 +96,36 @@ namespace ThermoGroupSample
         #region 属性
         public bool darwFalge;
         public bool darwMaxt;
-        private int inputWidth ;
-        private int inputHeight;
-        
-        int inputX;
-        int inputY;
-        uint dX;
-        uint dY;
+        /// <summary>
+        /// 圆心点坐标
+        /// </summary>
+        public int CentrePoint { get; set; }
+        /// <summary>
+        /// 锅炉高
+        /// </summary>
+        public int InputHeight { get; set; }
+        /// <summary>
+        /// 锅炉宽
+        /// </summary>
 
-        public int InputHeight
-        {
-            get
-            {
-                return inputHeight;
-            }
+        public int InputWidth { get; set; }
+        /// <summary>
+        /// 输入的X
+        /// </summary>
 
-            set
-            {
-                inputHeight = value;
-            }
-        }
-
-        public int InputWidth
-        {
-            get
-            {
-                return inputWidth;
-            }
-
-            set
-            {
-                inputWidth = value;
-            }
-        }
-
-        public int InputX
-        {
-            get
-            {
-                return inputX;
-            }
-
-            set
-            {
-                inputX = value;
-            }
-        }
-
-        public int InputY
-        {
-            get
-            {
-                return inputY;
-            }
-
-            set
-            {
-                inputY = value;
-            }
-        }
-
-        public uint DX
-        {
-            get
-            {
-                return dX;
-            }
-
-            set
-            {
-                dX = value;
-            }
-        }
-
-        public uint DY
-        {
-            get
-            {
-                return dY;
-            }
-
-            set
-            {
-                dY = value;
-            }
-        }
+        public int InputX { get; set; }
+        /// <summary>
+        /// 输入的Y
+        /// </summary>
+        public int InputY { get; set; }
+        /// <summary>
+        /// 绘制的X点
+        /// </summary>
+        public uint DX { get; set; }
+        /// <summary>
+        /// 绘制的Y点
+        /// </summary>
+        public uint DY { get; set; }
         #endregion
         /// <summary>
         /// 绘制需要检测的区域（圆）
@@ -190,7 +137,7 @@ namespace ThermoGroupSample
             {
                 SolidBrush redBrush;
                 redBrush = new SolidBrush(Color.Red);
-                graphic.FillRectangle(redBrush, InputX, InputY, InputWidth, InputHeight);
+                graphic.FillRectangle(redBrush, 0, 0, 0, 0);
             }
             else
             {
@@ -202,40 +149,60 @@ namespace ThermoGroupSample
             
         }
         public bool stop =false;
+        async void AutoDraw()
+        {
+            await Task.Run(GetMaxTemperatureInfo);
+        }
         /// <summary>
         /// 获取一个区域内大于阈值的最大温度
-        /// </summary>
-        void GetMaxTemperatureInfo()
+        /// </summary
+        async Task GetMaxTemperatureInfo()
         {
-            if (stop)
+            if(CentrePoint <= 0)
             {
-                MagDevice device = _DataDisplay.GetDevice();
-                int[] infos = new int[5];
-                bool falge = device.GetRectTemperatureInfo(0, 0, 50, 50, infos);
+                FormMain.GetOPCTaskInfo("圆心坐标异常,请检查甑锅参数并且设置,设置成功后将自动刷新!");
+                return;
+            }
+            while (stop)
+            {
 
-                if (falge)
+
+                if (stop)
                 {
-                    GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
-                
-                   // int intFPAMin = (int)(infos[3]);//MinTemperLoc
-                    int intFPAMax = (int)(infos[4]);//MaxTmperLoc
-                    float MaxTemper = infos[1] * 0.001f;//最高温度
-                    uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
-                    device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);
+                    MagDevice device = _DataDisplay.GetDevice();
+                    int[] infos = new int[5];
+                    //if (CentrePoint >= CentrePoint + CentrePoint)
+                    //{
+                    //    FormMain.GetOPCTaskInfo("圆心坐标必须要小于锅炉宽度");
+                    //    return;
+                    //}
+                    //else {
+                    InputWidth = CentrePoint + CentrePoint;//右上角坐标等于宽度加上圆心坐标
+                                                           //}
+                    bool falge = device.GetRectTemperatureInfo((uint)CentrePoint, (uint)CentrePoint, (uint)InputWidth, (uint)InputWidth, infos);
 
-                    this.DX = (uint)(x * this.Width  / cAMERA_INFO.intFPAWidth);//int.Parse( intFPAMax.ToString().Substring(0,2));
-                    this.DY = (uint)((cAMERA_INFO.intFPAHeight -(y + 1)) * this.Height / cAMERA_INFO.intFPAHeight   ); // int.Parse(intFPAMax.ToString().Substring(2, 2));
-                    this.darwMaxt = true;
-                    float temper = device.GetTemperatureProbe(x, y, 1) * 0.001f;
-                 
-                    FormControl.GetOPCTaskInfo(MaxTemper + " X:" + x + "Y:" + y + "temper" + temper);
-                  
-                        
-                         
-                    } 
+                    if (falge)
+                    {
+                        GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
+
+                        // int intFPAMin = (int)(infos[3]);//MinTemperLoc
+                        int intFPAMax = (int)(infos[4]);//MaxTmperLoc
+                        float MaxTemper = infos[1] * 0.001f;//最高温度
+                        uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
+                        device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);
+
+                        this.DX = (uint)(x * this.Width / cAMERA_INFO.intFPAWidth);//int.Parse( intFPAMax.ToString().Substring(0,2));
+                        this.DY = (uint)((cAMERA_INFO.intFPAHeight - (y + 1)) * this.Height / cAMERA_INFO.intFPAHeight); // int.Parse(intFPAMax.ToString().Substring(2, 2));
+                        this.darwMaxt = true;
+                        float temper = device.GetTemperatureProbe(x, y, 1) * 0.001f;
+
+                        FormMain.GetOPCTaskInfo(Name + "  " + MaxTemper + " X:" + x + "Y:" + y + "temper" + temper);
+                    }
                 }
-               
+                await Task.Delay(1000);
+            }
              
+
 
         }
         /// <summary>
@@ -248,7 +215,7 @@ namespace ThermoGroupSample
             {
                 SolidBrush redBrush;
                 redBrush = new SolidBrush(Color.Black);
-                graphic.FillEllipse(redBrush, dX, dY, 5, 5);
+                graphic.FillEllipse(redBrush, DX, DY, 5, 5);
             }
             else
             {
@@ -295,6 +262,40 @@ namespace ThermoGroupSample
 
             return true;
         }
+
+       public void GetInfo(float limitTmper,out object[] values , uint x = 0,uint y = 0)
+        {
+            MagDevice device = _DataDisplay.GetDevice();
+            List<string> list = new List<string>();  
+             values = new object[31];
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = 0;
+            }
+            int index =0;
+            for (int i = 0; i < 60; i++)//Y 宽
+            {
+                for (int j = 0; j < 80; j++)//x 长
+                {
+                    float temper = device.GetTemperatureProbe((uint)j, (uint)i, 1) * 0.001f;
+
+                    if (temper > limitTmper)
+                    {
+                        list.Add(temper + "$" + j + "$" + i); 
+                    }
+                }
+            } 
+            list.Sort(); 
+            foreach (var item in list)
+            {
+                string[] str = item.Split('$'); 
+                values[index] = str[0];//温度
+                values[index + 1] = str[1];//X
+                values[index + 2] = str[2];//I
+                index += 3; 
+            } 
+            FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
+        }
         /// <summary>
         /// 鼠标测温
         /// </summary>
@@ -328,12 +329,6 @@ namespace ThermoGroupSample
             {
                 intTemp = device.FixTemperature(intTemp, param.fEmissivity, (uint)intFPAx, (uint)intFPAy);
             }
-            //MagDevice device = _DataDisplay.GetDevice();
-            //int[] infos = new int[5];
-            //int intFPAMax = (int)(infos[4]);//MaxTmperLoc
-            //bool falge = device.GetRectTemperatureInfo(0, 0, 50, 50, infos);
-            //uint FPAx = (uint)info.intFPAWidth, FPAy = (uint)info.intFPAHeight;
-            //device.ConvertPos2XY((uint)intFPAMax, ref FPAx, ref FPAy);
 
 
             string sText = (intTemp * 0.001f).ToString("0.0") + "坐标X：" + intFPAx + "坐标Y：" + intFPAy;

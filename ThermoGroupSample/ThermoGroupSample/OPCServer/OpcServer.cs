@@ -67,7 +67,7 @@ namespace ThermoGroupSample
         } 
         public  void onDateChange(string info)
         {
-            FormControl.GetOPCTaskInfo(info);
+            FormMain.GetOPCTaskInfo(info);
             WriteLog.GetLog().Write("触发formcontrolONDATECHANGE" + info);
 
            
@@ -118,19 +118,12 @@ namespace ThermoGroupSample
                         if (tempvalue == 0)//如果等于0 就是已经处理
                         {
                             if (rad != null)
-                            {
-                                 
-                                frmDisplay = Globals.GetMainFrm().GetFormDisplay(0);
-                                device = frmDisplay.GetDateDisplay().GetDevice();
-                                 
-                                int[] info = new int[5];
-                                uint x0 = uint.Parse(rad.IniReadValue("Robot1", "X0"));
-                                uint y0 = uint.Parse(rad.IniReadValue("Robot1", "YO"));
-                                uint x1 = uint.Parse(rad.IniReadValue("Robot1", "X1"));
-                                uint y1 = uint.Parse(rad.IniReadValue("Robot1", "X1"));
-                                device.GetRectTemperatureInfo(x0, y0, x1, y1, info);
-                                FormControl.GetOPCTaskInfo("这是将任务信息写入到操控窗口");
-                                SendLoactionAndTmper(Robot1, tempvalue, info1);
+                            { 
+                                frmDisplay = Globals.GetMainFrm().GetFormDisplay(0); 
+                                object[] info = new object[31];
+                                frmDisplay.GetInfo(60,out info);
+                                FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
+                                SendLoactionAndTmper(Robot1, tempvalue, info);
                             }
                         } 
                     }
@@ -140,9 +133,8 @@ namespace ThermoGroupSample
                         if (tempvalue == 0)//如果等于0 就是已经处理
                         {
                             frmDisplay = Globals.GetMainFrm().GetFormDisplay(1);
-                            device = frmDisplay.GetDateDisplay().GetDevice();
-                            // device.GetRectTemperatureInfo()
-                            SendLoactionAndTmper(Robot2, tempvalue, info2);
+                            object[] info = new object[31];
+                            SendLoactionAndTmper(Robot2, tempvalue, info);
                         }
                     }
                     else
@@ -154,8 +146,6 @@ namespace ThermoGroupSample
         }
         static MagDevice device;
         static FormDisplay frmDisplay;
-        public static object[] info1 = new object[5];
-        public static object[] info2 = new object[5]; 
         static void SendLoactionAndTmper(Group group,int falge , object[] info)
         {
             try
@@ -181,6 +171,8 @@ namespace ThermoGroupSample
                 throw  ex;
             }
         }
+       
+
     }
       
     }

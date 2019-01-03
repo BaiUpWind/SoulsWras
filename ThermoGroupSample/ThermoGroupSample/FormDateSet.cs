@@ -47,6 +47,7 @@ namespace ThermoGroupSample
             rw.IniWriteValue("ListCout", "Count", count.ToString()); 
             rw.IniWriteValue("ZG" + index, "编号", name);
             rw.IniWriteValue("ZG" + index, "机器人象限", txtLoca.Text);
+            rw.IniWriteValue("ZG" + index, "圆心坐标", txtcentpoint.Text);
             rw.IniWriteValue("ZG" + index, "锅口直径", txtgkzj.Text);
             rw.IniWriteValue("ZG" + index, "锅底直径", txtgdzj.Text);
             rw.IniWriteValue("ZG" + index, "锅深度", txtsd.Text);
@@ -78,9 +79,10 @@ namespace ThermoGroupSample
         {
             if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtLoca.Text)
              && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text) &&
-             !string.IsNullOrWhiteSpace(txtsd.Text) && !string.IsNullOrWhiteSpace(txtlimitTmper.Text))
+             !string.IsNullOrWhiteSpace(txtsd.Text) && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string .IsNullOrWhiteSpace(txtcentpoint.Text))
             { 
-                WriteIntFile(); 
+                WriteIntFile();
+                comboBoxZG.Enabled = true;
             }
             else
             {
@@ -98,6 +100,7 @@ namespace ThermoGroupSample
             }
             txtZgname.Text = rw.IniReadValue("ZG" + index, "编号");
             txtLoca.Text = rw.IniReadValue("ZG" + index, "机器人象限");
+            txtcentpoint.Text = rw.IniReadValue("ZG" + index, "圆心坐标");
             txtgkzj.Text = rw.IniReadValue("ZG" + index, "锅口直径");
             txtgdzj.Text = rw.IniReadValue("ZG" + index, "锅底直径");
             txtsd.Text = rw.IniReadValue("ZG" + index, "锅深度");
@@ -118,6 +121,7 @@ namespace ThermoGroupSample
             txtsd.Enabled = ok;
             txtlimitTmper.Enabled = ok;
             btnSave.Visible = ok;
+            txtcentpoint.Enabled = ok;
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -125,7 +129,14 @@ namespace ThermoGroupSample
             comboBoxZG.Items.Add("甑锅"+(count+1));
             comboBoxZG.SelectedIndex = comboBoxZG.Items.Count-1;
             TxtEnabled(true);
-            btnSave.Visible = true; 
+            btnSave.Visible = true;
+            comboBoxZG.Enabled = false;
+        }
+        public delegate void GetNewZGInfo( );
+        public static GetNewZGInfo getNewZGInfo;
+        private void FormDateSet_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            getNewZGInfo();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Pub;
 
 namespace ThermoGroupSample
 {
@@ -61,7 +62,36 @@ namespace ThermoGroupSample
         {
             return _FormDisplayBG;
         }
+        
+        #region   任务的信息 在主窗体显示
+        delegate void HandleUpDate(string info);
+        private delegate void HandleDelegate(string strshow);
+        static HandleUpDate handle;
+        public static void GetOPCTaskInfo(string Info)
+        {
+            handle(Info);
+        }
+        void upDateList(string info)
+        {
+            updateListBox(info);
+        }
+    
+        public void updateListBox(string info)
+        {
+            String time = DateTime.Now.ToLongTimeString();
 
+            if (this.list_data.InvokeRequired)
+            {
+
+                this.list_data.Invoke(new HandleDelegate(updateListBox), info);
+            }
+            else
+            {
+                this.list_data.Items.Insert(0, time + "    " + info);
+
+            }
+        }
+        #endregion
         public FormMain()
         {
             InitializeComponent();
@@ -69,16 +99,23 @@ namespace ThermoGroupSample
             InitializeAllWindows();
 
             DataControl.UpdateDisplayPostion += new DataControl.delegateUpdateDisplayPostion(OnUpdateDisplayPostion);
-
+           
             Globals.SetMainFrm(this);
         }
-
+        private System.Windows.Forms.ListBox list_data = new ListBox();
         void InitializeAllWindows()
         {
             //主窗口
             this.Width = (int)MAINWINDOW_WIDTH;
             this.Height = (int)MAINWINDOW_HEIGHT;
-
+            this.Controls.Add(this.list_data);
+            this.list_data.Dock = DockStyle.Bottom;
+            this.list_data.FormattingEnabled = true;
+            this.list_data.ItemHeight = 12;
+            this.list_data.Location = new System.Drawing.Point(0, 0);
+            this.list_data.Name = "list_data";
+            handle += upDateList;
+            this.list_data.TabIndex = 40;
             //控制窗口
             _FormControl = new FormControl();
 
@@ -89,11 +126,10 @@ namespace ThermoGroupSample
             _FormControl.Left = (int)(MAINWINDOW_WIDTH - CONTROLWINDOW_WIDTH);
             _FormControl.Top = 0;
             _FormControl.Width = (int)CONTROLWINDOW_WIDTH  -20;
-            _FormControl.Height = (int)(CONTROLWINDOW_HEIGHT) - 50;
-            _FormControl.Show();
+        
 
-            //显示窗口的背景窗口
-            _FormDisplayBG = new FormDisplayBG();
+           //显示窗口的背景窗口
+           _FormDisplayBG = new FormDisplayBG();
             _FormDisplayBG.TopLevel = false;
             _FormDisplayBG.Parent = this;
             _FormDisplayBG.FormBorderStyle = FormBorderStyle.None;
@@ -113,8 +149,11 @@ namespace ThermoGroupSample
                 _FormDisplayLst[i].GetDateDisplay().WndIndex = i;
                 
             }
+            this.list_data.Size = new System.Drawing.Size(Width - _FormControl.Width -30, Height - _FormDisplayLst[0].Height - 250);
+            _FormControl.Height = (int)(CONTROLWINDOW_HEIGHT) - 40 - list_data.Size.Height;
+            _FormControl.Show();
         }
-
+        Pub.RWIniFile rw = new Pub.RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
         void OnUpdateDisplayPostion()
         {
             uint row = 0, col = 0;
@@ -162,8 +201,10 @@ namespace ThermoGroupSample
                     frm.Top = (int)y;
                     frm.Width = (int)display_width;
                     frm.Height = (int)display_height;
-                    frm.Name = "视频"+ (j+1); 
- 
+                    frm.Name = "视频"+ (j+1);
+                    
+
+
 
                 }
             }
@@ -179,21 +220,37 @@ namespace ThermoGroupSample
             _FormDisplayBG.BackColor = Color.Red;
             _FormDisplayBG.Show();
 
+            int zgCOunt =    rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+            if(zgCOunt < 0)
+            {
+                FormMain.GetOPCTaskInfo("未找到任何甑锅的参数,请录入甑锅参数后重启程序");
+                return;
+            }
             //更新显示窗口的显示与隐藏
             uint num = row * col;
             for (uint i = 0; i < num; i++)
             {
                 _FormDisplayLst[i].Show();
-            }
+              
 
+            }
+            GetZGinfoToDisplay();
             for (uint i = num; i < MAX_DEVWINDOW_NUM; i++)
             {
                 _FormDisplayLst[i].Hide();
             }
-         
+            FormDateSet.getNewZGInfo += GetZGinfoToDisplay;
         }
 
-
+        void GetZGinfoToDisplay( )
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                _FormDisplayLst[i].CentrePoint = rw.IniReadValue("ZG" + (i + 1), "圆心坐标").CastTo<int>(-1);
+                _FormDisplayLst[i].InputWidth = rw.IniReadValue("ZG" + (i + 1), "锅口直径").CastTo<int>(-1);
+            }
+           
+        }
         OpcServer opcServer = new OpcServer();
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {

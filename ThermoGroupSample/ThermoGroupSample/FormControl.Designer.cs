@@ -294,6 +294,7 @@ namespace ThermoGroupSample
             this.list_data.Name = "list_data";
             this.list_data.Size = new System.Drawing.Size(218, 112);
             this.list_data.TabIndex = 40;
+            this.list_data.Visible = false;
             // 
             // btnConnection
             // 
@@ -350,7 +351,7 @@ namespace ThermoGroupSample
             // Ò»ºÅêµ¹øToolStripMenuItem
             // 
             this.Ò»ºÅêµ¹øToolStripMenuItem.Name = "Ò»ºÅêµ¹øToolStripMenuItem";
-            this.Ò»ºÅêµ¹øToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.Ò»ºÅêµ¹øToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.Ò»ºÅêµ¹øToolStripMenuItem.Text = "êµ¹øÉèÖÃ";
             this.Ò»ºÅêµ¹øToolStripMenuItem.Click += new System.EventHandler(this.Ò»ºÅêµ¹øToolStripMenuItem_Click);
             // 
