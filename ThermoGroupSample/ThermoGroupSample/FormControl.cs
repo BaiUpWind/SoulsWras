@@ -269,11 +269,14 @@ namespace ThermoGroupSample
     
        
         private void btnTake_Click(object sender, EventArgs e)
-        { 
-            frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
-            frmDisplay.stop = true;
-            btnTake.Enabled = false;
-            frmDisplay.Startasync(); 
+        {
+            if (!stop)
+            {
+                frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
+                frmDisplay.stop = true;
+                btnTake.Enabled = false;
+                frmDisplay.Startasync();
+            }
         }
 
         #region 暂时无用
@@ -364,12 +367,12 @@ namespace ThermoGroupSample
 
         private void btnConnection_Click(object sender, EventArgs e)
         {
-            asyncConnectionPlc();
+            AsyncConnectionPlc();
         }
         /// <summary>
         /// 异步开启连接PLC 并且监听DB块值的变化
         /// </summary>
-        async void asyncConnectionPlc()
+        async void AsyncConnectionPlc()
         {
             try
             {
@@ -426,8 +429,17 @@ namespace ThermoGroupSample
 
         private void 一号甑锅ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormDateSet fds = new FormDateSet();
-            fds.ShowDialog();
+            try
+            {
+                FormDateSet fds = new FormDateSet();
+                fds.ShowDialog();
+            }
+            catch (Exception)
+            {
+
+                
+            }
+           
         }
     }
 }

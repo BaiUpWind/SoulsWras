@@ -165,40 +165,36 @@ namespace ThermoGroupSample
             }
             while (stop)
             {
+                MagDevice device = _DataDisplay.GetDevice();
+                int[] infos = new int[5];
+                //if (CentrePoint >= CentrePoint + CentrePoint)
+                //{
+                //    FormMain.GetOPCTaskInfo("圆心坐标必须要小于锅炉宽度");
+                //    return;
+                //}
+                //else {
+                InputWidth = CentrePoint + CentrePoint;//右上角坐标等于宽度加上圆心坐标
+                                                       //}
+                bool falge = device.GetEllipseTemperatureInfo((uint)CentrePoint, (uint)CentrePoint, (uint)InputWidth, (uint)InputWidth, infos);
 
-
-                if (stop)
+                if (falge)
                 {
-                    MagDevice device = _DataDisplay.GetDevice();
-                    int[] infos = new int[5];
-                    //if (CentrePoint >= CentrePoint + CentrePoint)
-                    //{
-                    //    FormMain.GetOPCTaskInfo("圆心坐标必须要小于锅炉宽度");
-                    //    return;
-                    //}
-                    //else {
-                    InputWidth = CentrePoint + CentrePoint;//右上角坐标等于宽度加上圆心坐标
-                                                           //}
-                    bool falge = device.GetRectTemperatureInfo((uint)CentrePoint, (uint)CentrePoint, (uint)InputWidth, (uint)InputWidth, infos);
+                    GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
 
-                    if (falge)
-                    {
-                        GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
+                    // int intFPAMin = (int)(infos[3]);//MinTemperLoc
+                    int intFPAMax = (int)(infos[4]);//MaxTmperLoc
+                    float MaxTemper = infos[1] * 0.001f;//最高温度
+                    uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
+                    device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);
 
-                        // int intFPAMin = (int)(infos[3]);//MinTemperLoc
-                        int intFPAMax = (int)(infos[4]);//MaxTmperLoc
-                        float MaxTemper = infos[1] * 0.001f;//最高温度
-                        uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
-                        device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);
+                    this.DX = (uint)(x * this.Width / cAMERA_INFO.intFPAWidth);//int.Parse( intFPAMax.ToString().Substring(0,2));
+                    this.DY = (uint)((cAMERA_INFO.intFPAHeight - (y + 1)) * this.Height / cAMERA_INFO.intFPAHeight); // int.Parse(intFPAMax.ToString().Substring(2, 2));
+                    this.darwMaxt = true;
+                    float temper = device.GetTemperatureProbe(x, y, 1) * 0.001f;
 
-                        this.DX = (uint)(x * this.Width / cAMERA_INFO.intFPAWidth);//int.Parse( intFPAMax.ToString().Substring(0,2));
-                        this.DY = (uint)((cAMERA_INFO.intFPAHeight - (y + 1)) * this.Height / cAMERA_INFO.intFPAHeight); // int.Parse(intFPAMax.ToString().Substring(2, 2));
-                        this.darwMaxt = true;
-                        float temper = device.GetTemperatureProbe(x, y, 1) * 0.001f;
-
-                        FormMain.GetOPCTaskInfo(Name + "  " + MaxTemper + " X:" + x + "Y:" + y + "temper" + temper);
-                    }
+                    FormMain.GetOPCTaskInfo(Name + "  " + MaxTemper + " X:" + x + "Y:" + y + "temper" + temper);
                 }
+
                 await Task.Delay(1000);
             }
              
@@ -226,6 +222,10 @@ namespace ThermoGroupSample
 
 
         }
+        /// <summary>
+        /// 极限温度
+        /// </summary>
+        public float LimitTmper { get; set; }
         /// <summary>
         /// 红外图绘制
         /// </summary>
@@ -262,8 +262,37 @@ namespace ThermoGroupSample
 
             return true;
         }
-
-       public void GetInfo(float limitTmper,out object[] values , uint x = 0,uint y = 0)
+        public void GetInfo( out object[] values)
+        {
+             MagDevice device = _DataDisplay.GetDevice();
+       int[] infos = new int[5];
+             values = new object[31];
+            for (int i = 0; i < values.Length; i++)
+            {
+                values[i] = 0;
+            }
+        cc: InputWidth = CentrePoint + InputWidth;//右上角坐标等于宽度加上圆心坐标
+            GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();                        //}
+            bool falge = device.GetEllipseTemperatureInfo((uint)CentrePoint, (uint)CentrePoint, (uint)InputWidth, (uint)InputWidth, infos);
+            float MaxTemper = infos[1] * 0.001f;//最高温度
+            int intFPAMax = (int)(infos[4]);//MaxTmperLoc
+            uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
+            device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);  
+            if (MaxTemper >= LimitTmper)
+            {
+                values[0] = MaxTemper;
+                values[1] = (uint)(x * this.Width / cAMERA_INFO.intFPAWidth); ;
+                values[2] = (uint)((cAMERA_INFO.intFPAHeight - (y + 1)) * this.Height / cAMERA_INFO.intFPAHeight); ;
+                values[30] = 1;//标志位写1
+            }
+            else
+            {
+                Task.Delay(500);//在这里停顿半秒
+                goto cc;//如果当前温度没有大于极限值 重新再获取一遍
+            }
+            FormMain.GetOPCTaskInfo("温度:" + values[0] + "坐标X:" + values[1] + "坐标Y " + values[2]);
+        }
+        public void GetInfo(float limitTmper,out object[] values , uint x = 0,uint y = 0)
         {
             MagDevice device = _DataDisplay.GetDevice();
             List<string> list = new List<string>();  

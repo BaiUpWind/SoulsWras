@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Pub;
+using ThermoGroupSample.Modle;
 
 namespace ThermoGroupSample
 {
@@ -94,6 +95,15 @@ namespace ThermoGroupSample
         #endregion
         public FormMain()
         {
+            try
+            {
+                ItemCollection.OpcServer = System.Configuration.ConfigurationManager.AppSettings["OpcPresortServer"].ToString();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("配置文件错误,请配置正确并且重启程序");
+                Close();
+            }
             InitializeComponent();
 
             InitializeAllWindows();
@@ -101,6 +111,8 @@ namespace ThermoGroupSample
             DataControl.UpdateDisplayPostion += new DataControl.delegateUpdateDisplayPostion(OnUpdateDisplayPostion);
            
             Globals.SetMainFrm(this);
+            
+           
         }
         private System.Windows.Forms.ListBox list_data = new ListBox();
         void InitializeAllWindows()
@@ -126,10 +138,10 @@ namespace ThermoGroupSample
             _FormControl.Left = (int)(MAINWINDOW_WIDTH - CONTROLWINDOW_WIDTH);
             _FormControl.Top = 0;
             _FormControl.Width = (int)CONTROLWINDOW_WIDTH  -20;
-        
 
-           //显示窗口的背景窗口
-           _FormDisplayBG = new FormDisplayBG();
+           
+            //显示窗口的背景窗口
+            _FormDisplayBG = new FormDisplayBG();
             _FormDisplayBG.TopLevel = false;
             _FormDisplayBG.Parent = this;
             _FormDisplayBG.FormBorderStyle = FormBorderStyle.None;
@@ -221,7 +233,8 @@ namespace ThermoGroupSample
             _FormDisplayBG.Show();
 
             int zgCOunt =    rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
-            if(zgCOunt < 0)
+            FormDateSet.getNewZGInfo += GetZGinfoToDisplay;
+            if (zgCOunt < 0)
             {
                 FormMain.GetOPCTaskInfo("未找到任何甑锅的参数,请录入甑锅参数后重启程序");
                 return;
@@ -239,16 +252,28 @@ namespace ThermoGroupSample
             {
                 _FormDisplayLst[i].Hide();
             }
-            FormDateSet.getNewZGInfo += GetZGinfoToDisplay;
+           
         }
 
         void GetZGinfoToDisplay( )
         {
-            for (int i = 0; i < 2; i++)
+            int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+            for (int i = 1; i <= count; i++)
             {
-                _FormDisplayLst[i].CentrePoint = rw.IniReadValue("ZG" + (i + 1), "圆心坐标").CastTo<int>(-1);
-                _FormDisplayLst[i].InputWidth = rw.IniReadValue("ZG" + (i + 1), "锅口直径").CastTo<int>(-1);
+                int readIndex = rw.IniReadValue("ZG" + (i), "启用相机").CastTo<int>(-1);
+                if(readIndex != -1)
+                {
+                    _FormDisplayLst[readIndex-1].CentrePoint = rw.IniReadValue("ZG" + (i ), "圆心坐标").CastTo<int>(-1);
+                    _FormDisplayLst[readIndex - 1].InputWidth = rw.IniReadValue("ZG" + (i ), "锅口直径").CastTo<int>(-1);
+                    _FormDisplayLst[readIndex - 1].LimitTmper = rw.IniReadValue("ZG" + (i ), "极限温度").CastTo<int>(-1);
+                }
             }
+            //for (int i = 0; i < 2; i++)
+            //{
+            //    _FormDisplayLst[i].CentrePoint = rw.IniReadValue("ZG" + (i + 1), "圆心坐标").CastTo<int>(-1);
+            //    _FormDisplayLst[i].InputWidth = rw.IniReadValue("ZG" + (i + 1), "锅口直径").CastTo<int>(-1);
+            //    _FormDisplayLst[i].LimitTmper = rw.IniReadValue("ZG" + (i + 1), "极限温度").CastTo<int>(-1);
+            //}
            
         }
         OpcServer opcServer = new OpcServer();

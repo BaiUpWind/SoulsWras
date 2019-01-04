@@ -6,6 +6,7 @@ using OpcRcw.Da;
 using ThermoGroupSample.Modle;
 using Pub;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ThermoGroupSample
 {
@@ -65,6 +66,28 @@ namespace ThermoGroupSample
 
 
         } 
+        async void GetTick()
+        {
+            FormMain.GetOPCTaskInfo("触发自动跳变");
+            await Task.Run( AuotoOnDateChange);
+        }
+        async Task AuotoOnDateChange()
+        {
+           await  Task.Delay(10 * 1000);//等待十秒
+            if (SpyGroup.Read(0).ToString() != "1")
+            {
+                SpyGroup.Write(2, 0);
+                SpyGroup.Write(0, 0);
+                FormMain.GetOPCTaskInfo("一号机器人任务块自动跳变");
+            }
+            if (SpyGroup.Read(1).ToString() != "1")
+            {
+                SpyGroup.Write(2, 1);
+                SpyGroup.Write(0, 0);
+                FormMain.GetOPCTaskInfo("二号机器人任务块自动跳变");
+            }
+           
+        }
         public  void onDateChange(string info)
         {
             FormMain.GetOPCTaskInfo(info);
@@ -79,22 +102,21 @@ namespace ThermoGroupSample
             //FormControl.callback += onDateChange;
             //return "";
             string info = "";
-            int flag1 = Robot1.ReadD(0).CastTo<int>(-1);
-            int flag2 = Robot2.ReadD(0).CastTo<int>(-1);
+            int flag1 = SpyGroup.ReadD(0).CastTo<int>(-1);
+            int flag2 = SpyGroup.ReadD(1).CastTo<int>(-1);
             if (flag1 != -1 && flag2 != -1)
             {
                 SpyGroup.callback += OnDataChange;
+                GetTick(); 
                 return info;
             }
             if (flag1 == -1)
             {
-                info += "一号机器人读取不到DB块,请检查网络";
-                return info;
+                info += "一号机器人读取不到DB块,请检查网络"; 
             }
             if (flag2 == -1)
             {
-                info += "二号机器人读取不到DB块,请检查网络";
-                return info;
+                info += "二号机器人读取不到DB块,请检查网络"; 
             }
             return info;
         }
@@ -117,15 +139,21 @@ namespace ThermoGroupSample
                         int tempvalue = int.Parse((values[i].ToString()));//标志位
                         if (tempvalue == 0)//如果等于0 就是已经处理
                         {
-                            if (rad != null)
-                            { 
-                                frmDisplay = Globals.GetMainFrm().GetFormDisplay(0); 
-                                object[] info = new object[31];
-                                frmDisplay.GetInfo(60,out info);
-                                FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
+
+                            frmDisplay = Globals.GetMainFrm().GetFormDisplay(0);
+                            object[] info = new object[31];
+                            frmDisplay.GetInfo(out info);
+                            if ((int)info[0] > 0)
+                            {
+                                // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
                                 SendLoactionAndTmper(Robot1, tempvalue, info);
                             }
-                        } 
+                            else
+                            {
+                                FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" + info[0]);
+                            }
+
+                        }
                     }
                     else if (clientId[i] == 2)//二号机器人
                     {
@@ -134,7 +162,16 @@ namespace ThermoGroupSample
                         {
                             frmDisplay = Globals.GetMainFrm().GetFormDisplay(1);
                             object[] info = new object[31];
-                            SendLoactionAndTmper(Robot2, tempvalue, info);
+                            frmDisplay.GetInfo(out info);
+                            if ((int)info[0] > 0)
+                            {
+                                // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
+                                SendLoactionAndTmper(Robot1, tempvalue, info);
+                            }
+                            else
+                            {
+                                FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" + info[0]);
+                            }
                         }
                     }
                     else
@@ -157,6 +194,7 @@ namespace ThermoGroupSample
                         try
                         {
                             group.SyncWrite(info);//写入DB快
+                            FormMain.GetOPCTaskInfo("任务"+ info[0]  + "写入DB块完成:"  );
                         }
                         catch (Exception)
                         { 

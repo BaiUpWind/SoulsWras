@@ -41,13 +41,15 @@
             this.txtZgname = new System.Windows.Forms.TextBox();
             this.lblname = new System.Windows.Forms.Label();
             this.groupBoxAturbit = new System.Windows.Forms.GroupBox();
+            this.txtcentpoint = new System.Windows.Forms.TextBox();
+            this.lblCP = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.comboBoxZG = new System.Windows.Forms.ComboBox();
             this.lblSelect = new System.Windows.Forms.Label();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.txtcentpoint = new System.Windows.Forms.TextBox();
-            this.lblCP = new System.Windows.Forms.Label();
+            this.lblState = new System.Windows.Forms.Label();
+            this.cmbState = new System.Windows.Forms.ComboBox();
             this.groupBoxAturbit.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +67,7 @@
             this.txtLoca.Enabled = false;
             this.txtLoca.Location = new System.Drawing.Point(184, 48);
             this.txtLoca.Name = "txtLoca";
-            this.txtLoca.Size = new System.Drawing.Size(100, 21);
+            this.txtLoca.Size = new System.Drawing.Size(138, 21);
             this.txtLoca.TabIndex = 1;
             // 
             // txtgkzj
@@ -73,7 +75,7 @@
             this.txtgkzj.Enabled = false;
             this.txtgkzj.Location = new System.Drawing.Point(184, 102);
             this.txtgkzj.Name = "txtgkzj";
-            this.txtgkzj.Size = new System.Drawing.Size(100, 21);
+            this.txtgkzj.Size = new System.Drawing.Size(138, 21);
             this.txtgkzj.TabIndex = 3;
             // 
             // lblgkzj
@@ -90,7 +92,7 @@
             this.txtgdzj.Enabled = false;
             this.txtgdzj.Location = new System.Drawing.Point(184, 129);
             this.txtgdzj.Name = "txtgdzj";
-            this.txtgdzj.Size = new System.Drawing.Size(100, 21);
+            this.txtgdzj.Size = new System.Drawing.Size(138, 21);
             this.txtgdzj.TabIndex = 5;
             // 
             // lblgdzj
@@ -107,7 +109,7 @@
             this.txtsd.Enabled = false;
             this.txtsd.Location = new System.Drawing.Point(184, 156);
             this.txtsd.Name = "txtsd";
-            this.txtsd.Size = new System.Drawing.Size(100, 21);
+            this.txtsd.Size = new System.Drawing.Size(138, 21);
             this.txtsd.TabIndex = 7;
             // 
             // lblsd
@@ -124,7 +126,7 @@
             this.txtlimitTmper.Enabled = false;
             this.txtlimitTmper.Location = new System.Drawing.Point(184, 183);
             this.txtlimitTmper.Name = "txtlimitTmper";
-            this.txtlimitTmper.Size = new System.Drawing.Size(100, 21);
+            this.txtlimitTmper.Size = new System.Drawing.Size(138, 21);
             this.txtlimitTmper.TabIndex = 9;
             // 
             // lbljxwd
@@ -141,7 +143,7 @@
             this.txtZgname.Enabled = false;
             this.txtZgname.Location = new System.Drawing.Point(184, 21);
             this.txtZgname.Name = "txtZgname";
-            this.txtZgname.Size = new System.Drawing.Size(100, 21);
+            this.txtZgname.Size = new System.Drawing.Size(138, 21);
             this.txtZgname.TabIndex = 10;
             // 
             // lblname
@@ -155,6 +157,8 @@
             // 
             // groupBoxAturbit
             // 
+            this.groupBoxAturbit.Controls.Add(this.cmbState);
+            this.groupBoxAturbit.Controls.Add(this.lblState);
             this.groupBoxAturbit.Controls.Add(this.txtcentpoint);
             this.groupBoxAturbit.Controls.Add(this.lblCP);
             this.groupBoxAturbit.Controls.Add(this.txtgkzj);
@@ -170,19 +174,36 @@
             this.groupBoxAturbit.Controls.Add(this.txtsd);
             this.groupBoxAturbit.Controls.Add(this.txtgdzj);
             this.groupBoxAturbit.Controls.Add(this.lblsd);
-            this.groupBoxAturbit.Location = new System.Drawing.Point(12, 56);
+            this.groupBoxAturbit.Location = new System.Drawing.Point(12, 41);
             this.groupBoxAturbit.Name = "groupBoxAturbit";
-            this.groupBoxAturbit.Size = new System.Drawing.Size(340, 245);
+            this.groupBoxAturbit.Size = new System.Drawing.Size(388, 277);
             this.groupBoxAturbit.TabIndex = 12;
             this.groupBoxAturbit.TabStop = false;
             this.groupBoxAturbit.Text = "甑锅属性";
             // 
+            // txtcentpoint
+            // 
+            this.txtcentpoint.Enabled = false;
+            this.txtcentpoint.Location = new System.Drawing.Point(184, 75);
+            this.txtcentpoint.Name = "txtcentpoint";
+            this.txtcentpoint.Size = new System.Drawing.Size(138, 21);
+            this.txtcentpoint.TabIndex = 14;
+            // 
+            // lblCP
+            // 
+            this.lblCP.AutoSize = true;
+            this.lblCP.Location = new System.Drawing.Point(27, 78);
+            this.lblCP.Name = "lblCP";
+            this.lblCP.Size = new System.Drawing.Size(59, 12);
+            this.lblCP.TabIndex = 13;
+            this.lblCP.Text = "圆心坐标:";
+            // 
             // btnSave
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSave.Location = new System.Drawing.Point(116, 216);
+            this.btnSave.Location = new System.Drawing.Point(154, 237);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.Size = new System.Drawing.Size(53, 23);
             this.btnSave.TabIndex = 12;
             this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -195,7 +216,7 @@
             this.comboBoxZG.FormattingEnabled = true;
             this.comboBoxZG.Location = new System.Drawing.Point(83, 14);
             this.comboBoxZG.Name = "comboBoxZG";
-            this.comboBoxZG.Size = new System.Drawing.Size(107, 20);
+            this.comboBoxZG.Size = new System.Drawing.Size(97, 20);
             this.comboBoxZG.TabIndex = 13;
             this.comboBoxZG.SelectedIndexChanged += new System.EventHandler(this.comboBoxZG_SelectedIndexChanged);
             // 
@@ -213,7 +234,7 @@
             this.btnChange.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnChange.Location = new System.Drawing.Point(196, 12);
             this.btnChange.Name = "btnChange";
-            this.btnChange.Size = new System.Drawing.Size(75, 23);
+            this.btnChange.Size = new System.Drawing.Size(40, 23);
             this.btnChange.TabIndex = 13;
             this.btnChange.Text = "修改";
             this.btnChange.UseVisualStyleBackColor = true;
@@ -222,36 +243,42 @@
             // btnAdd
             // 
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAdd.Location = new System.Drawing.Point(277, 12);
+            this.btnAdd.Location = new System.Drawing.Point(257, 12);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(75, 23);
+            this.btnAdd.Size = new System.Drawing.Size(40, 23);
             this.btnAdd.TabIndex = 13;
             this.btnAdd.Text = "新增";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // txtcentpoint
+            // lblState
             // 
-            this.txtcentpoint.Enabled = false;
-            this.txtcentpoint.Location = new System.Drawing.Point(184, 75);
-            this.txtcentpoint.Name = "txtcentpoint";
-            this.txtcentpoint.Size = new System.Drawing.Size(100, 21);
-            this.txtcentpoint.TabIndex = 14;
+            this.lblState.AutoSize = true;
+            this.lblState.Location = new System.Drawing.Point(27, 212);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(29, 12);
+            this.lblState.TabIndex = 15;
+            this.lblState.Text = "状态";
             // 
-            // lblCP
+            // cmbState
             // 
-            this.lblCP.AutoSize = true;
-            this.lblCP.Location = new System.Drawing.Point(27, 78);
-            this.lblCP.Name = "lblCP";
-            this.lblCP.Size = new System.Drawing.Size(59, 12);
-            this.lblCP.TabIndex = 13;
-            this.lblCP.Text = "圆心坐标:";
+            this.cmbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbState.Enabled = false;
+            this.cmbState.FormattingEnabled = true;
+            this.cmbState.Items.AddRange(new object[] {
+            "禁用",
+            "一号相机",
+            "二号相机"});
+            this.cmbState.Location = new System.Drawing.Point(184, 209);
+            this.cmbState.Name = "cmbState";
+            this.cmbState.Size = new System.Drawing.Size(138, 20);
+            this.cmbState.TabIndex = 16;
             // 
             // FormDateSet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(373, 332);
+            this.ClientSize = new System.Drawing.Size(412, 333);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.lblSelect);
             this.Controls.Add(this.comboBoxZG);
@@ -291,5 +318,7 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.TextBox txtcentpoint;
         private System.Windows.Forms.Label lblCP;
+        private System.Windows.Forms.ComboBox cmbState;
+        private System.Windows.Forms.Label lblState;
     }
 }
