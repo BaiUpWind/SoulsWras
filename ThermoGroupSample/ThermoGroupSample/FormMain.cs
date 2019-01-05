@@ -214,10 +214,6 @@ namespace ThermoGroupSample
                     frm.Width = (int)display_width;
                     frm.Height = (int)display_height;
                     frm.Name = "สำฦต"+ (j+1);
-                    
-
-
-
                 }
             }
 

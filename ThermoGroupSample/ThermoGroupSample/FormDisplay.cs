@@ -87,8 +87,9 @@ namespace ThermoGroupSample
 
                 return;
             }
-
+           
             DrawMouseTemp(graphic, this.Width, this.Height);//鼠标测温 
+            DarwDetectRegion(graphic);//查看检测区域
             DarwMaxTempPoint(graphic);
             _DataDisplay.GetDevice().Unlock();
 
@@ -137,7 +138,7 @@ namespace ThermoGroupSample
             {
                 SolidBrush redBrush;
                 redBrush = new SolidBrush(Color.Red);
-                graphic.FillRectangle(redBrush, 0, 0, 0, 0);
+                graphic.FillRectangle(redBrush, DX, DY, InputWidth, InputWidth);
             }
             else
             {
@@ -288,7 +289,7 @@ namespace ThermoGroupSample
             else
             {
                 Task.Delay(500);//在这里停顿半秒
-                goto cc;//如果当前温度没有大于极限值 重新再获取一遍
+                goto cc;//如果当前温度没有大于极限值 重新再获取一遍 确保跳变不会丢失
             }
             FormMain.GetOPCTaskInfo("温度:" + values[0] + "坐标X:" + values[1] + "坐标Y " + values[2]);
         }

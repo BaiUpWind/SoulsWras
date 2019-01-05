@@ -22,6 +22,7 @@ namespace ThermoGroupSample.Modle
                 list.Add(OpcServer + "DB30,INT" + (4 + (i * 8) ));
                 list.Add(OpcServer + "DB30,INT"+ (6 + (i * 8)));
             }
+            list.Add(OpcServer + "DB30,INT80");
             return list;
         }
         /// <summary>
@@ -31,12 +32,14 @@ namespace ThermoGroupSample.Modle
         public static List<string> GetRobotItem2()
         {
             List<string> list = new List<string>();
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 10; i++)
             {
                 list.Add(OpcServer + "DB31,REAL" + ((i * 8)));
                 list.Add(OpcServer + "DB31,INT" + (4 + (i * 8)));
                 list.Add(OpcServer + "DB31,INT" + (6 + (i * 8)));
             }
+           
+            list.Add(OpcServer + "DB31,INT80");
             return list;
         }
 

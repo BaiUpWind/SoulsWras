@@ -45,10 +45,10 @@ namespace ThermoGroupSample
                     Robot1 = new Group(pIOPCServer, 1, "group1", 1, LOCALE_ID);//一号机器人
                     Robot2 = new Group(pIOPCServer, 2, "group2", 1, LOCALE_ID);//二号机器人
                     SpyGroup= new Group(pIOPCServer, 3, "group3", 1, LOCALE_ID);//标志位监控
-                    rad = new RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
+                   
                     //添加DB块地址
                     Robot1.addItem(ItemCollection.GetRobotItem1());//一号机器人交互地址
-                    Robot1.addItem(ItemCollection.GetRobotItem2());//二号机器人交互地址
+                    Robot2.addItem(ItemCollection.GetRobotItem2());//二号机器人交互地址
                     SpyGroup.addItem(ItemCollection.GetFlagItem());//标志位监控
 
                     return true;
@@ -83,7 +83,7 @@ namespace ThermoGroupSample
             if (SpyGroup.Read(1).ToString() != "1")
             {
                 SpyGroup.Write(2, 1);
-                SpyGroup.Write(0, 0);
+                SpyGroup.Write(0, 1);
                 FormMain.GetOPCTaskInfo("二号机器人任务块自动跳变");
             }
            
@@ -142,7 +142,15 @@ namespace ThermoGroupSample
 
                             frmDisplay = Globals.GetMainFrm().GetFormDisplay(0);
                             object[] info = new object[31];
-                            frmDisplay.GetInfo(out info);
+                            for (int j = 0; j < info.Length; j++)
+                            {
+                                info[j] = 0;
+                            }
+                            info[0] = 1;
+                            info[1] = 1;
+                            info[2] = 1;
+                            info[30] = 1;
+                            // frmDisplay.GetInfo(out info);
                             if ((int)info[0] > 0)
                             {
                                 // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
@@ -162,11 +170,21 @@ namespace ThermoGroupSample
                         {
                             frmDisplay = Globals.GetMainFrm().GetFormDisplay(1);
                             object[] info = new object[31];
-                            frmDisplay.GetInfo(out info);
+                         
+                            for (int j = 0; j < info.Length; j++)
+                            {
+                                info[j] = 0;
+                            }
+                            info[0] = 2;
+                            info[1] = 2;
+                            info[2] = 2;
+                            info[30] = 1;
+                            // frmDisplay.GetInfo(out info);
+
                             if ((int)info[0] > 0)
                             {
                                 // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
-                                SendLoactionAndTmper(Robot1, tempvalue, info);
+                                SendLoactionAndTmper(Robot2, tempvalue, info);
                             }
                             else
                             {
@@ -179,7 +197,11 @@ namespace ThermoGroupSample
                         WriteLog.GetLog().Write("跳变未找到Group组");
                     }
                 }
-            } 
+            }
+            else
+            {
+                FormMain.GetOPCTaskInfo("跳变信号丢失,:"   );
+            }
         }
         static MagDevice device;
         static FormDisplay frmDisplay;
@@ -194,7 +216,7 @@ namespace ThermoGroupSample
                         try
                         {
                             group.SyncWrite(info);//写入DB快
-                            FormMain.GetOPCTaskInfo("任务"+ info[0]  + "写入DB块完成:"  );
+                            FormMain.GetOPCTaskInfo("任务 机器人 "+ info[0]  + "号 写入DB块完成:"  );
                         }
                         catch (Exception)
                         { 

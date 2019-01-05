@@ -14,7 +14,6 @@ D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Rele
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\ThermoGroupSample.exe
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\ThermoGroupSample.pdb
-D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormControl.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplay.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplayBG.resources
@@ -38,3 +37,4 @@ D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Rele
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.Properties.Resources.resources
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.Cache
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDateSet.resources
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache
