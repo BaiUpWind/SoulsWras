@@ -103,20 +103,40 @@ namespace ThermoGroupSample
             return false;
         }
 
-        public FormDisplay GetBindedDisplayForm(uint intCameraIP)
+        public FormDisplay GetBindedDisplayForm(uint intCameraIP,int index)
         {
-            uint max_wnd = Globals.GetMainFrm().GetMaxDeviceWnd();
-
-            for (uint i = 0; i < max_wnd; i++)
+            
+            if(index < 0)
             {
-                FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay(i);
+                return null;
+            }
+                FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay((uint)index);
                 MagDevice device = frmDisplay.GetDateDisplay().GetDevice();
 
                 if (device.GetDevIPAddress() == intCameraIP)
                 {
                     return frmDisplay;
                 }
+            
+
+            return null;
+        }
+
+        public FormDisplay GetBindedDisplayForm(uint intCameraIP )
+        {
+            uint max_wnd = Globals.GetMainFrm().GetMaxDeviceWnd();
+
+            for (uint i = 0; i < max_wnd; i++)
+            {
+
+                FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay(i);
+            MagDevice device = frmDisplay.GetDateDisplay().GetDevice();
+
+            if (device.GetDevIPAddress() == intCameraIP)
+            {
+                return frmDisplay;
             }
+        }
 
             return null;
         }

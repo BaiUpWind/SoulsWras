@@ -303,9 +303,9 @@ namespace ThermoGroupSample
                 values[i] = 0;
             }
             int index =0;
-            for (int i = 0; i < 60; i++)//Y ¿í
+            for (int i = CentrePoint; i < InputWidth; i++)//Y ¿í
             {
-                for (int j = 0; j < 80; j++)//x ³¤
+                for (int j = CentrePoint; j < InputWidth; j++)//x ³¤
                 {
                     float temper = device.GetTemperatureProbe((uint)j, (uint)i, 1) * 0.001f;
 
