@@ -147,8 +147,8 @@ namespace ThermoGroupSample
         private void buttonLink_Click(object sender, EventArgs e)
         {
             int index = comboBoxOnlineDevice.SelectedIndex;
-            int selectFrom = cmbDisplay.SelectedIndex;
-            if (index < 0 && selectFrom < 0 )
+          
+            if (index < 0 )
             {
                 return;
             }
@@ -171,7 +171,7 @@ namespace ThermoGroupSample
 
             if (_DataControl.IsInvadedByOthers(_LstEnumInfo[index].intUsrIp))
             {
-                DislinkCamera(_LstEnumInfo[index].intCamIp, selectFrom);
+                DislinkCamera(_LstEnumInfo[index].intCamIp);
             }
 
             FormDisplay display = _DataControl.GetCurrDisplayForm();
@@ -189,9 +189,9 @@ namespace ThermoGroupSample
             RefreshOnlineDevice();
         }
 
-        private void DislinkCamera(uint intCameraIP,int index )
+        private void DislinkCamera(uint intCameraIP)
         {
-            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(intCameraIP, index);
+            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(intCameraIP);
             if (frmDisplay != null)
             {
                 MagDevice device = frmDisplay.GetDateDisplay().GetDevice();
@@ -204,8 +204,8 @@ namespace ThermoGroupSample
         private void buttonDislink_Click(object sender, EventArgs e)
         {
             int index = comboBoxOnlineDevice.SelectedIndex;
-            int selectFrom = cmbDisplay.SelectedIndex;
-            if (index < 0 || selectFrom < 0)
+            
+            if (index < 0 )
             {
                 return;
             }
@@ -214,7 +214,7 @@ namespace ThermoGroupSample
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
 
 
-            DislinkCamera(_LstEnumInfo[index].intCamIp, selectFrom);
+            DislinkCamera(_LstEnumInfo[index].intCamIp);
 
             Thread.Sleep(300);
             RefreshOnlineDevice();
@@ -223,8 +223,8 @@ namespace ThermoGroupSample
         private void buttonPlay_Click(object sender, EventArgs e)
         {
             int index = comboBoxOnlineDevice.SelectedIndex;
-            int selectFrom = cmbDisplay.SelectedIndex;
-            if (index < 0 || selectFrom < 0)
+          
+            if (index < 0  )
             {
                 return;
             }
@@ -232,24 +232,16 @@ namespace ThermoGroupSample
             MagService service = _DataControl.GetService();
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
 
-            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp, selectFrom);
-
-            if (frmDisplay != null)
-            { 
-                frmDisplay.GetDateDisplay().Play();
-                stop = false;
-            }
-            else
-            {
-                FormMain.GetOPCTaskInfo(frmDisplay.Name +"已经在运行当中,请选择其他窗口!");
-            }
+            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp); 
+            frmDisplay.GetDateDisplay().Play();
+            stop = false; 
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
             int index = comboBoxOnlineDevice.SelectedIndex;
-            int selectFrom = cmbDisplay.SelectedIndex;
-            if (index < 0 || selectFrom < 0)
+          
+            if (index < 0  )
             { 
                 return;
             }
@@ -257,7 +249,7 @@ namespace ThermoGroupSample
             MagService service = _DataControl.GetService();
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
 
-            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp, selectFrom);
+            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp);
             if (frmDisplay == null)
             {
                 return;
@@ -266,13 +258,11 @@ namespace ThermoGroupSample
             btnTake.Enabled = true;
             frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
             frmDisplay.Invalidate(false);
+            stop = true;
         }
 
 
         bool stop = true;
-
-        public int Whidth { get; set; }
-
 
     
        
