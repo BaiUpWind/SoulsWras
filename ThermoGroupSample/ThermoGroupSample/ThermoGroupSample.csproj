@@ -102,9 +102,11 @@
     <Compile Include="MagHelper.cs" />
     <Compile Include="Modle\Group.cs" />
     <Compile Include="Modle\ItemCollection.cs" />
+    <Compile Include="Modle\M_CalInfo.cs" />
     <Compile Include="OPCServer\OpcServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Pub\CalculatorClass.cs" />
     <Compile Include="Pub\ObjectExtensions.cs" />
     <Compile Include="Pub\WriteLog.cs" />
     <EmbeddedResource Include="FormControl.resx">
