@@ -7,6 +7,7 @@ using ThermoGroupSample.Modle;
 using Pub;
 using System.Threading;
 using System.Threading.Tasks;
+using ThermoGroupSample.Pub;
 
 namespace ThermoGroupSample
 {
@@ -16,12 +17,14 @@ namespace ThermoGroupSample
         public static IOPCServer pIOPCServer;  //定义opcServer对象
         internal const string SERVER_NAME = "OPC.SimaticNET";
         internal const int LOCALE_ID = 0x409;
-        public static Group Robot1, Robot2,SpyGroup;
+        public static Group SpyGroup, RpyGroup,RobitGroup;
+ 
         static RWIniFile rad;
         public   void DisConnection()
         {
-            if(Robot1 != null) { Robot1.Release(); }
-            if(Robot2 != null) { Robot2.Release(); }
+            if(SpyGroup != null) { SpyGroup.Release(); }
+            if(RpyGroup != null) { RpyGroup.Release(); }
+            if(RobitGroup !=null){ RobitGroup.Release(); }
           
         }
   
@@ -42,15 +45,13 @@ namespace ThermoGroupSample
                     Guid iidRequiredInterface = typeof(IOPCItemMgt).GUID;
                     svrComponenttyp = Type.GetTypeFromProgID(SERVER_NAME);
                     pIOPCServer = (IOPCServer)Activator.CreateInstance(svrComponenttyp);
-                    Robot1 = new Group(pIOPCServer, 1, "group1", 1, LOCALE_ID);//一号机器人
-                    Robot2 = new Group(pIOPCServer, 2, "group2", 1, LOCALE_ID);//二号机器人
-                    SpyGroup= new Group(pIOPCServer, 3, "group3", 1, LOCALE_ID);//标志位监控
-                   
-                    //添加DB块地址
-                    Robot1.addItem(ItemCollection.GetRobotItem1());//一号机器人交互地址
-                    Robot2.addItem(ItemCollection.GetRobotItem2());//二号机器人交互地址
-                    SpyGroup.addItem(ItemCollection.GetFlagItem());//标志位监控
 
+                    RpyGroup = new Group(pIOPCServer, 1, "group1", 1, LOCALE_ID);// 机器人交互组
+                    SpyGroup = new Group(pIOPCServer, 2, "group2", 1, LOCALE_ID);//标志位监控 
+                    RobitGroup = new Group(pIOPCServer, 3, "group3", 1, LOCALE_ID);//标志位监控 
+                    RpyGroup.addItem(ItemCollection.GetRpyItem());//任务下载块
+                    SpyGroup.addItem(ItemCollection.GetRpyFalg());//标志位监控 
+                    RobitGroup.addItem(ItemCollection.GetRobitPositionItem());//获取机器人姿态块
                     return true;
                 }
                 catch (Exception ex)
@@ -69,6 +70,7 @@ namespace ThermoGroupSample
         async void GetTick()
         {
             FormMain.GetOPCTaskInfo("触发自动跳变");
+
             await Task.Run( AuotoOnDateChange);
         }
         async Task AuotoOnDateChange()
@@ -78,15 +80,8 @@ namespace ThermoGroupSample
             {
                 SpyGroup.Write(2, 0);
                 SpyGroup.Write(0, 0);
-                FormMain.GetOPCTaskInfo("一号机器人任务块自动跳变");
-            }
-            if (SpyGroup.Read(1).ToString() != "1")
-            {
-                SpyGroup.Write(2, 1);
-                SpyGroup.Write(0, 1);
-                FormMain.GetOPCTaskInfo("二号机器人任务块自动跳变");
-            }
-           
+                FormMain.GetOPCTaskInfo("任务块自动跳变");
+            } 
         }
         public  void onDateChange(string info)
         {
@@ -102,9 +97,8 @@ namespace ThermoGroupSample
             //FormControl.callback += onDateChange;
             //return "";
             string info = "";
-            int flag1 = SpyGroup.ReadD(0).CastTo<int>(-1);
-            int flag2 = SpyGroup.ReadD(1).CastTo<int>(-1);
-            if (flag1 != -1 && flag2 != -1)
+            int flag1 = SpyGroup.ReadD(0).CastTo<int>(-1); 
+            if (flag1 != -1  )
             {
                 SpyGroup.callback += OnDataChange;
                 GetTick(); 
@@ -112,12 +106,9 @@ namespace ThermoGroupSample
             }
             if (flag1 == -1)
             {
-                info += "一号机器人读取不到DB块,请检查网络"; 
+                info += "读取不到DB块,请检查网络"; 
             }
-            if (flag2 == -1)
-            {
-                info += "二号机器人读取不到DB块,请检查网络"; 
-            }
+          
             return info;
         }
      
@@ -129,78 +120,60 @@ namespace ThermoGroupSample
         /// <param name="values"></param>
         public  void OnDataChange(int group, int[] clientId, object[] values)
         {
-            if (group == 3)//1号机器人
+            if (group == 2)//任务下发位置
             {
              
                 for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
                 {
-                    if (clientId[i] == 1)//一号机器人
+                     
+                    int tempvalue = int.Parse((values[i].ToString()));//标志位
+                    if (tempvalue == 0)//如果等于0 就是已经处理 可以下发任务
                     {
-                        int tempvalue = int.Parse((values[i].ToString()));//标志位
-                        if (tempvalue == 0)//如果等于0 就是已经处理
+                        Posistion posistion = new Posistion
                         {
-
-                            frmDisplay = Globals.GetMainFrm().GetFormDisplay(0);
-                            object[] info = new object[31];
-                            for (int j = 0; j < info.Length; j++)
-                            {
-                                info[j] = 0;
-                            }
-                            info[0] = 1;
-                            info[1] = 1;
-                            info[2] = 1;
-                            info[30] = 1;
-                            // frmDisplay.GetInfo(out info);
-                            if ((int)info[0] > 0)
-                            {
-                                // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
-                                SendLoactionAndTmper(Robot1, tempvalue, info);
-                            }
-                            else
-                            {
-                                FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" + info[0]);
-                            }
-
-                        }
-                    }
-                    else if (clientId[i] == 2)//二号机器人
-                    {
-                        int tempvalue = int.Parse((values[i].ToString()));//标志位
-                        if (tempvalue == 0)//如果等于0 就是已经处理
+                            x = RobitGroup.ReadD(0).CastTo<float>(-1),
+                            y = RobitGroup.ReadD(1).CastTo<float>(-1),
+                            z = RobitGroup.ReadD(2).CastTo<float>(-1),
+                            Ry = RobitGroup.ReadD(3).CastTo<float>(-1),
+                            Rx = RobitGroup.ReadD(4).CastTo<float>(-1),
+                            Rz = RobitGroup.ReadD(5).CastTo<float>(-1)
+                        };//机器人矩阵
+                   
+                        Transform transform = new Transform(); //相机矩阵
+                        if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
                         {
-                            frmDisplay = Globals.GetMainFrm().GetFormDisplay(1);
-                            object[] info = new object[31];
-                         
-                            for (int j = 0; j < info.Length; j++)
-                            {
-                                info[j] = 0;
-                            }
-                            info[0] = 2;
-                            info[1] = 2;
-                            info[2] = 2;
-                            info[30] = 1;
-                            // frmDisplay.GetInfo(out info);
-
-                            if ((int)info[0] > 0)
-                            {
-                                // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
-                                SendLoactionAndTmper(Robot2, tempvalue, info);
-                            }
-                            else
-                            {
-                                FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" + info[0]);
-                            }
+                            
                         }
-                    }
+                        else
+                        {
+                            FormMain.GetOPCTaskInfo("机器人姿态转为相机位置失败");
+                            WriteLog.GetLog().Write("机器人姿态转为相机位置失败");
+                        }
+
+                        
+                        
+                        //// frmDisplay.GetInfo(out info);
+                        //if ((int)info[0] > 0)
+                        //{
+                        //    // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
+                            
+                        //}
+                        //else
+                        //{
+                        //    FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" );
+                        //}
+
+                    } 
                     else
                     {
                         WriteLog.GetLog().Write("跳变未找到Group组");
+                        FormMain.GetOPCTaskInfo("跳变未找到Group组");
                     }
                 }
             }
             else
             {
-                FormMain.GetOPCTaskInfo("跳变信号丢失,:"   );
+                FormMain.GetOPCTaskInfo("跳变信号组错误,组:" +group  );
             }
         }
         static MagDevice device;
@@ -230,6 +203,10 @@ namespace ThermoGroupSample
             {
                 throw  ex;
             }
+        }
+        void SendTask()
+        {
+
         }
        
 

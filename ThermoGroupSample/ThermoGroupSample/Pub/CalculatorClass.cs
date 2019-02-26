@@ -8,10 +8,9 @@ namespace ThermoGroupSample.Pub
 {
    public class CalculatorClass
     {
-       
-        private const string ALL = "1";
-        private const string ORT = "0";
-        private   const  double Pi = Math.PI;
+
+        private   const string ALL = "1";
+        private  const string ORT = "0"; 
         private const double ANGLE_RAD = 0.017453292;
   
         private const string RIGHT = "1";
@@ -24,7 +23,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="theta"></param>
         /// <param name="result">指针</param>
         /// <param name="direction"></param>
-        void Rot_z(Transform t, float theta, Transform  result, string direction)
+        static void Rot_z(Transform t, float theta, Transform  result, string direction)
         {
             float cth, sth;
 
@@ -60,7 +59,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="theta"></param>
         /// <param name="result">指针</param>
         /// <param name="direction"></param>
-        void Rot_y(Transform t, float theta, Transform result, string direction)
+        static void Rot_y(Transform t, float theta, Transform result, string direction)
         {
             float cth, sth;
 
@@ -93,7 +92,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="theta"></param>
         /// <param name="result">指针</param>
         /// <param name="direction"></param>
-        void Rot_x(Transform t, float theta, Transform result, string direction)
+        static void Rot_x(Transform t, float theta, Transform result, string direction)
         {
             float cth, sth;
 
@@ -123,7 +122,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="t2">实体</param>
         /// <param name="result"></param>
         /// <param name="choice"></param>
-        void Mm_multi(Transform t1, Transform t2, Transform result, string choice)
+        static void  Mm_multi(Transform t1, Transform t2, Transform result, string choice)
         {
            // result->n.x = t1.n.x * t2.n.x + t1.o.x * t2.n.y + t1.a.x * t2.n.z;
             result.v1.x = t1.v1.x * t2.v1.x + t1.v2.x * t2.v1.y + t1.v3.x * t2.v1.z;
@@ -159,8 +158,8 @@ namespace ThermoGroupSample.Pub
         /// </summary>
         /// <param name="src">RPY数据</param>
         /// <param name="dst">温度信息</param>
-        /// <returns>0是正常，1 是错误</returns>
-     public   int Rpy_to_trans(Posistion src,ref Transform  dst)
+        /// <returns>0是正常，1是错误</returns>
+     public static int Rpy_to_trans(Posistion src,ref Transform  dst)
         {
             if (src == null)
             {
@@ -213,7 +212,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="src">温度信息</param>
         /// <param name="dest">指针</param>
         /// <returns>0是正常，1是错误</returns>
-       public int Trans_to_rpy(Transform src, Posistion dest)
+       public  static int Trans_to_rpy(Transform src, Posistion dest)
         {
             int re = 0;
             if (src == null)
@@ -231,21 +230,21 @@ namespace ThermoGroupSample.Pub
 
                 if( Math.Abs(src.v1.x) > EPS || Math.Abs(src.v1.y) > EPS)
                     {
-                    dest.Rx =float.Parse(  (Math.Atan2(src.v2.z, src.v3.z) * 180 / Pi).ToString());
-                    dest.Ry = float.Parse((Math.Atan2(-src.v1.z, Math.Sqrt(Math.Pow(src.v1.y, 2))) * 180 / Pi).ToString());
-                    dest.Rz = float.Parse((Math.Atan2(src.v1.y, src.v1.x) * 180 / Pi).ToString());
+                    dest.Rx =float.Parse(  (Math.Atan2(src.v2.z, src.v3.z) * 180 / Math.PI).ToString());
+                    dest.Ry = float.Parse((Math.Atan2(-src.v1.z, Math.Sqrt(Math.Pow(src.v1.y, 2))) * 180 / Math.PI).ToString());
+                    dest.Rz = float.Parse((Math.Atan2(src.v1.y, src.v1.x) * 180 / Math.PI).ToString());
                 }
                 else if (Math.Abs(src.v1.z) - 1 < EPS)
                 {
                     if(src.v1.z > 0)
                     {
-                        dest.Rx = float.Parse((-Math.Atan2(src.v2.x, src.v2.y) / 180 / Pi).ToString());
+                        dest.Rx = float.Parse((-Math.Atan2(src.v2.x, src.v2.y) / 180 / Math.PI).ToString());
                         dest.Ry = -90;
                         dest.Rz = 0;
                     }
                     else
                     {
-                        dest.Rx = float.Parse((Math.Atan2(src.v2.x,src.v2.y) * 180 / Pi).ToString());
+                        dest.Rx = float.Parse((Math.Atan2(src.v2.x,src.v2.y) * 180 / Math.PI).ToString());
                         dest.Ry = 90;
                         dest.Rz = 0;
                     }
