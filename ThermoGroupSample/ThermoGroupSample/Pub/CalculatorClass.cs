@@ -256,8 +256,64 @@ namespace ThermoGroupSample.Pub
             }
             return re;
         }
- 
+
+        public static void main(String[] args)
+        {
+            int r = 8;//半径
+            int w = 4;//圆边离左右边界最大距离
+            int h = 4;//圆边离上下边界最大距离
+            int L = 2 * r + w;//矩形右边界
+            int H = 2 * r + h;//矩形下边界
+            String[,] arr = new String[H,L];
+            arr = paintCircle(r, w, h);
+            string[,] outInfo = new string[h,L];
+            printLn(arr, H, L, ref outInfo);
+        }
+
+        public static string[,] paintCircle(int r, int w, int h)
+        {//输入半径、离左上两边距离（圆与矩形右下两边相切）
+         //如果传递随机数，可以实现“动图”吗？
+            int L = 2 * r + w;//圆形直径+离左边距离
+            int H = 2 * r + h;//圆形直径+离上边距离
+            int m = r + w - 1;//确定圆心元素角标，行号减一
+            int n = r + h - 1;//确定圆心元素角标，列号减一
+                              //定义数组储存
+            String[,] arr = new String[H,L];
+            for (int i = 0; i <= H - 1; i++)
+            {//0-19
+                for (int j = 0; j <= L - 1; j++)
+                {
+                    int x2 = (i - m) * (i - m) + (j - n) * (j - n);
+                    int r2 = r * r;
+                    if (x2 <= r2)
+                    {
+                        arr[i,j] = "* ";
+                    }
+                    else
+                    {
+                        arr[i,j] = "  ";
+                    }
+                }
+            }
+            return arr;
+        }
+        public static void printLn(String[,] arr, int H, int L,ref string[,] outInfo)
+        {//打印数组（或重载打印其他），打印H行，每行L个元素后换行
+            outInfo = new string[H,L];
+            for (int i = 0; i < H; i++)
+            {
+                for (int j = 0; j < L; j++)
+                {
+                    outInfo[i,j] = arr[i,j];
+                }
+
+            }
+        }
+
     }
+
+   
+       
     
     /// <summary>
     /// 向量
