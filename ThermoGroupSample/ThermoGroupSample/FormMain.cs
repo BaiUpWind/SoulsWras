@@ -27,7 +27,11 @@ namespace ThermoGroupSample
         FormControl _FormControl;
         FormDisplay[] _FormDisplayLst;
         FormDisplayBG _FormDisplayBG;
-
+        /// <summary>
+        /// 返回选定索引的窗口
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <returns></returns>
         public FormDisplay GetFormDisplay(uint index)
         {
             return _FormDisplayLst[index];
@@ -165,7 +169,7 @@ namespace ThermoGroupSample
             _FormControl.Height = (int)(CONTROLWINDOW_HEIGHT) - 40 - list_data.Size.Height;
             _FormControl.Show();
         }
-        Pub.RWIniFile rw = new Pub.RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
+         RWIniFile rw = new RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
         void OnUpdateDisplayPostion()
         {
             uint row = 0, col = 0;
@@ -272,13 +276,13 @@ namespace ThermoGroupSample
             //}
            
         }
-        OpcServer opcServer = new OpcServer();
+       
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (OnDestroy != null)
             {
                 OnDestroy.Invoke();
-                opcServer.DisConnection(); 
+                
             }
         }
     }

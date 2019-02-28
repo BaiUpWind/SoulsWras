@@ -19,8 +19,11 @@ namespace ThermoGroupSample
         List<uint> _LstComboIP = new List<uint>();
         FormControl _FormControl = null;
         const int MAX_ENUMDEVICE = 32;
+        /// <summary>
+        /// 相机数据
+        /// </summary>
         GroupSDK.ENUM_INFO[] _LstEnumInfo = new GroupSDK.ENUM_INFO[MAX_ENUMDEVICE];
-        OpcServer opcServer = new OpcServer();
+        OpcServer opcServer = null;
         FormDisplay frmDisplay;
         MagDevice device;
         Thread th;
@@ -38,7 +41,7 @@ namespace ThermoGroupSample
            
             _DataControl.GetService().EnableAutoReConnect(true);//使能断线重连
             _FormControl =this;
-            
+            opcServer = new OpcServer(_LstEnumInfo);
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
             
         }
@@ -60,13 +63,15 @@ namespace ThermoGroupSample
         private void FormControl_Paint(object sender, PaintEventArgs e)
         {
         }
-
+        /// <summary>
+        /// 刷新相机下拉框，重新获取局域网内所有的热像仪
+        /// </summary>
         private void UpdateOnlineDevComboLst()
         {
-            MagService service = _DataControl.GetService();
-            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
+            MagService service = _DataControl.GetService();//获取相机服务器
+            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);//获取在线相机
 
-            int index = comboBoxOnlineDevice.SelectedIndex;
+            int index = comboBoxOnlineDevice.SelectedIndex;//获取选中的下拉框的索引
 
             uint ip = 0;
             if (index >= 0 && index < _LstComboIP.Count)
@@ -74,25 +79,26 @@ namespace ThermoGroupSample
                 ip = _LstComboIP[index];
             }
 
-            comboBoxOnlineDevice.Items.Clear();
-            cmbDisplay.Items.Clear();
-            _LstComboIP.Clear();
+            comboBoxOnlineDevice.Items.Clear();//清空下拉框
+            //cmbDisplay.Items.Clear();
+            _LstComboIP.Clear();//IP地址情况
 
             string sItem = "";
 
             for (int i = 0; i < dev_num; i++)
             {
-                if (_LstEnumInfo[i].intUsrIp == service.GetLocalIp())
+                //创建摄像机名称，
+                if (_LstEnumInfo[i].intUsrIp == service.GetLocalIp())// 
                 {
-                    sItem = String.Format("{0}(conn)", _LstEnumInfo[i].sName);
+                    sItem = String.Format("{0}(conn)", _LstEnumInfo[i].sName);//连接
                 }
-                else if (_LstEnumInfo[i].intUsrIp != 0 && _LstEnumInfo[i].intUsrIp != service.GetLocalIp())
+                else if (_LstEnumInfo[i].intUsrIp != 0 && _LstEnumInfo[i].intUsrIp != service.GetLocalIp())//繁忙
                 {
                     sItem = String.Format("{0}(busy-{1})", _LstEnumInfo[i].sName, _LstEnumInfo[i].intUsrIp >> 24);
                 }
                 else
                 {
-                    sItem = _LstEnumInfo[i].sName;
+                    sItem = _LstEnumInfo[i].sName;//位置
                 }
 
                 comboBoxOnlineDevice.Items.Add(sItem);
@@ -127,6 +133,9 @@ namespace ThermoGroupSample
                 cmb.SelectedIndex = 0;
             }
         }
+        /// <summary>
+        /// 刷线局域网网内相机信息
+        /// </summary>
         private void RefreshOnlineDevice()
         {
             _DataControl.GetService().EnumCameras();
@@ -153,14 +162,14 @@ namespace ThermoGroupSample
                 return;
             }
 
-            MagService service = _DataControl.GetService();
-            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
+            MagService service = _DataControl.GetService();//创建
+            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);//获取在线相机
 
-            if (_DataControl.IsLinkedByMyself(_LstEnumInfo[index].intCamIp))
+            if (_DataControl.IsLinkedByMyself(_LstEnumInfo[index].intCamIp))//如果是我自己在使用
             {
                 return;
             }
-            else if (_DataControl.IsLinkedByOthers(_LstEnumInfo[index].intUsrIp))
+            else if (_DataControl.IsLinkedByOthers(_LstEnumInfo[index].intUsrIp))//如果是其他人在使用
             {
                 DialogResult result = MessageBox.Show("相机正与其它终端连接,确信要抢占吗?", "连接相机", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
@@ -169,9 +178,9 @@ namespace ThermoGroupSample
                 }
             }
 
-            if (_DataControl.IsInvadedByOthers(_LstEnumInfo[index].intUsrIp))
+            if (_DataControl.IsInvadedByOthers(_LstEnumInfo[index].intUsrIp))//如果被别人抢了摄像头
             {
-                DislinkCamera(_LstEnumInfo[index].intCamIp);
+                DislinkCamera(_LstEnumInfo[index].intCamIp);//就断开连接
             }
 
             FormDisplay display = _DataControl.GetCurrDisplayForm();
@@ -179,7 +188,7 @@ namespace ThermoGroupSample
             {
                 MagDevice device = display.GetDateDisplay().GetDevice();
 
-                if (device.LinkCamera(_LstEnumInfo[index].intCamIp, 2000))
+                if (device.LinkCamera(_LstEnumInfo[index].intCamIp, 2000))//连接相机
                 {
                     DataDisplay.CurrSelectedWndIndex = display.GetDateDisplay().WndIndex;//更新选中框
                     Globals.GetMainFrm().GetFormDisplayBG().Invalidate(false);
@@ -188,7 +197,10 @@ namespace ThermoGroupSample
             stop = false;
             RefreshOnlineDevice();
         }
-
+        /// <summary>
+        /// 断开摄像头连接
+        /// </summary>
+        /// <param name="intCameraIP"></param>
         private void DislinkCamera(uint intCameraIP)
         {
             FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(intCameraIP);
@@ -211,10 +223,10 @@ namespace ThermoGroupSample
             }
 
             MagService service = _DataControl.GetService();
-            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
+            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);//获取在线相机列表
 
 
-            DislinkCamera(_LstEnumInfo[index].intCamIp);
+            DislinkCamera(_LstEnumInfo[index].intCamIp);//断开连接
 
             Thread.Sleep(300);
             RefreshOnlineDevice();
@@ -232,7 +244,7 @@ namespace ThermoGroupSample
             MagService service = _DataControl.GetService();
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
 
-            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp); 
+            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp); //选择已经绑定的IP的显示窗口
             frmDisplay.GetDateDisplay().Play();
             stop = false; 
         }

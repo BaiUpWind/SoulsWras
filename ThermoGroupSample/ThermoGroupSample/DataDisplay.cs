@@ -29,7 +29,9 @@ namespace ThermoGroupSample
             get { return _CurrSelectedWndIndex; }
             set { _CurrSelectedWndIndex = value;}
         }
-
+        /// <summary>
+        /// 显示窗口索引
+        /// </summary>
         public uint WndIndex
         {
             get { return _WndIndex;  }
@@ -63,12 +65,16 @@ namespace ThermoGroupSample
         {
             return _MagDevice;
         }
-
+        /// <summary>
+        /// 播放
+        /// </summary>
+        /// <returns></returns>
         public bool Play()
         {
-            GroupSDK.CAMERA_INFO cam_info = _MagDevice.GetCamInfo();
+            GroupSDK.CAMERA_INFO cam_info = _MagDevice.GetCamInfo();//相机信息
 
-            GroupSDK.OUTPUT_PARAM param = new GroupSDK.OUTPUT_PARAM();
+            GroupSDK.OUTPUT_PARAM param = new GroupSDK.OUTPUT_PARAM();  /// 相机视频输出参数
+                                                                              
             param.intFPAWidth = (uint)cam_info.intFPAWidth;
             param.intFPAHeight = (uint)cam_info.intFPAHeight;
             param.intBMPWidth = (uint)cam_info.intVideoWidth;

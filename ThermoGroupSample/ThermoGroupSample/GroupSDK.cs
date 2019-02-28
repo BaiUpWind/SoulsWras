@@ -56,8 +56,11 @@ namespace SDK
             /// </summary>
             public UInt32 bIsMulticast;
         }
-
+     
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+      
+
+        
         public struct OUTPUT_PARAM
         {
             /// <summary>

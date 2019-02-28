@@ -41,6 +41,8 @@
             this.txtZgname = new System.Windows.Forms.TextBox();
             this.lblname = new System.Windows.Forms.Label();
             this.groupBoxAturbit = new System.Windows.Forms.GroupBox();
+            this.cmbState = new System.Windows.Forms.ComboBox();
+            this.lblState = new System.Windows.Forms.Label();
             this.txtcentpoint = new System.Windows.Forms.TextBox();
             this.lblCP = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
@@ -48,8 +50,6 @@
             this.lblSelect = new System.Windows.Forms.Label();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.lblState = new System.Windows.Forms.Label();
-            this.cmbState = new System.Windows.Forms.ComboBox();
             this.groupBoxAturbit.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -181,6 +181,29 @@
             this.groupBoxAturbit.TabStop = false;
             this.groupBoxAturbit.Text = "甑锅属性";
             // 
+            // cmbState
+            // 
+            this.cmbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbState.Enabled = false;
+            this.cmbState.FormattingEnabled = true;
+            this.cmbState.Items.AddRange(new object[] {
+            "禁用",
+            "一号相机",
+            "二号相机"});
+            this.cmbState.Location = new System.Drawing.Point(184, 209);
+            this.cmbState.Name = "cmbState";
+            this.cmbState.Size = new System.Drawing.Size(138, 20);
+            this.cmbState.TabIndex = 16;
+            // 
+            // lblState
+            // 
+            this.lblState.AutoSize = true;
+            this.lblState.Location = new System.Drawing.Point(27, 212);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(29, 12);
+            this.lblState.TabIndex = 15;
+            this.lblState.Text = "状态";
+            // 
             // txtcentpoint
             // 
             this.txtcentpoint.Enabled = false;
@@ -188,6 +211,7 @@
             this.txtcentpoint.Name = "txtcentpoint";
             this.txtcentpoint.Size = new System.Drawing.Size(138, 21);
             this.txtcentpoint.TabIndex = 14;
+            this.txtcentpoint.Visible = false;
             // 
             // lblCP
             // 
@@ -197,6 +221,7 @@
             this.lblCP.Size = new System.Drawing.Size(59, 12);
             this.lblCP.TabIndex = 13;
             this.lblCP.Text = "圆心坐标:";
+            this.lblCP.Visible = false;
             // 
             // btnSave
             // 
@@ -250,29 +275,6 @@
             this.btnAdd.Text = "新增";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // lblState
-            // 
-            this.lblState.AutoSize = true;
-            this.lblState.Location = new System.Drawing.Point(27, 212);
-            this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(29, 12);
-            this.lblState.TabIndex = 15;
-            this.lblState.Text = "状态";
-            // 
-            // cmbState
-            // 
-            this.cmbState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbState.Enabled = false;
-            this.cmbState.FormattingEnabled = true;
-            this.cmbState.Items.AddRange(new object[] {
-            "禁用",
-            "一号相机",
-            "二号相机"});
-            this.cmbState.Location = new System.Drawing.Point(184, 209);
-            this.cmbState.Name = "cmbState";
-            this.cmbState.Size = new System.Drawing.Size(138, 20);
-            this.cmbState.TabIndex = 16;
             // 
             // FormDateSet
             // 

@@ -8,12 +8,22 @@ using Pub;
 using System.Threading;
 using System.Threading.Tasks;
 using ThermoGroupSample.Pub;
+using SDK;
 
 namespace ThermoGroupSample
 {
     public  class OpcServer   
     {
+        public OpcServer()
+        {
 
+        }
+        public OpcServer(GroupSDK.ENUM_INFO[] enuminfo)
+        {
+            _LstEnumInfo = enuminfo;
+        }
+        GroupSDK.ENUM_INFO[] _LstEnumInfo = null;
+        DataControl _DataControl = null;
         public static IOPCServer pIOPCServer;  //定义opcServer对象
         internal const string SERVER_NAME = "OPC.SimaticNET";
         internal const int LOCALE_ID = 0x409;
@@ -48,7 +58,7 @@ namespace ThermoGroupSample
 
                     RpyGroup = new Group(pIOPCServer, 1, "group1", 1, LOCALE_ID);// 机器人交互组
                     SpyGroup = new Group(pIOPCServer, 2, "group2", 1, LOCALE_ID);//标志位监控 
-                    RobitGroup = new Group(pIOPCServer, 3, "group3", 1, LOCALE_ID);//标志位监控 
+                    RobitGroup = new Group(pIOPCServer, 3, "group3", 1, LOCALE_ID);//机器人姿态监控 
                     RpyGroup.addItem(ItemCollection.GetRpyItem());//任务下载块
                     SpyGroup.addItem(ItemCollection.GetRpyFalg());//标志位监控 
                     RobitGroup.addItem(ItemCollection.GetRobitPositionItem());//获取机器人姿态块
@@ -122,10 +132,10 @@ namespace ThermoGroupSample
         {
             if (group == 2)//任务下发位置
             {
-             
+
                 for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
                 {
-                     
+
                     int tempvalue = int.Parse((values[i].ToString()));//标志位
                     if (tempvalue == 0)//如果等于0 就是已经处理 可以下发任务
                     {
@@ -138,11 +148,11 @@ namespace ThermoGroupSample
                             Rx = RobitGroup.ReadD(4).CastTo<float>(-1),
                             Rz = RobitGroup.ReadD(5).CastTo<float>(-1)
                         };//机器人矩阵
-                   
+
                         Transform transform = new Transform(); //相机矩阵
                         if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
                         {
-                            
+
                         }
                         else
                         {
@@ -150,20 +160,20 @@ namespace ThermoGroupSample
                             WriteLog.GetLog().Write("机器人姿态转为相机位置失败");
                         }
 
-                        
-                        
+
+
                         //// frmDisplay.GetInfo(out info);
                         //if ((int)info[0] > 0)
                         //{
                         //    // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
-                            
+
                         //}
                         //else
                         //{
                         //    FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" );
                         //}
 
-                    } 
+                    }
                     else
                     {
                         WriteLog.GetLog().Write("跳变未找到Group组");
@@ -171,9 +181,35 @@ namespace ThermoGroupSample
                     }
                 }
             }
+            else if (group == 3)
+            {
+                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
+                {
+                    Posistion posistion = new Posistion
+                    {
+                        x = float.Parse(RobitGroup.ReadD(0).ToString()),
+                        y = float.Parse(RobitGroup.ReadD(1).ToString()),
+                        z = float.Parse(RobitGroup.ReadD(2).ToString()),
+                        Rx = float.Parse(RobitGroup.ReadD(3).ToString()),
+                        Ry = float.Parse(RobitGroup.ReadD(4).ToString()),
+                        Rz = float.Parse(RobitGroup.ReadD(5).ToString())
+                    };
+                    Transform transform = new Transform();
+                    if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)
+                    {
+                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[0].intCamIp); //选择已经绑定的IP的显示窗口
+                        frmDisplay.GetDateDisplay().Play();//来
+                    }
+                    else
+                    {
+                        FormMain.GetOPCTaskInfo("Rpy_to_trans：机器人姿态值转变失败，组:" + group);
+                    }
+
+                }
+            }
             else
             {
-                FormMain.GetOPCTaskInfo("跳变信号组错误,组:" +group  );
+                FormMain.GetOPCTaskInfo("跳变信号组错误,组:" + group);
             }
         }
         static MagDevice device;

@@ -55,6 +55,11 @@ namespace ThermoGroupSample
             return _MagService;
         }
 
+        /// <summary>
+        /// 如果连接的是我自己
+        /// </summary>
+        /// <param name="intCameraIP"></param>
+        /// <returns></returns>
         public bool IsLinkedByMyself(uint intCameraIP)
         {
             uint max_wnd = Globals.GetMainFrm().GetMaxDeviceWnd();
@@ -71,7 +76,11 @@ namespace ThermoGroupSample
 
             return false;
         }
-
+        /// <summary>
+        /// 如果连接的人其他人
+        /// </summary>
+        /// <param name="intUserIP"></param>
+        /// <returns></returns>
         public bool IsLinkedByOthers(uint intUserIP)
         {
             if (intUserIP != 0 && intUserIP != _MagService.GetLocalIp())
@@ -102,26 +111,12 @@ namespace ThermoGroupSample
 
             return false;
         }
-
-        public FormDisplay GetBindedDisplayForm(uint intCameraIP,int index)
-        {
-            
-            if(index < 0)
-            {
-                return null;
-            }
-                FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay((uint)index);
-                MagDevice device = frmDisplay.GetDateDisplay().GetDevice();
-
-                if (device.GetDevIPAddress() == intCameraIP)
-                {
-                    return frmDisplay;
-                }
-            
-
-            return null;
-        }
-
+      
+        /// <summary>
+        /// 根据IP获取绑定的显示窗口
+        /// </summary>
+        /// <param name="intCameraIP">相机IP</param>
+        /// <returns></returns>
         public FormDisplay GetBindedDisplayForm(uint intCameraIP )
         {
             uint max_wnd = Globals.GetMainFrm().GetMaxDeviceWnd();
@@ -141,6 +136,10 @@ namespace ThermoGroupSample
             return null;
         }
 
+        /// <summary>
+        /// 获得第一个能显示的窗体
+        /// </summary>
+        /// <returns></returns>
         public FormDisplay GetFirstFreeDisplayForm()
         {
             uint max_wnd = Globals.GetMainFrm().GetMaxDeviceWnd();
@@ -159,6 +158,10 @@ namespace ThermoGroupSample
             return null;
         }
 
+        /// <summary>
+        /// 获取当前显示窗体
+        /// </summary>
+        /// <returns></returns>
         public FormDisplay GetCurrDisplayForm()
         {
             FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);

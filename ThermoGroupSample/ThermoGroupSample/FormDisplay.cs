@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SDK;
+using ThermoGroupSample.Pub;
 
 namespace ThermoGroupSample
 {
@@ -293,38 +294,110 @@ namespace ThermoGroupSample
             }
             FormMain.GetOPCTaskInfo("温度:" + values[0] + "坐标X:" + values[1] + "坐标Y " + values[2]);
         }
-        public void GetInfo(float limitTmper,out object[] values , uint x = 0,uint y = 0)
+        int r, w, h;//半径 ，离左边距离 ， 离上边距离
+        /// <summary>
+        /// 检测制定圆形区域的温度
+        /// </summary>
+        /// <param name="limitTmper">极限温度</param>
+        /// <param name="values"></param>
+        public void GetInfo(float limitTmper,out object[] values  )
         {
-            MagDevice device = _DataDisplay.GetDevice();
-            List<string> list = new List<string>();  
-             values = new object[31];
-            for (int i = 0; i < values.Length; i++)
+            try
             {
-                values[i] = 0;
-            }
-            int index =0;
-            for (int i = CentrePoint; i < InputWidth; i++)//Y 宽
-            {
-                for (int j = CentrePoint; j < InputWidth; j++)//x 长
-                {
-                    float temper = device.GetTemperatureProbe((uint)j, (uint)i, 1) * 0.001f;
 
-                    if (temper > limitTmper)
+
+                MagDevice device = _DataDisplay.GetDevice();
+                List<string> list = new List<string>();
+                values = new object[36];
+                for (int i = 0; i < values.Length; i++)
+                {
+                    values[i] = 0;
+                }
+                GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
+                uint CenterPointArrY = (uint)cAMERA_INFO.intFPAHeight / 2;//Y
+                uint CenterPointArrX = (uint)cAMERA_INFO.intFPAWidth / 2;//X
+                int index = 0;
+                uint height = (uint)InputHeight / 2;
+                uint width = (uint)InputWidth / 2;
+                uint Top = CenterPointArrY + height;//离圆心往上靠
+                uint Bot = CenterPointArrY - height;//离圆心往下靠
+                uint Left = CenterPointArrX - width;//离圆心往左靠
+                uint Right = CenterPointArrX + width;//离圆心往右靠
+                for (int x = (int)Left; x < Right; x++)//X轴
+                {
+                    for (int y = (int)Bot; y < Top; y++)//Y轴
                     {
-                        list.Add(temper + "$" + j + "$" + i); 
+                        if (x > Left && x < Right || y > Bot && y < Top)
+                        {
+                            float temper = device.GetTemperatureProbe((uint)x, (uint)y, 1) * 0.001f;
+                            if (temper >= limitTmper)//如果大于等于极限温度
+                            {
+                                list.Add(temper + "$" + x + "$" + y + "$" + 0);
+                            }
+                        }
                     }
                 }
-            } 
-            list.Sort(); 
-            foreach (var item in list)
-            {
-                string[] str = item.Split('$'); 
-                values[index] = str[0];//温度
-                values[index + 1] = str[1];//X
-                values[index + 2] = str[2];//I
-                index += 3; 
-            } 
-            FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
+                #region
+                //int L = InputWidth + w;//圆形直径+离左边距离
+                //int H = InputWidth + h;//圆形直径+离上边距离
+                //r = InputWidth / 2;//半径
+                //w = 4;//圆边离左右边界最大距离
+                //h = 4;//圆边离上下边界最大距离
+                //int m = r + w - 1;//确定圆心元素角标，行号减一
+                //int n = r + h - 1;//确定圆心元素角标，列号减一
+                //
+                //for (int i = 0; i < InputWidth -1 ; i++)//Y 宽
+                //{
+                //    for (int j = 0; j < InputHeight -1; j++)//x 长
+                //    {
+                //        int x2 = (i - m) * (i - m) + (j - n) * (j - n);
+                //        int r2 = r * r;
+                //        if (x2 <= r2)//如果在检测区域
+                //        {
+                //            float temper = device.GetTemperatureProbe((uint)j, (uint)i, 1) * 0.001f;
+                //            if (temper >= limitTmper)//如果大于等于极限温度
+                //            {
+                //                list.Add(temper + "$" + j + "$" + i);
+                //            }
+                //        }  
+                //    }
+                //} 
+
+                #endregion
+
+                list.Sort();
+                foreach (var item in list)
+                {
+                    string[] str = item.Split('$');
+                    Transform transform = new Transform();
+                    transform.v4.x = float.Parse(str[1]);
+                    transform.v4.y = float.Parse(str[2]);
+                    transform.v4.z = float.Parse(str[3]);
+                    Posistion posistion = new Posistion();
+                    if (CalculatorClass.Trans_to_rpy(transform, posistion) > 0)
+                    {
+                        values[index] = str[0];//温度
+                        values[index + 1] = posistion.x;//X
+                        values[index + 2] = posistion.y;//I
+                        values[index + 3] = posistion.z;//I
+                        values[index + 4] = posistion.Rx;//I
+                        values[index + 5] = posistion.Ry;//I
+                        values[index + 6] = posistion.Rz;//I
+                        index += 7;
+                    }
+                    else
+                    {
+                        FormMain.GetOPCTaskInfo("Trans_To_Rpy失败！");
+                        break;
+
+                    }
+                }
+                FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
+            }
+            catch (Exception ex)
+            { 
+                throw ex;
+            }
         }
         /// <summary>
         /// 鼠标测温

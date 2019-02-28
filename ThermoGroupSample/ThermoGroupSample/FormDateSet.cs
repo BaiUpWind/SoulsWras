@@ -19,7 +19,7 @@ namespace ThermoGroupSample
             ReadIntFile();
             cmbState.SelectedIndex = 0;
         }
-        Pub.RWIniFile rw = new Pub.RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
+        RWIniFile rw = new  RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
         void WriteIntFile()
         {
             string name = "";

@@ -61,6 +61,12 @@
   <ItemGroup>
     <Compile Include="DataControl.cs" />
     <Compile Include="DataDisplay.cs" />
+    <Compile Include="FmMianControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FmMianControl.Designer.cs">
+      <DependentUpon>FmMianControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormControl.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,6 +115,9 @@
     <Compile Include="Pub\CalculatorClass.cs" />
     <Compile Include="Pub\ObjectExtensions.cs" />
     <Compile Include="Pub\WriteLog.cs" />
+    <EmbeddedResource Include="FmMianControl.resx">
+      <DependentUpon>FmMianControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormControl.cs</DependentUpon>
