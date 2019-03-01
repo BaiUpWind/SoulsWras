@@ -31,7 +31,10 @@ namespace ThermoGroupSample
             row = _DisplayRowNum;
             col = _DisplayColNum;
         }
-
+        /// <summary>
+        /// 创建相机服务器
+        /// </summary>
+        /// <returns></returns>
         public bool CreateService()
         {
             if (_MagService == null)
@@ -125,13 +128,13 @@ namespace ThermoGroupSample
             {
 
                 FormDisplay frmDisplay = Globals.GetMainFrm().GetFormDisplay(i);
-            MagDevice device = frmDisplay.GetDateDisplay().GetDevice();
+                MagDevice device = frmDisplay.GetDateDisplay().GetDevice();
 
-            if (device.GetDevIPAddress() == intCameraIP)
-            {
-                return frmDisplay;
+                if (device.GetDevIPAddress() == intCameraIP)
+                {
+                    return frmDisplay;
+                }
             }
-        }
 
             return null;
         }
