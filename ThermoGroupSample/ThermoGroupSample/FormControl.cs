@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 using SDK;
 using System.Threading.Tasks;
+using ThermoGroupSample.Pub;
 
 namespace ThermoGroupSample
 {
@@ -37,13 +38,13 @@ namespace ThermoGroupSample
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
             _DataControl = new DataControl();
-            _DataControl.CreateService();//必须调用
-           
+            _DataControl.CreateService();//必须调用 
             _DataControl.GetService().EnableAutoReConnect(true);//使能断线重连
             _FormControl =this;
             opcServer = new OpcServer(_LstEnumInfo);
-            FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
-            
+            FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy); 
+            AsyncConnectionPlc();//创建OPC服务器
+
         }
 
         private void FormControl_Load(object sender, EventArgs e)
@@ -151,6 +152,8 @@ namespace ThermoGroupSample
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             RefreshOnlineDevice();
+            opcServer = null;
+            opcServer = new OpcServer(_LstEnumInfo);//重新传入相机数据
         }
 
         private void buttonLink_Click(object sender, EventArgs e)
@@ -266,7 +269,7 @@ namespace ThermoGroupSample
             {
                 return;
             }
-            frmDisplay. stop = false;
+            frmDisplay. Stop = false;
             btnTake.Enabled = true;
             frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
             frmDisplay.Invalidate(false);
@@ -283,7 +286,7 @@ namespace ThermoGroupSample
             if (!stop)
             {
                 frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
-                frmDisplay.stop = true;
+                frmDisplay.Stop = true;
                 btnTake.Enabled = false;
                 frmDisplay.Startasync();
             }
@@ -377,28 +380,29 @@ namespace ThermoGroupSample
 
         private void btnConnection_Click(object sender, EventArgs e)
         {
-            AsyncConnectionPlc();
+           if(opcServer.RobitGroup !=null && opcServer.SpyGroup != null)
+            {
+                opcServer.RobitGroup.callback += OnDataChange;
+                opcServer.SpyGroup.callback += OnDataChange;
+            }
+          
         }
         /// <summary>
         /// 异步开启连接PLC 并且监听DB块值的变化
         /// </summary>
-        async void AsyncConnectionPlc()
+        void AsyncConnectionPlc()
         {
             try
             {
-                await Task.Run( GetConneection );
+                GetConneection();  
             }
             catch (NotSupportedException EX)
             {
                 FormMain.GetOPCTaskInfo("错误:" + EX.Message);
             }
-        }
-        //public delegate void HandleOnDateChange(string info);
-
-        //public static HandleOnDateChange callback;
-
-       
-        private  async Task GetConneection()
+        } 
+         
+        private  async void GetConneection()
         {
             try
             {
@@ -411,24 +415,91 @@ namespace ThermoGroupSample
                     FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络");
                 }
                 FormMain.GetOPCTaskInfo("PLC连接中...");
-                string info = opcServer.Connection();
+                string info = await Task.Run(()=> opcServer.Connection());
                 if (string.IsNullOrWhiteSpace(info))
                 {
-                    FormMain.GetOPCTaskInfo("PLC连接成功,开始工作!");
+                    FormMain.GetOPCTaskInfo("PLC连接成功!");
                 }
                 else
                 {
                     FormMain.GetOPCTaskInfo("PLC连接失败" + info);
-                }
-                await Task.Delay(10);
+                } 
             }
             catch (Exception ex)
             {
-                FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络"+ex.Message); 
+                FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络和环境"+ex.Message); 
             }
           
         }
- 
+        public void OnDataChange(int group, int[] clientId, object[] values)
+        {
+            if (group == 2)//任务下发位置
+            {
+
+                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
+                {
+
+                    int tempvalue = int.Parse((values[i].ToString()));//标志位
+                    if (tempvalue == 0)//如果等于0 就是已经处理 可以下发任务
+                    {
+                        Posistion posistion = new Posistion
+                        {
+                            x = RobitGroup.ReadD(0).CastTo<float>(-1),
+                            y = RobitGroup.ReadD(1).CastTo<float>(-1),
+                            z = RobitGroup.ReadD(2).CastTo<float>(-1),
+                            Ry = RobitGroup.ReadD(3).CastTo<float>(-1),
+                            Rx = RobitGroup.ReadD(4).CastTo<float>(-1),
+                            Rz = RobitGroup.ReadD(5).CastTo<float>(-1)
+                        };//机器人矩阵
+
+                        Transform transform = new Transform(); //相机矩阵
+                        if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
+                        {
+
+                        }
+                        else
+                        {
+                            FormMain.GetOPCTaskInfo("机器人姿态转为相机位置失败");
+                        }
+                    }
+                    else
+                    {
+
+                        FormMain.GetOPCTaskInfo("跳变未找到Group组");
+                    }
+                }
+            }
+            else if (group == 3)
+            {
+                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
+                {
+                    Posistion posistion = new Posistion
+                    {
+                        x = float.Parse(RobitGroup.ReadD(0).ToString()),
+                        y = float.Parse(RobitGroup.ReadD(1).ToString()),
+                        z = float.Parse(RobitGroup.ReadD(2).ToString()),
+                        Rx = float.Parse(RobitGroup.ReadD(3).ToString()),
+                        Ry = float.Parse(RobitGroup.ReadD(4).ToString()),
+                        Rz = float.Parse(RobitGroup.ReadD(5).ToString())
+                    };
+                    Transform transform = new Transform();
+                    if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)
+                    {
+                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[0].intCamIp); //选择已经绑定的IP的显示窗口
+                        frmDisplay.GetDateDisplay().Play();//来
+                    }
+                    else
+                    {
+                        FormMain.GetOPCTaskInfo("Rpy_to_trans：机器人姿态值转变失败，组:" + group);
+                    }
+
+                }
+            }
+            else
+            {
+                FormMain.GetOPCTaskInfo("跳变信号组错误,组:" + group);
+            }
+        }
 
 
         private void btnEnter_Click(object sender, EventArgs e)
@@ -450,6 +521,25 @@ namespace ThermoGroupSample
                 
             }
            
+        }
+
+        private void btnStOP_Click(object sender, EventArgs e)
+        {
+            DialogResult MsgBoxResult = MessageBox.Show("确定要停止任务?",//对话框的显示内容 
+                                                       "操作提示",//对话框的标题 
+                                                       MessageBoxButtons.YesNo,//定义对话框的按钮，这里定义了YSE和NO两个按钮 
+                                                       MessageBoxIcon.Question,//定义对话框内的图表式样，这里是一个黄色三角型内加一个感叹号 
+                                                       MessageBoxDefaultButton.Button2);//定义对话框的按钮式样
+
+
+            if (MsgBoxResult == DialogResult.Yes)
+            { 
+                if (opcServer.RobitGroup != null && opcServer.SpyGroup != null)
+                {
+                    opcServer.RobitGroup.callback -= OnDataChange;
+                    opcServer.SpyGroup.callback -= OnDataChange;
+                }
+            }
         }
     }
 }

@@ -150,7 +150,7 @@ namespace ThermoGroupSample
            
             
         }
-        public bool stop =false;
+
         async void AutoDraw()
         {
             await Task.Run(GetMaxTemperatureInfo);
@@ -165,7 +165,7 @@ namespace ThermoGroupSample
                 FormMain.GetOPCTaskInfo("圆心坐标异常,请检查甑锅参数并且设置,设置成功后将自动刷新!");
                 return;
             }
-            while (stop)
+            while (Stop)
             {
                 MagDevice device = _DataDisplay.GetDevice();
                 int[] infos = new int[5];
@@ -228,6 +228,8 @@ namespace ThermoGroupSample
         /// 极限温度
         /// </summary>
         public float LimitTmper { get; set; }
+        public bool Stop { get; set; } = false;
+
         /// <summary>
         /// 红外图绘制
         /// </summary>
@@ -304,8 +306,7 @@ namespace ThermoGroupSample
         {
             try
             {
-
-
+               
                 MagDevice device = _DataDisplay.GetDevice();
                 List<string> list = new List<string>();
                 values = new object[36];
@@ -323,20 +324,20 @@ namespace ThermoGroupSample
                 uint Bot = CenterPointArrY - height;//离圆心往下靠
                 uint Left = CenterPointArrX - width;//离圆心往左靠
                 uint Right = CenterPointArrX + width;//离圆心往右靠
-                for (int x = (int)Left; x < Right; x++)//X轴
+            aa: for (int x = (int)Left; x < Right; x++)//X轴
                 {
                     for (int y = (int)Bot; y < Top; y++)//Y轴
                     {
                         if (x > Left && x < Right || y > Bot && y < Top)
                         {
                             float temper = device.GetTemperatureProbe((uint)x, (uint)y, 1) * 0.001f;
-                            if (temper >= limitTmper)//如果大于等于极限温度
+                            if (temper >= LimitTmper)//如果大于等于极限温度
                             {
                                 list.Add(temper + "$" + x + "$" + y + "$" + 0);
                             }
                         }
                     }
-                }
+                } 
                 #region
                 //int L = InputWidth + w;//圆形直径+离左边距离
                 //int H = InputWidth + h;//圆形直径+离上边距离
@@ -364,9 +365,16 @@ namespace ThermoGroupSample
                 //} 
 
                 #endregion
-
+                if (list == null || list.Count == 0  )//如果没有检测温度 继续执行
+                {
+                    if (!Stop)//发送指令停止温度
+                    {
+                        goto bb ;
+                    }
+                    goto aa;
+                }
                 list.Sort();
-                foreach (var item in list)
+            bb: foreach (var item in list)
                 {
                     string[] str = item.Split('$');
                     Transform transform = new Transform();
@@ -389,13 +397,13 @@ namespace ThermoGroupSample
                     {
                         FormMain.GetOPCTaskInfo("Trans_To_Rpy失败！");
                         break;
-
                     }
                 }
+
                 FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
             }
             catch (Exception ex)
-            { 
+            {
                 throw ex;
             }
         }

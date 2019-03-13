@@ -22,19 +22,24 @@ namespace ThermoGroupSample
         {
             _LstEnumInfo = enuminfo;
         }
+        /// <summary>
+        /// 相机信息
+        /// </summary>
         GroupSDK.ENUM_INFO[] _LstEnumInfo = null;
         DataControl _DataControl = null;
         public static IOPCServer pIOPCServer;  //定义opcServer对象
         internal const string SERVER_NAME = "OPC.SimaticNET";
         internal const int LOCALE_ID = 0x409;
-        public static Group SpyGroup, RpyGroup,RobitGroup;
+           Group RpyGroup;
  
         static RWIniFile rad;
-        public   void DisConnection()
+        /// <summary>
+        /// 取消任务跳变 停止发送任务 ，停止接收数据
+        /// </summary>
+        public   void DropHandele()
         {
-            if(SpyGroup != null) { SpyGroup.Release(); }
-            if(RpyGroup != null) { RpyGroup.Release(); }
-            if(RobitGroup !=null){ RobitGroup.Release(); }
+            if(SpyGroup != null) { SpyGroup.callback  -= OnDataChange; }
+            if(RobitGroup != null) { RobitGroup.callback -= OnDataChange; } 
           
         }
   
@@ -43,10 +48,7 @@ namespace ThermoGroupSample
         /// </summary>
         /// <returns></returns>
         public  bool Create()
-        {
-
-            //Thread.Sleep(1000);
-            //return true;
+        { 
             if (pIOPCServer == null)
             {
                 try
@@ -76,7 +78,15 @@ namespace ThermoGroupSample
             }
 
 
-        } 
+        }
+        /// <summary>
+        /// 创建PLC监控跳变  发送任务 ， 
+        /// </summary>
+        public void BindingHandele()
+        {
+            if (SpyGroup != null) { SpyGroup.callback += OnDataChange; }
+            if (RobitGroup != null) { RobitGroup.callback += OnDataChange; }
+        }
         async void GetTick()
         {
             FormMain.GetOPCTaskInfo("触发自动跳变");
@@ -95,40 +105,61 @@ namespace ThermoGroupSample
         }
         public  void onDateChange(string info)
         {
-            FormMain.GetOPCTaskInfo(info);
-            WriteLog.GetLog().Write("触发formcontrolONDATECHANGE" + info);
-
-           
+            FormMain.GetOPCTaskInfo("触发formcontrolONDATECHANGE" + info);  
         }
         public  string Connection()
         {
-
-            //Thread.Sleep(1000);
-            //FormControl.callback += onDateChange;
-            //return "";
             string info = "";
             int flag1 = SpyGroup.ReadD(0).CastTo<int>(-1); 
             if (flag1 != -1  )
-            {
-                SpyGroup.callback += OnDataChange;
-                GetTick(); 
+            {  
                 return info;
             }
             if (flag1 == -1)
             {
-                info += "读取不到DB块,请检查网络"; 
+                info += "读取不到DB块,请检查网络和环境！"; 
             }
           
             return info;
         }
-     
+        bool isWork =false;
+        /// <summary>
+        /// 获取相机位置，判断哪个相机可用
+        /// </summary>
+        void GetCameraPositon()
+        {
+            
+            Posistion posistion = new Posistion
+            {
+                x = RobitGroup.ReadD(0).CastTo<float>(-1),
+                y = RobitGroup.ReadD(1).CastTo<float>(-1),
+                z = RobitGroup.ReadD(2).CastTo<float>(-1),
+                Ry = RobitGroup.ReadD(3).CastTo<float>(-1),
+                Rx = RobitGroup.ReadD(4).CastTo<float>(-1),
+                Rz = RobitGroup.ReadD(5).CastTo<float>(-1)
+            };//机器人矩阵
+
+            Transform transform = new Transform(); //相机矩阵
+            if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
+            {
+
+            }
+            else
+            {
+                FormMain.GetOPCTaskInfo("机器人姿态转为相机位置失败");
+            }
+
+             
+        }
+        int CamIndex = -1;
+        int JumpSingle =1;
         /// <summary>
         /// 当值发生改变时
         /// </summary>
         /// <param name="group"></param>
         /// <param name="clientId"></param>
         /// <param name="values"></param>
-        public  void OnDataChange(int group, int[] clientId, object[] values)
+        public async  void OnDataChange(int group, int[] clientId, object[] values)
         {
             if (group == 2)//任务下发位置
             {
@@ -139,7 +170,10 @@ namespace ThermoGroupSample
                     int tempvalue = int.Parse((values[i].ToString()));//标志位
                     if (tempvalue == 0)//如果等于0 就是已经处理 可以下发任务
                     {
-                        Posistion posistion = new Posistion
+                        if (!isWork)
+                        {
+                            isWork = true;
+                        aa: Posistion posistion = new Posistion
                         {
                             x = RobitGroup.ReadD(0).CastTo<float>(-1),
                             y = RobitGroup.ReadD(1).CastTo<float>(-1),
@@ -147,45 +181,52 @@ namespace ThermoGroupSample
                             Ry = RobitGroup.ReadD(3).CastTo<float>(-1),
                             Rx = RobitGroup.ReadD(4).CastTo<float>(-1),
                             Rz = RobitGroup.ReadD(5).CastTo<float>(-1)
-                        };//机器人矩阵
-
-                        Transform transform = new Transform(); //相机矩阵
-                        if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
-                        {
-
+                        };//机器人矩阵 
+                            Transform transform = new Transform(); //相机矩阵
+                            if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
+                            {
+                                if (transform.v1.x > 0)//如果是一号热像仪可用
+                                {
+                                    CamIndex = 0;
+                                }
+                                else if (transform.v1.x > 1)//如果是二号热像仪可用
+                                {
+                                    CamIndex = 1;
+                                }
+                                else//都不可用的情况下 再取一次机器人的位置
+                                {
+                                    goto aa;
+                                }
+                                FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[CamIndex].intCamIp); //选择已经绑定的IP的显示窗口
+                                FormMain.GetOPCTaskInfo("正在使用窗体：" + frmDisplay.Name + "的热像仪！");
+                                object[] obj = new object[36];
+                                await Task.Run(() => frmDisplay.GetInfo(1, out obj));
+                                RpyGroup.SyncWrite(obj);//写入坐标和温度
+                                isWork = false;
+                            }
+                            else
+                            {
+                                FormMain.GetOPCTaskInfo("机器人姿态转为相机位置失败");
+                            }
                         }
                         else
-                        {
-                            FormMain.GetOPCTaskInfo("机器人姿态转为相机位置失败");
-                            WriteLog.GetLog().Write("机器人姿态转为相机位置失败");
+                        { 
+                            FormMain.GetOPCTaskInfo("在获取热点信息时，产生了一次跳变信号，第"+ JumpSingle+"次");
+                            JumpSingle++;
                         }
-
-
-
-                        //// frmDisplay.GetInfo(out info);
-                        //if ((int)info[0] > 0)
-                        //{
-                        //    // FormMain.GetOPCTaskInfo("这是将任务信息写入到主窗口");
-
-                        //}
-                        //else
-                        //{
-                        //    FormMain.GetOPCTaskInfo("跳变信号丢失,温度值为:" );
-                        //}
-
                     }
                     else
                     {
-                        WriteLog.GetLog().Write("跳变未找到Group组");
+                       
                         FormMain.GetOPCTaskInfo("跳变未找到Group组");
                     }
                 }
             }
-            else if (group == 3)
+            else if (group == 3)//机器人姿态位置
             {
                 for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
                 {
-                    Posistion posistion = new Posistion
+                   aa: Posistion posistion = new Posistion
                     {
                         x = float.Parse(RobitGroup.ReadD(0).ToString()),
                         y = float.Parse(RobitGroup.ReadD(1).ToString()),
@@ -195,10 +236,26 @@ namespace ThermoGroupSample
                         Rz = float.Parse(RobitGroup.ReadD(5).ToString())
                     };
                     Transform transform = new Transform();
-                    if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)
+                    if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)//机器人姿态转换相机位置
                     {
-                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[0].intCamIp); //选择已经绑定的IP的显示窗口
-                        frmDisplay.GetDateDisplay().Play();//来
+                       
+                        if(transform.v1.x > 0)//如果是一号热像仪可用
+                        {
+                            CamIndex = 0;
+                        }
+                        else if(transform.v1.x > 1)//如果是二号热像仪可用
+                        {
+                            CamIndex = 1;
+                        }
+                        else//都不可用的情况下 再取一次机器人的位置
+                        {
+                            goto aa;
+                        }  
+                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[CamIndex].intCamIp); //选择已经绑定的IP的显示窗口
+                        FormMain.GetOPCTaskInfo("正在使用窗体："+frmDisplay.Name +"的热像仪！"); 
+                        object[] obj = new object[36];
+                        await Task.Run(()=>  frmDisplay.GetInfo(1, out obj) );
+                        RpyGroup.SyncWrite(obj);//写入坐标和温度
                     }
                     else
                     {
@@ -214,6 +271,12 @@ namespace ThermoGroupSample
         }
         static MagDevice device;
         static FormDisplay frmDisplay;
+        private static Group spyGroup;
+        private static Group robitGroup;
+
+        public   Group SpyGroup { get => spyGroup; set => spyGroup = value; }
+        public   Group RobitGroup { get => robitGroup; set => robitGroup = value; }
+
         static void SendLoactionAndTmper(Group group,int falge , object[] info)
         {
             try

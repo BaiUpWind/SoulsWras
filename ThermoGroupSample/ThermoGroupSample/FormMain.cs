@@ -72,8 +72,13 @@ namespace ThermoGroupSample
         delegate void HandleUpDate(string info);
         private delegate void HandleDelegate(string strshow);
         static HandleUpDate handle;
+        /// <summary>
+        /// 获取提示信息显示且写入本地
+        /// </summary>
+        /// <param name="Info"></param>
         public static void GetOPCTaskInfo(string Info)
         {
+            WriteLog.GetLog().Write(Info);
             handle(Info);
         }
         void upDateList(string info)
