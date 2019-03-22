@@ -9,7 +9,9 @@ using System.Threading;
 using SDK;
 using System.Threading.Tasks;
 using ThermoGroupSample.Pub;
-
+using ThermoGroupSample.Server;
+using HslCommunication.Profinet.Siemens;
+using Pub;
 namespace ThermoGroupSample
 {
     public partial class FormControl : Form
@@ -43,8 +45,8 @@ namespace ThermoGroupSample
             _FormControl =this;
             opcServer = new OpcServer(_LstEnumInfo);
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy); 
-            AsyncConnectionPlc();//创建OPC服务器
-
+            AsyncConnectionPlc();//创建服务
+         
         }
 
         private void FormControl_Load(object sender, EventArgs e)
@@ -243,12 +245,13 @@ namespace ThermoGroupSample
             {
                 return;
             }
-
             MagService service = _DataControl.GetService();
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
-
-            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp); //选择已经绑定的IP的显示窗口
-            frmDisplay.GetDateDisplay().Play();
+            for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+            {
+                FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp); //选择已经绑定的IP的显示窗口
+                frmDisplay.GetDateDisplay().Play();
+            }  
             stop = false; 
         }
 
@@ -263,16 +266,18 @@ namespace ThermoGroupSample
 
             MagService service = _DataControl.GetService();
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
-
-            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[index].intCamIp);
-            if (frmDisplay == null)
+            for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
             {
-                return;
+                FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
+                if (frmDisplay == null)
+                {
+                    continue;
+                }
+                frmDisplay.Stop = false; 
+                frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
+                frmDisplay.Invalidate(false);
             }
-            frmDisplay. Stop = false;
             btnTake.Enabled = true;
-            frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
-            frmDisplay.Invalidate(false);
             stop = true;
         }
 
@@ -288,10 +293,29 @@ namespace ThermoGroupSample
                 frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
                 frmDisplay.Stop = true;
                 btnTake.Enabled = false;
+          
                 frmDisplay.Startasync();
             }
         }
+        /// <summary>
+        /// 鼠标显示图标
+        /// </summary>
+        /// <param name="i">1是禁止，2是允许</param>
+        void ChangeBtnCursor(int i)
+        {
+            if (i == 1)
+            {
 
+                btnConnection.Cursor = Cursors.No;
+                btnStOP.Cursor = Cursors.No;
+            }
+            else if(i == 2)
+            {
+
+                btnConnection.Cursor = Cursors.Hand;
+                btnStOP.Cursor = Cursors.Hand;
+            }
+        }
         #region 暂时无用
         //void GetRefesh()
         //{
@@ -377,16 +401,115 @@ namespace ThermoGroupSample
             LableBoxVis(lblL, true);
             LableBoxVis(lblW, true);
         }
+        SiemensS7 s7Task = null;//机器人任务下载地址
+        SiemensS7 s7Postion = null;//机器人位置（角度）
 
+        private Thread thread = null;              // 后台读取的线程
+        private int timeSleep = 300;               // 读取的间隔
+        private bool isThreadRun = false;          // 用来标记线程的运行状态
         private void btnConnection_Click(object sender, EventArgs e)
         {
-           if(opcServer.RobitGroup !=null && opcServer.SpyGroup != null)
+            if (btnConnection.Cursor == Cursors.No)
             {
-                opcServer.RobitGroup.callback += OnDataChange;
-                opcServer.SpyGroup.callback += OnDataChange;
+                return;
             }
-          
+            var radian = (Math.PI / 180) * 83.82;//根据角度求出弧度
+            double zgX = 90 * Math.Cos(radian);//X轴
+            double zgY = 90 * Math.Sin(radian);//y轴
+            MessageBox.Show("x:" + zgX + "y:" + zgY);
+            if (!isThreadRun)
+            {
+                if (!int.TryParse(txtTimetim.Text, out timeSleep))
+                {
+                    MessageBox.Show("Time input wrong！");
+                    return;
+                }
+                isThreadRun = true;
+                thread = new Thread(ThreadReadServer)
+                {
+                    IsBackground = true
+                };
+                thread.Start();
+            }
+
+            ///opc方式读取
+            //if (opcServer.RobitGroup !=null && opcServer.SpyGroup != null)
+            //{
+
+            //    opcServer.BindingHandele();
+            //}
+
         }
+        int r;//半径
+        /// <summary>
+        /// 线程读取DB块
+        /// </summary>
+        private void ThreadReadServer()
+        {
+            while (isThreadRun) //线程的运行状态
+            {
+                int flag = s7Task.Read(s7Task.ListCount).CastTo<int>(-1);//获取标志位
+                if(flag == 0)//允许采集热点信息
+                {
+                    float degrees = s7Postion.Read(0).CastTo<float>(-1);//获取机器人的角度 判断热像仪可检测范围
+                    if (degrees > 0f)
+                    {
+                        var radian = (Math.PI / 180) * degrees;//根据角度求出弧度
+                        double zgX = r * Math.Cos(radian);//X轴
+                        double zgY = r * Math.Sin(radian);//y轴
+                        for (int i = 0;  i<= r; i++)
+                        {
+                            for (int j = 0; j < 360; j++)
+                            {
+                                var radiani = (Math.PI / 180) * j;//根据角度求出弧度
+                                double zgXj = i * Math.Cos(radian);//X轴
+                                double zgYj = i * Math.Sin(radian);//y轴
+                            }
+                        }
+
+                        Thread.Sleep(500);//未取到数据时 0.5秒后再取
+                    }
+                    else
+                    {
+                        FormMain.GetOPCTaskInfo("未读取到机器人角度" + degrees);
+                        Thread.Sleep(3000);//3秒后重新再读取
+                    }
+                }
+                else
+                {
+                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag);
+                    Thread.Sleep(2000);//2秒后重新再读取
+                }
+
+             
+            }
+        }
+ 
+        /// <summary>
+        /// 创建S7协议服务器
+        /// </summary>
+        void CreatS7Server()
+        {
+
+            try
+            {
+                SiemensS7Net s7server = new SiemensS7Net(SiemensPLCS.S1500)
+                {
+                    IpAddress = Globals.RobitPlc_Ip.Trim(),
+                    Slot = 0,
+                    Rack = 0
+                };
+                s7Task = new SiemensS7(s7server, Modle.ItemCollection.GetBYS7Item());
+                s7Postion = new SiemensS7(s7server, Modle.ItemCollection.GetRobitPositionbYs7Item());
+            }
+            catch (Exception ex)
+            {
+                FormMain.GetOPCTaskInfo("服务创建失败:" + ex.Message);
+
+            }
+
+        }
+        #region OPC方式连接方式
         /// <summary>
         /// 异步开启连接PLC 并且监听DB块值的变化
         /// </summary>
@@ -394,7 +517,8 @@ namespace ThermoGroupSample
         {
             try
             {
-                GetConneection();  
+               // GetConneection();
+                CreatS7Server();
             }
             catch (NotSupportedException EX)
             {
@@ -408,17 +532,20 @@ namespace ThermoGroupSample
             {
                 if (opcServer.Create())
                 {
-                    FormMain.GetOPCTaskInfo("OPC创建成功!");
+                    FormMain.GetOPCTaskInfo("OPC创建成功!"); 
                 }
                 else
                 {
-                    FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络");
+                    FormMain.GetOPCTaskInfo("OPC创建失败!请检查环境");
+                    ChangeBtnCursor(1);
                 }
                 FormMain.GetOPCTaskInfo("PLC连接中...");
                 string info = await Task.Run(()=> opcServer.Connection());
                 if (string.IsNullOrWhiteSpace(info))
                 {
                     FormMain.GetOPCTaskInfo("PLC连接成功!");
+                    ChangeBtnCursor(2);
+                    opcServer.GetTick();//十秒后自动跳变
                 }
                 else
                 {
@@ -427,79 +554,12 @@ namespace ThermoGroupSample
             }
             catch (Exception ex)
             {
-                FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络和环境"+ex.Message); 
+                FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络和环境"+ex.Message);
+                ChangeBtnCursor(1);
             }
           
         }
-        public void OnDataChange(int group, int[] clientId, object[] values)
-        {
-            if (group == 2)//任务下发位置
-            {
-
-                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
-                {
-
-                    int tempvalue = int.Parse((values[i].ToString()));//标志位
-                    if (tempvalue == 0)//如果等于0 就是已经处理 可以下发任务
-                    {
-                        Posistion posistion = new Posistion
-                        {
-                            x = RobitGroup.ReadD(0).CastTo<float>(-1),
-                            y = RobitGroup.ReadD(1).CastTo<float>(-1),
-                            z = RobitGroup.ReadD(2).CastTo<float>(-1),
-                            Ry = RobitGroup.ReadD(3).CastTo<float>(-1),
-                            Rx = RobitGroup.ReadD(4).CastTo<float>(-1),
-                            Rz = RobitGroup.ReadD(5).CastTo<float>(-1)
-                        };//机器人矩阵
-
-                        Transform transform = new Transform(); //相机矩阵
-                        if (CalculatorClass.Rpy_to_trans(posistion, ref transform) == 0)//机器人姿态转为相机所在为位置
-                        {
-
-                        }
-                        else
-                        {
-                            FormMain.GetOPCTaskInfo("机器人姿态转为相机位置失败");
-                        }
-                    }
-                    else
-                    {
-
-                        FormMain.GetOPCTaskInfo("跳变未找到Group组");
-                    }
-                }
-            }
-            else if (group == 3)
-            {
-                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
-                {
-                    Posistion posistion = new Posistion
-                    {
-                        x = float.Parse(RobitGroup.ReadD(0).ToString()),
-                        y = float.Parse(RobitGroup.ReadD(1).ToString()),
-                        z = float.Parse(RobitGroup.ReadD(2).ToString()),
-                        Rx = float.Parse(RobitGroup.ReadD(3).ToString()),
-                        Ry = float.Parse(RobitGroup.ReadD(4).ToString()),
-                        Rz = float.Parse(RobitGroup.ReadD(5).ToString())
-                    };
-                    Transform transform = new Transform();
-                    if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)
-                    {
-                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[0].intCamIp); //选择已经绑定的IP的显示窗口
-                        frmDisplay.GetDateDisplay().Play();//来
-                    }
-                    else
-                    {
-                        FormMain.GetOPCTaskInfo("Rpy_to_trans：机器人姿态值转变失败，组:" + group);
-                    }
-
-                }
-            }
-            else
-            {
-                FormMain.GetOPCTaskInfo("跳变信号组错误,组:" + group);
-            }
-        }
+        #endregion
 
 
         private void btnEnter_Click(object sender, EventArgs e)
@@ -525,6 +585,12 @@ namespace ThermoGroupSample
 
         private void btnStOP_Click(object sender, EventArgs e)
         {
+             
+            return;
+            if(btnStOP.Cursor == Cursors.No)
+            {
+                return;
+            }
             DialogResult MsgBoxResult = MessageBox.Show("确定要停止任务?",//对话框的显示内容 
                                                        "操作提示",//对话框的标题 
                                                        MessageBoxButtons.YesNo,//定义对话框的按钮，这里定义了YSE和NO两个按钮 
@@ -536,8 +602,11 @@ namespace ThermoGroupSample
             { 
                 if (opcServer.RobitGroup != null && opcServer.SpyGroup != null)
                 {
-                    opcServer.RobitGroup.callback -= OnDataChange;
-                    opcServer.SpyGroup.callback -= OnDataChange;
+                    FormDisplay frmDisplay1 = _DataControl.GetBindedDisplayForm(_LstEnumInfo[0].intCamIp); //选择已经绑定的IP的显示窗口
+                    FormDisplay frmDisplay2 = _DataControl.GetBindedDisplayForm(_LstEnumInfo[1].intCamIp); //选择已经绑定的IP的显示窗口
+                    frmDisplay1.Stop = false;
+                    frmDisplay2.Stop = false;
+                    opcServer.DropHandele(); 
                 }
             }
         }

@@ -87,11 +87,10 @@ namespace ThermoGroupSample
             if (SpyGroup != null) { SpyGroup.callback += OnDataChange; }
             if (RobitGroup != null) { RobitGroup.callback += OnDataChange; }
         }
-        async void GetTick()
+      public  void GetTick()
         {
             FormMain.GetOPCTaskInfo("触发自动跳变");
-
-            await Task.Run( AuotoOnDateChange);
+            Task.Run( AuotoOnDateChange);
         }
         async Task AuotoOnDateChange()
         {
@@ -103,10 +102,7 @@ namespace ThermoGroupSample
                 FormMain.GetOPCTaskInfo("任务块自动跳变");
             } 
         }
-        public  void onDateChange(string info)
-        {
-            FormMain.GetOPCTaskInfo("触发formcontrolONDATECHANGE" + info);  
-        }
+       
         public  string Connection()
         {
             string info = "";
@@ -195,6 +191,7 @@ namespace ThermoGroupSample
                                 }
                                 else//都不可用的情况下 再取一次机器人的位置
                                 {
+                                    Thread.Sleep(50);
                                     goto aa;
                                 }
                                 FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[CamIndex].intCamIp); //选择已经绑定的IP的显示窗口
@@ -222,48 +219,50 @@ namespace ThermoGroupSample
                     }
                 }
             }
-            else if (group == 3)//机器人姿态位置
-            {
-                for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
-                {
-                   aa: Posistion posistion = new Posistion
-                    {
-                        x = float.Parse(RobitGroup.ReadD(0).ToString()),
-                        y = float.Parse(RobitGroup.ReadD(1).ToString()),
-                        z = float.Parse(RobitGroup.ReadD(2).ToString()),
-                        Rx = float.Parse(RobitGroup.ReadD(3).ToString()),
-                        Ry = float.Parse(RobitGroup.ReadD(4).ToString()),
-                        Rz = float.Parse(RobitGroup.ReadD(5).ToString())
-                    };
-                    Transform transform = new Transform();
-                    if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)//机器人姿态转换相机位置
-                    {
-                       
-                        if(transform.v1.x > 0)//如果是一号热像仪可用
-                        {
-                            CamIndex = 0;
-                        }
-                        else if(transform.v1.x > 1)//如果是二号热像仪可用
-                        {
-                            CamIndex = 1;
-                        }
-                        else//都不可用的情况下 再取一次机器人的位置
-                        {
-                            goto aa;
-                        }  
-                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[CamIndex].intCamIp); //选择已经绑定的IP的显示窗口
-                        FormMain.GetOPCTaskInfo("正在使用窗体："+frmDisplay.Name +"的热像仪！"); 
-                        object[] obj = new object[36];
-                        await Task.Run(()=>  frmDisplay.GetInfo(1, out obj) );
-                        RpyGroup.SyncWrite(obj);//写入坐标和温度
-                    }
-                    else
-                    {
-                        FormMain.GetOPCTaskInfo("Rpy_to_trans：机器人姿态值转变失败，组:" + group);
-                    }
+            #region 暂时无用
+            //else if (group == 3)//机器人姿态位置
+            //{
+            //    for (int i = 0; i < clientId.Length; i++)// 获取跳变信号
+            //    {
+            //       aa: Posistion posistion = new Posistion
+            //        {
+            //            x = float.Parse(RobitGroup.ReadD(0).ToString()),
+            //            y = float.Parse(RobitGroup.ReadD(1).ToString()),
+            //            z = float.Parse(RobitGroup.ReadD(2).ToString()),
+            //            Rx = float.Parse(RobitGroup.ReadD(3).ToString()),
+            //            Ry = float.Parse(RobitGroup.ReadD(4).ToString()),
+            //            Rz = float.Parse(RobitGroup.ReadD(5).ToString())
+            //        };
+            //        Transform transform = new Transform();
+            //        if (CalculatorClass.Rpy_to_trans(posistion, ref transform) > 0)//机器人姿态转换相机位置
+            //        {
 
-                }
-            }
+            //            if(transform.v1.x > 0)//如果是一号热像仪可用
+            //            {
+            //                CamIndex = 0;
+            //            }
+            //            else if(transform.v1.x > 1)//如果是二号热像仪可用
+            //            {
+            //                CamIndex = 1;
+            //            }
+            //            else//都不可用的情况下 再取一次机器人的位置
+            //            {
+            //                goto aa;
+            //            }  
+            //            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[CamIndex].intCamIp); //选择已经绑定的IP的显示窗口
+            //            FormMain.GetOPCTaskInfo("正在使用窗体："+frmDisplay.Name +"的热像仪！"); 
+            //            object[] obj = new object[36];
+            //            await Task.Run(()=>  frmDisplay.GetInfo(1, out obj) );
+            //            RpyGroup.SyncWrite(obj);//写入坐标和温度
+            //        }
+            //        else
+            //        {
+            //            FormMain.GetOPCTaskInfo("Rpy_to_trans：机器人姿态值转变失败，组:" + group);
+            //        }
+
+            //    }
+            //}
+            #endregion
             else
             {
                 FormMain.GetOPCTaskInfo("跳变信号组错误,组:" + group);

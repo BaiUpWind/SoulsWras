@@ -266,37 +266,8 @@ namespace ThermoGroupSample
 
             return true;
         }
-        public void GetInfo( out object[] values)
-        {
-             MagDevice device = _DataDisplay.GetDevice();
-       int[] infos = new int[5];
-             values = new object[31];
-            for (int i = 0; i < values.Length; i++)
-            {
-                values[i] = 0;
-            }
-        cc: InputWidth = CentrePoint + InputWidth;//右上角坐标等于宽度加上圆心坐标
-            GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();                        //}
-            bool falge = device.GetEllipseTemperatureInfo((uint)CentrePoint, (uint)CentrePoint, (uint)InputWidth, (uint)InputWidth, infos);
-            float MaxTemper = infos[1] * 0.001f;//最高温度
-            int intFPAMax = (int)(infos[4]);//MaxTmperLoc
-            uint x = (uint)cAMERA_INFO.intFPAWidth, y = (uint)cAMERA_INFO.intFPAHeight;
-            device.ConvertPos2XY((uint)intFPAMax, ref x, ref y);  
-            if (MaxTemper >= LimitTmper)
-            {
-                values[0] = MaxTemper;
-                values[1] = (uint)(x * this.Width / cAMERA_INFO.intFPAWidth); ;
-                values[2] = (uint)((cAMERA_INFO.intFPAHeight - (y + 1)) * this.Height / cAMERA_INFO.intFPAHeight); ;
-                values[30] = 1;//标志位写1
-            }
-            else
-            {
-                Task.Delay(500);//在这里停顿半秒
-                goto cc;//如果当前温度没有大于极限值 重新再获取一遍 确保跳变不会丢失
-            }
-            FormMain.GetOPCTaskInfo("温度:" + values[0] + "坐标X:" + values[1] + "坐标Y " + values[2]);
-        }
-        int r, w, h;//半径 ，离左边距离 ， 离上边距离
+      
+      //  int r, w, h;//半径 ，离左边距离 ， 离上边距离
         /// <summary>
         /// 检测制定圆形区域的温度
         /// </summary>

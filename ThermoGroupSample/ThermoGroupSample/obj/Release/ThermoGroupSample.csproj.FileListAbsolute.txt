@@ -39,3 +39,5 @@ D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Rele
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDateSet.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FmMianControl.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.CopyComplete
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\HslCommunication.dll

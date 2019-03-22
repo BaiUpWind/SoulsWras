@@ -40,6 +40,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HslCommunication, Version=5.8.0.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Lib\HslCommunication.dll</HintPath>
+    </Reference>
     <Reference Include="opcrcw.comn, Version=1.10.2.0, Culture=neutral, PublicKeyToken=9a40e993cbface53, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -109,7 +113,9 @@
     <Compile Include="Modle\Group.cs" />
     <Compile Include="Modle\ItemCollection.cs" />
     <Compile Include="Modle\M_CalInfo.cs" />
-    <Compile Include="OPCServer\OpcServer.cs" />
+    <Compile Include="Server\DemoUtils.cs" />
+    <Compile Include="Server\OpcServer.cs" />
+    <Compile Include="Server\SiemensS7.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pub\CalculatorClass.cs" />
@@ -162,6 +168,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\HslCommunication.dll" />
     <Content Include="Lib\opcrcw.comn.dll" />
     <Content Include="Lib\opcrcw.da.dll" />
   </ItemGroup>

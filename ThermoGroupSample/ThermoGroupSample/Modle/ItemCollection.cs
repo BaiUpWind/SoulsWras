@@ -61,5 +61,39 @@ namespace ThermoGroupSample.Modle
             return list;
 
         }
+
+
+
+
+        /// <summary>
+        /// 机器人任务下载块
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetBYS7Item()
+        {
+            List<string> list = new List<string>();
+
+            for (int i = 0; i < 4; i++)
+            {
+                list.Add("DB30.REAL" + (i * 10));//角度
+                list.Add("DB30.REAL" + (4 + (i * 10)));//距离
+                list.Add("DB30.W" + (8 + (i * 10)));//距离
+            }
+            list.Add(OpcServer + "DB30,W64");//标志位
+            return list;
+        }
+
+        
+         
+        public static List<string> GetRobitPositionbYs7Item()
+        {
+            List<string> list = new List<string>
+            {
+                "DB31.REAL0",//X
+               
+            };
+            return list;
+
+        }
     }
 }

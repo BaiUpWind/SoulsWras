@@ -53,11 +53,14 @@ namespace ThermoGroupSample
             this.list_data = new System.Windows.Forms.ListBox();
             this.btnConnection = new System.Windows.Forms.Button();
             this.groupBoxPLCContrl = new System.Windows.Forms.GroupBox();
+            this.btnStOP = new System.Windows.Forms.Button();
             this.btnEnter = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.≤Œ ˝…Ë÷√SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.“ª∫≈Íµπ¯ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnStOP = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtTimetim = new System.Windows.Forms.TextBox();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxDisplay.SuspendLayout();
@@ -136,7 +139,7 @@ namespace ThermoGroupSample
             // 
             this.groupBoxTras.Controls.Add(this.buttonStop);
             this.groupBoxTras.Controls.Add(this.buttonPlay);
-            this.groupBoxTras.Location = new System.Drawing.Point(1, 140);
+            this.groupBoxTras.Location = new System.Drawing.Point(5, 129);
             this.groupBoxTras.Name = "groupBoxTras";
             this.groupBoxTras.Size = new System.Drawing.Size(217, 75);
             this.groupBoxTras.TabIndex = 4;
@@ -169,7 +172,7 @@ namespace ThermoGroupSample
             // 
             this.lblDisplay.AutoSize = true;
             this.lblDisplay.BackColor = System.Drawing.SystemColors.Control;
-            this.lblDisplay.Location = new System.Drawing.Point(3, 460);
+            this.lblDisplay.Location = new System.Drawing.Point(3, 530);
             this.lblDisplay.Name = "lblDisplay";
             this.lblDisplay.Size = new System.Drawing.Size(53, 12);
             this.lblDisplay.TabIndex = 3;
@@ -179,7 +182,7 @@ namespace ThermoGroupSample
             // cmbDisplay
             // 
             this.cmbDisplay.FormattingEnabled = true;
-            this.cmbDisplay.Location = new System.Drawing.Point(66, 460);
+            this.cmbDisplay.Location = new System.Drawing.Point(66, 530);
             this.cmbDisplay.Name = "cmbDisplay";
             this.cmbDisplay.Size = new System.Drawing.Size(147, 20);
             this.cmbDisplay.TabIndex = 0;
@@ -189,7 +192,7 @@ namespace ThermoGroupSample
             // btnTake
             // 
             this.btnTake.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnTake.Location = new System.Drawing.Point(18, 49);
+            this.btnTake.Location = new System.Drawing.Point(18, 89);
             this.btnTake.Name = "btnTake";
             this.btnTake.Size = new System.Drawing.Size(75, 23);
             this.btnTake.TabIndex = 5;
@@ -207,7 +210,7 @@ namespace ThermoGroupSample
             this.groupBoxDisplay.Controls.Add(this.txtW);
             this.groupBoxDisplay.Controls.Add(this.lblL);
             this.groupBoxDisplay.Controls.Add(this.lblW);
-            this.groupBoxDisplay.Location = new System.Drawing.Point(5, 343);
+            this.groupBoxDisplay.Location = new System.Drawing.Point(5, 413);
             this.groupBoxDisplay.Name = "groupBoxDisplay";
             this.groupBoxDisplay.Size = new System.Drawing.Size(217, 108);
             this.groupBoxDisplay.TabIndex = 6;
@@ -290,7 +293,7 @@ namespace ThermoGroupSample
             // btnSelect
             // 
             this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSelect.Location = new System.Drawing.Point(113, 67);
+            this.btnSelect.Location = new System.Drawing.Point(113, 107);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(91, 23);
             this.btnSelect.TabIndex = 1;
@@ -303,16 +306,16 @@ namespace ThermoGroupSample
             this.list_data.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.list_data.FormattingEnabled = true;
             this.list_data.ItemHeight = 12;
-            this.list_data.Location = new System.Drawing.Point(0, 504);
+            this.list_data.Location = new System.Drawing.Point(0, 564);
             this.list_data.Name = "list_data";
-            this.list_data.Size = new System.Drawing.Size(224, 112);
+            this.list_data.Size = new System.Drawing.Size(224, 52);
             this.list_data.TabIndex = 40;
             this.list_data.Visible = false;
             // 
             // btnConnection
             // 
             this.btnConnection.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnConnection.Location = new System.Drawing.Point(18, 20);
+            this.btnConnection.Location = new System.Drawing.Point(6, 47);
             this.btnConnection.Name = "btnConnection";
             this.btnConnection.Size = new System.Drawing.Size(56, 23);
             this.btnConnection.TabIndex = 41;
@@ -322,22 +325,35 @@ namespace ThermoGroupSample
             // 
             // groupBoxPLCContrl
             // 
+            this.groupBoxPLCContrl.Controls.Add(this.txtTimetim);
+            this.groupBoxPLCContrl.Controls.Add(this.label2);
             this.groupBoxPLCContrl.Controls.Add(this.btnStOP);
             this.groupBoxPLCContrl.Controls.Add(this.btnEnter);
             this.groupBoxPLCContrl.Controls.Add(this.btnConnection);
             this.groupBoxPLCContrl.Controls.Add(this.btnTake);
             this.groupBoxPLCContrl.Controls.Add(this.btnSelect);
-            this.groupBoxPLCContrl.Location = new System.Drawing.Point(5, 221);
+            this.groupBoxPLCContrl.Location = new System.Drawing.Point(5, 219);
             this.groupBoxPLCContrl.Name = "groupBoxPLCContrl";
-            this.groupBoxPLCContrl.Size = new System.Drawing.Size(217, 108);
+            this.groupBoxPLCContrl.Size = new System.Drawing.Size(217, 150);
             this.groupBoxPLCContrl.TabIndex = 43;
             this.groupBoxPLCContrl.TabStop = false;
             this.groupBoxPLCContrl.Text = "PLCøÿ÷∆∆˜";
             // 
+            // btnStOP
+            // 
+            this.btnStOP.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnStOP.Location = new System.Drawing.Point(68, 47);
+            this.btnStOP.Name = "btnStOP";
+            this.btnStOP.Size = new System.Drawing.Size(54, 23);
+            this.btnStOP.TabIndex = 43;
+            this.btnStOP.Text = "Õ£÷π";
+            this.btnStOP.UseVisualStyleBackColor = true;
+            this.btnStOP.Click += new System.EventHandler(this.btnStOP_Click);
+            // 
             // btnEnter
             // 
             this.btnEnter.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEnter.Location = new System.Drawing.Point(18, 78);
+            this.btnEnter.Location = new System.Drawing.Point(18, 118);
             this.btnEnter.Name = "btnEnter";
             this.btnEnter.Size = new System.Drawing.Size(56, 23);
             this.btnEnter.TabIndex = 42;
@@ -370,16 +386,29 @@ namespace ThermoGroupSample
             this.“ª∫≈Íµπ¯ToolStripMenuItem.Text = "Íµπ¯…Ë÷√";
             this.“ª∫≈Íµπ¯ToolStripMenuItem.Click += new System.EventHandler(this.“ª∫≈Íµπ¯ToolStripMenuItem_Click);
             // 
-            // btnStOP
+            // label1
             // 
-            this.btnStOP.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnStOP.Location = new System.Drawing.Point(86, 20);
-            this.btnStOP.Name = "btnStOP";
-            this.btnStOP.Size = new System.Drawing.Size(54, 23);
-            this.btnStOP.TabIndex = 43;
-            this.btnStOP.Text = "Õ£÷π";
-            this.btnStOP.UseVisualStyleBackColor = true;
-            this.btnStOP.Click += new System.EventHandler(this.btnStOP_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(-1, 126);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 12);
+            this.label1.TabIndex = 47;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(77, 12);
+            this.label2.TabIndex = 44;
+            this.label2.Text = "º‰∏Ù£®mm£©£∫";
+            // 
+            // txtTimetim
+            // 
+            this.txtTimetim.Location = new System.Drawing.Point(88, 20);
+            this.txtTimetim.Name = "txtTimetim";
+            this.txtTimetim.Size = new System.Drawing.Size(66, 21);
+            this.txtTimetim.TabIndex = 45;
             // 
             // FormControl
             // 
@@ -387,6 +416,7 @@ namespace ThermoGroupSample
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(224, 616);
             this.ControlBox = false;
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblDisplay);
             this.Controls.Add(this.list_data);
             this.Controls.Add(this.groupBoxDisplay);
@@ -409,6 +439,7 @@ namespace ThermoGroupSample
             this.groupBoxDisplay.ResumeLayout(false);
             this.groupBoxDisplay.PerformLayout();
             this.groupBoxPLCContrl.ResumeLayout(false);
+            this.groupBoxPLCContrl.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -448,5 +479,8 @@ namespace ThermoGroupSample
         private System.Windows.Forms.ToolStripMenuItem “ª∫≈Íµπ¯ToolStripMenuItem;
         private System.Windows.Forms.Label lblDisplay;
         private System.Windows.Forms.Button btnStOP;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtTimetim;
+        private System.Windows.Forms.Label label2;
     }
 }
