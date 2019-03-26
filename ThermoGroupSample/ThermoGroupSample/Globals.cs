@@ -63,5 +63,76 @@ namespace ThermoGroupSample
                 }
             }
         }
+
+        /// <summary>
+        /// 相机坐标原点拍摄的位置（以图像坐标左下角开始的起始坐标，0,0） 距离量测实物的圆心的距离(单位厘米)
+        /// </summary>
+        public static double TwoProp
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result =Convert.ToDouble( config.AppSettings.Settings["TwoProp"].Value) ;
+                        if ( result >0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            } 
+        }
+        /// <summary>
+        /// 相机距离机器人垂直距离
+        /// </summary>
+        public static double CamerRototVd
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["CamerRototVd"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            } 
+        }
     }
 }
