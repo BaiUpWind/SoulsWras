@@ -36,6 +36,9 @@ namespace ThermoGroupSample
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
           
         }
+        /// <summary>
+        /// 异步检测最高温度值
+        /// </summary>
         public void Startasync() {
             AutoDraw();
         }
@@ -90,12 +93,11 @@ namespace ThermoGroupSample
             }
            
             DrawMouseTemp(graphic, this.Width, this.Height);//鼠标测温 
-            DarwDetectRegion(graphic);//查看检测区域
-            DarwMaxTempPoint(graphic);
             _DataDisplay.GetDevice().Unlock();
 
         }
         #region 属性
+         
         public bool darwFalge;
         public bool darwMaxt;
         /// <summary>
@@ -128,6 +130,12 @@ namespace ThermoGroupSample
         /// 绘制的Y点
         /// </summary>
         public uint DY { get; set; }
+        /// <summary>
+        /// 当前相机对应圆心所在的角度
+        /// </summary>
+        public double Degrees { get; set; }
+
+        CalculatorClass  calculator = new CalculatorClass();
         #endregion
         /// <summary>
         /// 绘制需要检测的区域（圆）
@@ -266,8 +274,64 @@ namespace ThermoGroupSample
 
             return true;
         }
-      
-      //  int r, w, h;//半径 ，离左边距离 ， 离上边距离
+
+
+        public void NewGetInfo(out object[] values)
+        {
+            try
+            {
+                double index =  ( Degrees /45);//当前检测区域的位置
+                int listindex = 0;//数据索引
+                MagDevice device = _DataDisplay.GetDevice();
+                List<string> list = new List<string>();
+                values = new object[16];
+                for (int i = 0; i < values.Length; i++)
+                {
+                    values[i] = 0;
+                }
+                GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
+                for (int x = 0; x < cAMERA_INFO.intFPAWidth; x++)//X轴
+                {
+                    for (int y = 0; y < cAMERA_INFO.intFPAHeight; y++)//Y轴
+                    {
+                        float temper = device.GetTemperatureProbe((uint)x, (uint)y, 1) * 0.001f;//获取温度
+                        if (temper >= LimitTmper)//如果大于等于极限温度
+                        {
+                            var realPoint = calculator.listDegress[(int)index][x, y].Split(',');//取得在对应角度的 绑定的坐标
+                            var newX = Convert.ToDouble(realPoint[0]);
+                            var newY = Convert.ToDouble(realPoint[1]);
+                            if (newX != -1 && newY != -1)
+                            {
+                                list.Add(temper + "$" + realPoint[0] + "$" + realPoint[y]  ); //温度，实际坐标X，实际坐标Y
+                            }
+                            else
+                            {
+                                FormMain.GetOPCTaskInfo("检测到不在范围的温度坐标,温度：" + temper + " 实际X坐标：" + realPoint[0] + " 实际Y坐标：" + realPoint[y]);
+                            } 
+                        }
+                    }
+                }
+                list.Sort();
+                foreach (var item in list)
+                {
+                   var date = item.Trim().Split('$');
+                    double temper = Convert.ToDouble( date[0]);
+                    double x = Convert.ToDouble(date[1]);
+                    double y = Convert.ToDouble(date[2]);
+                    double dg = calculator.GetDegress(x, y);//根据坐标求出角度
+                    values[listindex] = temper;//温度
+                    values[listindex + 1] = dg;
+                    values[listindex + 2] = calculator.GetVd(dg, CentrePoint, CentrePoint, x, y);//根据角度，坐标 求出距离
+                    listindex += 3;
+                }
+                FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //  int r, w, h;//半径 ，离左边距离 ， 离上边距离
         /// <summary>
         /// 检测制定圆形区域的温度
         /// </summary>

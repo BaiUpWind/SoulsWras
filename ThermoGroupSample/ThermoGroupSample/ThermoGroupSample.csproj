@@ -107,6 +107,12 @@
     <Compile Include="FormMainSc.Designer.cs">
       <DependentUpon>FormMainSc.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPointBind.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPointBind.Designer.cs">
+      <DependentUpon>FormPointBind.cs</DependentUpon>
+    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="GroupSDK.cs" />
     <Compile Include="MagHelper.cs" />

@@ -22,6 +22,7 @@ namespace ThermoGroupSample
         List<uint> _LstComboIP = new List<uint>();
         FormControl _FormControl = null;
         const int MAX_ENUMDEVICE = 32;
+        CalculatorClass calculator = new CalculatorClass();
         /// <summary>
         /// 相机数据
         /// </summary>
@@ -285,7 +286,11 @@ namespace ThermoGroupSample
         bool stop = true;
 
     
-       
+       /// <summary>
+       /// 获取最高温度点
+       /// </summary>
+       /// <param name="sender"></param>
+       /// <param name="e"></param>
         private void btnTake_Click(object sender, EventArgs e)
         {
             if (!stop)
@@ -294,7 +299,7 @@ namespace ThermoGroupSample
                 frmDisplay.Stop = true;
                 btnTake.Enabled = false;
           
-                frmDisplay.Startasync();
+               // frmDisplay.Startasync();
             }
         }
         /// <summary>
@@ -412,11 +417,7 @@ namespace ThermoGroupSample
             if (btnConnection.Cursor == Cursors.No)
             {
                 return;
-            }
-            var radian = (Math.PI / 180) * 83.82;//根据角度求出弧度
-            double zgX = 90 * Math.Cos(radian);//X轴
-            double zgY = 90 * Math.Sin(radian);//y轴
-            MessageBox.Show("x:" + zgX + "y:" + zgY);
+            } 
             if (!isThreadRun)
             {
                 if (!int.TryParse(txtTimetim.Text, out timeSleep))
@@ -430,14 +431,7 @@ namespace ThermoGroupSample
                     IsBackground = true
                 };
                 thread.Start();
-            }
-
-            ///opc方式读取
-            //if (opcServer.RobitGroup !=null && opcServer.SpyGroup != null)
-            //{
-
-            //    opcServer.BindingHandele();
-            //}
+            } 
 
         }
         int r;//半径
@@ -451,27 +445,41 @@ namespace ThermoGroupSample
                 int flag = s7Task.Read(s7Task.ListCount).CastTo<int>(-1);//获取标志位
                 if(flag == 0)//允许采集热点信息
                 {
-                    float degrees = s7Postion.Read(0).CastTo<float>(-1);//获取机器人的角度 判断热像仪可检测范围
-                    if (degrees > 0f)
+                    double degrees = s7Postion.Read(0).CastTo<double>(-1);//获取机器人的角度 判断热像仪可检测范围
+                    if (degrees > 0d)
                     {
-                        var radian = (Math.PI / 180) * degrees;//根据角度求出弧度
-                        double zgX = r * Math.Cos(radian);//X轴
-                        double zgY = r * Math.Sin(radian);//y轴
-                        for (int i = 0;  i<= r; i++)
-                        {
-                            for (int j = 0; j < 360; j++)
-                            {
-                                var radiani = (Math.PI / 180) * j;//根据角度求出弧度
-                                double zgXj = i * Math.Cos(radian);//X轴
-                                double zgYj = i * Math.Sin(radian);//y轴
-                            }
-                        }
+                      double[] towDegress =  calculator.DegreesTrans(degrees);//取得一个相机角度，获取另个相机所在的角度
 
+                        for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+                        {
+                            if( i >= towDegress.Length)
+                            {
+                                break;
+                            }
+                            if( comboBoxOnlineDevice.Items[i].ToString().Contains("conn"))
+                            {
+                                FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
+                                if (frmDisplay == null)
+                                {
+                                    FormMain.GetOPCTaskInfo("未获取到该热像仪画面: IP:" + _LstEnumInfo[i].intCamIp);
+                                    continue;
+                                }
+                                else
+                                {
+                                    frmDisplay.Degrees = towDegress[i];
+                                    FormMain.GetOPCTaskInfo("窗体:"+ frmDisplay.Name+",存入角度:"+ towDegress[i] + ",IP:" + _LstEnumInfo[i].intCamIp);
+                                }
+                            }
+                            else
+                            {
+                                FormMain.GetOPCTaskInfo("此相机不处于连接状态："+comboBoxOnlineDevice.Items[i].ToString());
+                            }
+                        } 
                         Thread.Sleep(500);//未取到数据时 0.5秒后再取
                     }
                     else
                     {
-                        FormMain.GetOPCTaskInfo("未读取到机器人角度" + degrees);
+                        FormMain.GetOPCTaskInfo("未读取到机器人角度:" + degrees);
                         Thread.Sleep(3000);//3秒后重新再读取
                     }
                 }
@@ -609,6 +617,11 @@ namespace ThermoGroupSample
                     opcServer.DropHandele(); 
                 }
             }
+        }
+
+        private void 坐标绑定ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

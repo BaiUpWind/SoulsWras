@@ -53,14 +53,15 @@ namespace ThermoGroupSample
             this.list_data = new System.Windows.Forms.ListBox();
             this.btnConnection = new System.Windows.Forms.Button();
             this.groupBoxPLCContrl = new System.Windows.Forms.GroupBox();
+            this.txtTimetim = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.btnStOP = new System.Windows.Forms.Button();
             this.btnEnter = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.参数设置SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtTimetim = new System.Windows.Forms.TextBox();
+            this.坐标绑定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxDisplay.SuspendLayout();
@@ -141,7 +142,7 @@ namespace ThermoGroupSample
             this.groupBoxTras.Controls.Add(this.buttonPlay);
             this.groupBoxTras.Location = new System.Drawing.Point(5, 129);
             this.groupBoxTras.Name = "groupBoxTras";
-            this.groupBoxTras.Size = new System.Drawing.Size(217, 75);
+            this.groupBoxTras.Size = new System.Drawing.Size(217, 59);
             this.groupBoxTras.TabIndex = 4;
             this.groupBoxTras.TabStop = false;
             this.groupBoxTras.Text = "传图控制";
@@ -332,12 +333,28 @@ namespace ThermoGroupSample
             this.groupBoxPLCContrl.Controls.Add(this.btnConnection);
             this.groupBoxPLCContrl.Controls.Add(this.btnTake);
             this.groupBoxPLCContrl.Controls.Add(this.btnSelect);
-            this.groupBoxPLCContrl.Location = new System.Drawing.Point(5, 219);
+            this.groupBoxPLCContrl.Location = new System.Drawing.Point(5, 194);
             this.groupBoxPLCContrl.Name = "groupBoxPLCContrl";
             this.groupBoxPLCContrl.Size = new System.Drawing.Size(217, 150);
             this.groupBoxPLCContrl.TabIndex = 43;
             this.groupBoxPLCContrl.TabStop = false;
             this.groupBoxPLCContrl.Text = "PLC控制器";
+            // 
+            // txtTimetim
+            // 
+            this.txtTimetim.Location = new System.Drawing.Point(88, 20);
+            this.txtTimetim.Name = "txtTimetim";
+            this.txtTimetim.Size = new System.Drawing.Size(66, 21);
+            this.txtTimetim.TabIndex = 45;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(77, 12);
+            this.label2.TabIndex = 44;
+            this.label2.Text = "间隔（mm）：";
             // 
             // btnStOP
             // 
@@ -374,7 +391,8 @@ namespace ThermoGroupSample
             // 参数设置SToolStripMenuItem
             // 
             this.参数设置SToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.一号甑锅ToolStripMenuItem});
+            this.一号甑锅ToolStripMenuItem,
+            this.坐标绑定ToolStripMenuItem});
             this.参数设置SToolStripMenuItem.Name = "参数设置SToolStripMenuItem";
             this.参数设置SToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
             this.参数设置SToolStripMenuItem.Text = "参数设置(&S)";
@@ -394,21 +412,12 @@ namespace ThermoGroupSample
             this.label1.Size = new System.Drawing.Size(0, 12);
             this.label1.TabIndex = 47;
             // 
-            // label2
+            // 坐标绑定ToolStripMenuItem
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 27);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 12);
-            this.label2.TabIndex = 44;
-            this.label2.Text = "间隔（mm）：";
-            // 
-            // txtTimetim
-            // 
-            this.txtTimetim.Location = new System.Drawing.Point(88, 20);
-            this.txtTimetim.Name = "txtTimetim";
-            this.txtTimetim.Size = new System.Drawing.Size(66, 21);
-            this.txtTimetim.TabIndex = 45;
+            this.坐标绑定ToolStripMenuItem.Name = "坐标绑定ToolStripMenuItem";
+            this.坐标绑定ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.坐标绑定ToolStripMenuItem.Text = "坐标绑定";
+            this.坐标绑定ToolStripMenuItem.Click += new System.EventHandler(this.坐标绑定ToolStripMenuItem_Click);
             // 
             // FormControl
             // 
@@ -482,5 +491,6 @@ namespace ThermoGroupSample
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtTimetim;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ToolStripMenuItem 坐标绑定ToolStripMenuItem;
     }
 }
