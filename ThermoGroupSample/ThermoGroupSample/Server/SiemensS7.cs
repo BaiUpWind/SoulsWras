@@ -172,11 +172,11 @@ namespace ThermoGroupSample.Server
             }
         }
         /// <summary>
-        /// 
+        /// 写入电控
         /// </summary>
         /// <param name="values">对应整块DB块的值</param>
         /// <param name="index"></param>
-        public void Write(object[] values, int index)
+        public void Write(object[] values)
         {
             try
             {

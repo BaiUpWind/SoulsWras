@@ -275,7 +275,10 @@ namespace ThermoGroupSample
             return true;
         }
 
-
+        /// <summary>
+        /// 获取要发送的信息
+        /// </summary>
+        /// <param name="values"></param>
         public void NewGetInfo(out object[] values)
         {
             try

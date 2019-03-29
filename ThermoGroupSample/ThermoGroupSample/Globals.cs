@@ -134,5 +134,147 @@ namespace ThermoGroupSample
 
             } 
         }
+
+        /// <summary>
+        /// 实际宽
+        /// </summary>
+        public static double RealWidth
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["RealWidth"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
+        /// <summary>
+        /// 实际高
+        /// </summary>
+        public static double RealHeight
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["RealHeight"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
+        /// <summary>
+        /// 等分
+        /// </summary>
+        public static double  Parts
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["Parts"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
+        /// <summary>
+        /// 距离
+        /// </summary>
+        public static double Range
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["Range"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
+        
     }
 }

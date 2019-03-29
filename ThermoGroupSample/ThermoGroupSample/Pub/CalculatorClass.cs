@@ -329,26 +329,22 @@ namespace ThermoGroupSample.Pub
         //ratio 比值：坐标对应的比值
         string[,] camerLocation1;//相机坐标
         string[,] realLoaction;//实际坐标
-        double range;
-
-
-
+        double range; 
         public List<string[,]> listDegress;// 存放的对应坐标 
         /// <summary>
         /// 哑办法绑值
         /// </summary>
         void BindPoint()
         {
-            RealWidth = 60;
-            RealHeight = 60;
+            RealWidth = Globals.RealWidth;
+            RealHeight = Globals.RealHeight;
+            range = Globals.Range;
             RealPoint();
-            Parts = 8;
+            Parts = Globals.Parts;
             listDegress = new List<string[,]>();
             for (int i = 0; i < Parts; i++)
             {
-                camerLocation1 = new string[60, 80];
-
-                range = 20;
+                camerLocation1 = new string[60, 80]; 
                 RealX1 = RealWidth / 2;
                 RealY1 = RealWidth / 2;
                 double degerss = (360 / Parts) * i;//当前角度 
@@ -389,6 +385,10 @@ namespace ThermoGroupSample.Pub
                     case 315:
                         nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
                         nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
+                        break;
+                    default:
+                        nX1 = Math.Sin(radian) * range + RealX1;
+                        nY1 = Math.Cos(radian) * range + RealY1;
                         break;
                 }
                 #endregion
@@ -419,28 +419,28 @@ namespace ThermoGroupSample.Pub
                 listDegress.Add(camerLocation1);
             }
         }
+         
         /// <summary>
         /// 动态计算
         /// </summary>
         void BindPointByDynamic()
         {
-            RealWidth = 60;
-            RealHeight = 60;
+            RealWidth = Globals.RealWidth;
+            RealHeight = Globals.RealHeight;
+            range = Globals.Range;
             RealPoint();
-            Parts = 8;
+            Parts = Globals.Parts;
             listDegress = new List<string[,]>();
             for (int i = 0; i < Parts; i++)
             {
                 camerLocation1 = new string[60, 80];
-
-                range = 20;
-                RealX1 = RealWidth / 2;
-                RealY1 = RealWidth / 2;
+                RealX1 = RealWidth / 2;//圆心点
+                RealY1 = RealHeight / 2;//圆心点
                 double degerss = (360 / Parts) * i;//当前角度 
                 double radian = (Math.PI / 180) * degerss;
                 #region 检测区域 
                 double nX1 = 0;
-                double nY1 = 0;
+                double nY1 = 0; 
                 switch (degerss)
                 {
                     case 0:
@@ -474,6 +474,10 @@ namespace ThermoGroupSample.Pub
                     case 315:
                         nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
                         nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
+                        break;
+                    default:
+                        nX1 = Math.Sin(radian) * range + RealX1;
+                        nY1 = Math.Cos(radian) * range + RealY1;
                         break;
                 }
                 #endregion

@@ -450,7 +450,7 @@ namespace ThermoGroupSample
                     {
                       double[] towDegress =  calculator.DegreesTrans(degrees);//取得一个相机角度，获取另个相机所在的角度
 
-                        for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+                        for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)//获取到在线相机
                         {
                             if( i >= towDegress.Length)
                             {
@@ -467,6 +467,8 @@ namespace ThermoGroupSample
                                 else
                                 {
                                     frmDisplay.Degrees = towDegress[i];
+                                    frmDisplay.NewGetInfo(out object[] va);
+                                    s7Task.Write(va);
                                     FormMain.GetOPCTaskInfo("窗体:"+ frmDisplay.Name+",存入角度:"+ towDegress[i] + ",IP:" + _LstEnumInfo[i].intCamIp);
                                 }
                             }
