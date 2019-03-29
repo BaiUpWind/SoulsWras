@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Pub;
 using ThermoGroupSample.Modle;
+using ThermoGroupSample.Pub;
 
 namespace ThermoGroupSample
 {
@@ -23,7 +24,7 @@ namespace ThermoGroupSample
         const uint DISPLAYWND_MARGIN = 6;
         const uint DISPLAYWND_BORDER_WIDTH = DISPLAYWND_GAP / 2;
         const uint MAX_DEVWINDOW_NUM = 2;
-
+        CalculatorClass cc;
         FormControl _FormControl;
         FormDisplay[] _FormDisplayLst;
         FormDisplayBG _FormDisplayBG;
@@ -126,6 +127,7 @@ namespace ThermoGroupSample
         private System.Windows.Forms.ListBox list_data = new ListBox();
         void InitializeAllWindows()
         {
+            cc = new CalculatorClass();
             //主窗口
             this.Width = (int)MAINWINDOW_WIDTH;
             this.Height = (int)MAINWINDOW_HEIGHT;
@@ -257,7 +259,9 @@ namespace ThermoGroupSample
             {
                 _FormDisplayLst[i].Hide();
             }
-           
+            cc.BindPoint();///绑定坐标
+
+
         }
 
         void GetZGinfoToDisplay( )

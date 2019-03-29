@@ -11,24 +11,32 @@ using System.Text.RegularExpressions;
 
 namespace ThermoGroupSample.Server
 {
-    public class SiemensS7:IDisposable
+    public class SiemensS7 : IDisposable
     {
-        public SiemensS7(SiemensS7Net siemensPLCS,List<string> listItem)
+        public SiemensS7(SiemensS7Net siemensPLCS, List<string> listItem)
         {
             SiemensTcpNet = siemensPLCS;
             ListItem = listItem;
             OperateResult operate = SiemensTcpNet.ConnectServer();
             if (!operate.IsSuccess)
             {
-                throw new Exception("连接失败！"+operate.Message);
+                throw new Exception("连接失败！" + operate.Message);
+            }
+            else
+            {
+                IsConnectioned = true;
             }
         }
 
-        private SiemensS7Net SiemensTcpNet = null;  
+        private SiemensS7Net SiemensTcpNet = null;
         /// <summary>
         /// DB地址集合 格式：DB地址+类型+加上位置,地址和类型之间用.隔开 如： DB30.Dint0   
         /// </summary>
         public List<string> ListItem { get; }
+        /// <summary>
+        /// 是否连接成功
+        /// </summary>
+        public bool IsConnectioned { get; } =  false;
         /// <summary>
         /// 返回地址集合的长度
         /// </summary>

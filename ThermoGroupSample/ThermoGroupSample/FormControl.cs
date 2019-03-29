@@ -431,6 +431,7 @@ namespace ThermoGroupSample
                     IsBackground = true
                 };
                 thread.Start();
+                timeSleep = txtTimetim.Text.CastTo(1000);
             } 
 
         }
@@ -449,7 +450,8 @@ namespace ThermoGroupSample
                     if (degrees > 0d)
                     {
                       double[] towDegress =  calculator.DegreesTrans(degrees);//取得一个相机角度，获取另个相机所在的角度
-
+                        object[] values = new object[50]; 
+                        List<List<string>> newInfo = new List<List<string>>();
                         for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)//获取到在线相机
                         {
                             if( i >= towDegress.Length)
@@ -467,8 +469,7 @@ namespace ThermoGroupSample
                                 else
                                 {
                                     frmDisplay.Degrees = towDegress[i];
-                                    frmDisplay.NewGetInfo(out object[] va);
-                                    s7Task.Write(va);
+                                    newInfo.Add( frmDisplay.NewGetInfo()); 
                                     FormMain.GetOPCTaskInfo("窗体:"+ frmDisplay.Name+",存入角度:"+ towDegress[i] + ",IP:" + _LstEnumInfo[i].intCamIp);
                                 }
                             }
@@ -476,8 +477,29 @@ namespace ThermoGroupSample
                             {
                                 FormMain.GetOPCTaskInfo("此相机不处于连接状态："+comboBoxOnlineDevice.Items[i].ToString());
                             }
+                        }
+                        int listindex = 0;
+                        foreach (var item in newInfo)
+                        {
+                            foreach (var item1 in item)
+                            {
+                                if (listindex >= s7Task.ListCount)
+                                {
+                                    break;
+                                }
+                                var date = item1.Trim().Split('$');
+                                double temper = Convert.ToDouble(date[0]);
+                                double x = Convert.ToDouble(date[1]);
+                                double y = Convert.ToDouble(date[2]);
+                                double dg = calculator.GetDegress(x, y);//根据坐标求出角度
+                                values[listindex] = temper;//温度
+                                values[listindex + 1] = dg;
+                                values[listindex + 2] = calculator.GetVd(dg, calculator.RealWidth / 2, calculator.RealHeight / 2, x, y);//根据角度，坐标 求出距离
+                                listindex += 3;
+                            } 
                         } 
-                        Thread.Sleep(500);//未取到数据时 0.5秒后再取
+                        s7Task.Write(values);
+                        Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取
                     }
                     else
                     {
@@ -498,9 +520,13 @@ namespace ThermoGroupSample
         /// <summary>
         /// 创建S7协议服务器
         /// </summary>
-        void CreatS7Server()
+       async void CreatS7Server()
         {
-
+            if (s7Task != null)
+            {
+                FormMain.GetOPCTaskInfo("服务已经创建!");
+                return;
+            }
             try
             {
                 SiemensS7Net s7server = new SiemensS7Net(SiemensPLCS.S1500)
@@ -509,7 +535,7 @@ namespace ThermoGroupSample
                     Slot = 0,
                     Rack = 0
                 };
-                s7Task = new SiemensS7(s7server, Modle.ItemCollection.GetBYS7Item());
+              await Task.Run(()=>  s7Task = new SiemensS7(s7server, Modle.ItemCollection.GetBYS7Item()));
                 s7Postion = new SiemensS7(s7server, Modle.ItemCollection.GetRobitPositionbYs7Item());
             }
             catch (Exception ex)
@@ -592,11 +618,11 @@ namespace ThermoGroupSample
             }
            
         }
-
+        ManualResetEvent manu = new ManualResetEvent(false);
         private void btnStOP_Click(object sender, EventArgs e)
         {
              
-            return;
+           
             if(btnStOP.Cursor == Cursors.No)
             {
                 return;
@@ -609,21 +635,21 @@ namespace ThermoGroupSample
 
 
             if (MsgBoxResult == DialogResult.Yes)
-            { 
-                if (opcServer.RobitGroup != null && opcServer.SpyGroup != null)
-                {
-                    FormDisplay frmDisplay1 = _DataControl.GetBindedDisplayForm(_LstEnumInfo[0].intCamIp); //选择已经绑定的IP的显示窗口
-                    FormDisplay frmDisplay2 = _DataControl.GetBindedDisplayForm(_LstEnumInfo[1].intCamIp); //选择已经绑定的IP的显示窗口
-                    frmDisplay1.Stop = false;
-                    frmDisplay2.Stop = false;
-                    opcServer.DropHandele(); 
-                }
+            {
+                isThreadRun = false;//线程停止
+           
+              
             }
         }
 
         private void 坐标绑定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnRConn_Click(object sender, EventArgs e)
+        {
+            AsyncConnectionPlc();
         }
     }
 }

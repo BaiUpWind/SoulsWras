@@ -61,7 +61,7 @@ namespace ThermoGroupSample
             this.参数设置SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.坐标绑定ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnRConn = new System.Windows.Forms.Button();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxDisplay.SuspendLayout();
@@ -193,7 +193,7 @@ namespace ThermoGroupSample
             // btnTake
             // 
             this.btnTake.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnTake.Location = new System.Drawing.Point(18, 89);
+            this.btnTake.Location = new System.Drawing.Point(11, 350);
             this.btnTake.Name = "btnTake";
             this.btnTake.Size = new System.Drawing.Size(75, 23);
             this.btnTake.TabIndex = 5;
@@ -294,7 +294,7 @@ namespace ThermoGroupSample
             // btnSelect
             // 
             this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSelect.Location = new System.Drawing.Point(113, 107);
+            this.btnSelect.Location = new System.Drawing.Point(106, 368);
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(91, 23);
             this.btnSelect.TabIndex = 1;
@@ -326,13 +326,11 @@ namespace ThermoGroupSample
             // 
             // groupBoxPLCContrl
             // 
+            this.groupBoxPLCContrl.Controls.Add(this.btnRConn);
             this.groupBoxPLCContrl.Controls.Add(this.txtTimetim);
             this.groupBoxPLCContrl.Controls.Add(this.label2);
             this.groupBoxPLCContrl.Controls.Add(this.btnStOP);
-            this.groupBoxPLCContrl.Controls.Add(this.btnEnter);
             this.groupBoxPLCContrl.Controls.Add(this.btnConnection);
-            this.groupBoxPLCContrl.Controls.Add(this.btnTake);
-            this.groupBoxPLCContrl.Controls.Add(this.btnSelect);
             this.groupBoxPLCContrl.Location = new System.Drawing.Point(5, 194);
             this.groupBoxPLCContrl.Name = "groupBoxPLCContrl";
             this.groupBoxPLCContrl.Size = new System.Drawing.Size(217, 150);
@@ -370,7 +368,7 @@ namespace ThermoGroupSample
             // btnEnter
             // 
             this.btnEnter.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEnter.Location = new System.Drawing.Point(18, 118);
+            this.btnEnter.Location = new System.Drawing.Point(11, 379);
             this.btnEnter.Name = "btnEnter";
             this.btnEnter.Size = new System.Drawing.Size(56, 23);
             this.btnEnter.TabIndex = 42;
@@ -391,8 +389,7 @@ namespace ThermoGroupSample
             // 参数设置SToolStripMenuItem
             // 
             this.参数设置SToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.一号甑锅ToolStripMenuItem,
-            this.坐标绑定ToolStripMenuItem});
+            this.一号甑锅ToolStripMenuItem});
             this.参数设置SToolStripMenuItem.Name = "参数设置SToolStripMenuItem";
             this.参数设置SToolStripMenuItem.Size = new System.Drawing.Size(83, 21);
             this.参数设置SToolStripMenuItem.Text = "参数设置(&S)";
@@ -412,12 +409,16 @@ namespace ThermoGroupSample
             this.label1.Size = new System.Drawing.Size(0, 12);
             this.label1.TabIndex = 47;
             // 
-            // 坐标绑定ToolStripMenuItem
+            // btnRConn
             // 
-            this.坐标绑定ToolStripMenuItem.Name = "坐标绑定ToolStripMenuItem";
-            this.坐标绑定ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.坐标绑定ToolStripMenuItem.Text = "坐标绑定";
-            this.坐标绑定ToolStripMenuItem.Click += new System.EventHandler(this.坐标绑定ToolStripMenuItem_Click);
+            this.btnRConn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnRConn.Location = new System.Drawing.Point(6, 76);
+            this.btnRConn.Name = "btnRConn";
+            this.btnRConn.Size = new System.Drawing.Size(56, 23);
+            this.btnRConn.TabIndex = 46;
+            this.btnRConn.Text = "重连";
+            this.btnRConn.UseVisualStyleBackColor = true;
+            this.btnRConn.Click += new System.EventHandler(this.btnRConn_Click);
             // 
             // FormControl
             // 
@@ -428,8 +429,11 @@ namespace ThermoGroupSample
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblDisplay);
             this.Controls.Add(this.list_data);
+            this.Controls.Add(this.btnEnter);
             this.Controls.Add(this.groupBoxDisplay);
             this.Controls.Add(this.groupBoxTras);
+            this.Controls.Add(this.btnTake);
+            this.Controls.Add(this.btnSelect);
             this.Controls.Add(this.cmbDisplay);
             this.Controls.Add(this.groupBoxDevice);
             this.Controls.Add(this.labelOnlineDevice);
@@ -491,6 +495,6 @@ namespace ThermoGroupSample
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtTimetim;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ToolStripMenuItem 坐标绑定ToolStripMenuItem;
+        private System.Windows.Forms.Button btnRConn;
     }
 }

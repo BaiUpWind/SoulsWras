@@ -323,30 +323,36 @@ namespace ThermoGroupSample.Pub
             return towDeg;
         }
 
-
-        double Parts, RealX1, RealY1, RealX2, RealY2, Ratio;//将检测区域分为几等分， 现实坐标x1相对于图像坐标的起始坐标，现实坐标y1 ,现实坐标x2 相对于图像坐标的对点坐标 ，现实坐标 y2
-        double RealWidth, RealHeight;//坐标的长宽
+        private double parts;
+        private double realX1;
+        private double ralY1;  
+        double realWidth, realHeight;//坐标的长宽
         //ratio 比值：坐标对应的比值
         string[,] camerLocation1;//相机坐标
         string[,] realLoaction;//实际坐标
-        double range; 
+        double range;
+
+
+
         public List<string[,]> listDegress;// 存放的对应坐标 
         /// <summary>
         /// 哑办法绑值
         /// </summary>
-        void BindPoint()
+      public  void BindPoint()
         {
-            RealWidth = Globals.RealWidth;
-            RealHeight = Globals.RealHeight;
-            range = Globals.Range;
+            RealWidth = 60;
+            RealHeight = 60;
             RealPoint();
-            Parts = Globals.Parts;
+            Parts = 8;
+            Range = 20;
             listDegress = new List<string[,]>();
             for (int i = 0; i < Parts; i++)
             {
                 camerLocation1 = new string[60, 80]; 
+                //中心坐标
                 RealX1 = RealWidth / 2;
-                RealY1 = RealWidth / 2;
+                RalY1 = RealWidth / 2;
+                //
                 double degerss = (360 / Parts) * i;//当前角度 
                 double radian = (Math.PI / 180) * degerss;
                 #region 检测区域 
@@ -355,40 +361,36 @@ namespace ThermoGroupSample.Pub
                 switch (degerss)
                 {
                     case 0:
-                        nX1 = Math.Sin(radian) * range + RealX1;
-                        nY1 = Math.Cos(radian) * range + RealY1;
+                        nX1 = Math.Sin(radian) * Range + RealX1;
+                        nY1 = Math.Cos(radian) * Range + RalY1;
                         break;
                     case 45:
-                        nX1 = Math.Abs(Math.Sin(radian) * range - RealX1);
-                        nY1 = Math.Cos(radian) * range + RealY1;
+                        nX1 = Math.Abs(Math.Sin(radian) * Range - RealX1);
+                        nY1 = Math.Cos(radian) * Range + RalY1;
                         break;
                     case 90:
-                        nX1 = Math.Abs(Math.Sin(radian) * range - RealX1);
-                        nY1 = Math.Cos(radian) * range + RealY1;
+                        nX1 = Math.Abs(Math.Sin(radian) * Range - RealX1);
+                        nY1 = Math.Cos(radian) * Range + RalY1;
                         break;
                     case 135:
-                        nX1 = Math.Abs(Math.Sin(radian) * range - RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range - RealY1);
+                        nX1 = Math.Abs(Math.Sin(radian) * Range - RealX1);
+                        nY1 = Math.Abs(Math.Cos(radian) * Range - RalY1);
                         break;
                     case 180:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
+                        nX1 = Math.Abs(Math.Sin(radian) * Range + RealX1);
+                        nY1 = Math.Abs(Math.Cos(radian) * Range + RalY1);
                         break;
                     case 225:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
+                        nX1 = Math.Abs(Math.Sin(radian) * Range + RealX1);
+                        nY1 = Math.Abs(Math.Cos(radian) * Range + RalY1);
                         break;
                     case 270:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
+                        nX1 = Math.Abs(Math.Sin(radian) * Range + RealX1);
+                        nY1 = Math.Abs(Math.Cos(radian) * Range + RalY1);
                         break;
                     case 315:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
-                        break;
-                    default:
-                        nX1 = Math.Sin(radian) * range + RealX1;
-                        nY1 = Math.Cos(radian) * range + RealY1;
+                        nX1 = Math.Abs(Math.Sin(radian) * Range + RealX1);
+                        nY1 = Math.Abs(Math.Cos(radian) * Range + RalY1);
                         break;
                 }
                 #endregion
@@ -419,95 +421,7 @@ namespace ThermoGroupSample.Pub
                 listDegress.Add(camerLocation1);
             }
         }
-         
-        /// <summary>
-        /// 动态计算
-        /// </summary>
-        void BindPointByDynamic()
-        {
-            RealWidth = Globals.RealWidth;
-            RealHeight = Globals.RealHeight;
-            range = Globals.Range;
-            RealPoint();
-            Parts = Globals.Parts;
-            listDegress = new List<string[,]>();
-            for (int i = 0; i < Parts; i++)
-            {
-                camerLocation1 = new string[60, 80];
-                RealX1 = RealWidth / 2;//圆心点
-                RealY1 = RealHeight / 2;//圆心点
-                double degerss = (360 / Parts) * i;//当前角度 
-                double radian = (Math.PI / 180) * degerss;
-                #region 检测区域 
-                double nX1 = 0;
-                double nY1 = 0; 
-                switch (degerss)
-                {
-                    case 0:
-                        nX1 = Math.Sin(radian) * range + RealX1;
-                        nY1 = Math.Cos(radian) * range + RealY1;
-                        break;
-                    case 45:
-                        nX1 = Math.Abs(Math.Sin(radian) * range - RealX1);
-                        nY1 = Math.Cos(radian) * range + RealY1;
-                        break;
-                    case 90:
-                        nX1 = Math.Abs(Math.Sin(radian) * range - RealX1);
-                        nY1 = Math.Cos(radian) * range + RealY1;
-                        break;
-                    case 135:
-                        nX1 = Math.Abs(Math.Sin(radian) * range - RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range - RealY1);
-                        break;
-                    case 180:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
-                        break;
-                    case 225:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
-                        break;
-                    case 270:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
-                        break;
-                    case 315:
-                        nX1 = Math.Abs(Math.Sin(radian) * range + RealX1);
-                        nY1 = Math.Abs(Math.Cos(radian) * range + RealY1);
-                        break;
-                    default:
-                        nX1 = Math.Sin(radian) * range + RealX1;
-                        nY1 = Math.Cos(radian) * range + RealY1;
-                        break;
-                }
-                #endregion
-                for (int cX = 0; cX < 60; cX++)//相机坐标点
-                {
-                    for (int cY = 0; cY < 80; cY++)
-                    {
-                        if (nX1 + cX >= RealWidth || nY1 + cY >= RealHeight)
-                        {
-                            camerLocation1[cX, cY] = "-1,-1";
-
-                        }
-                        else
-                        {
-                            if (degerss >= 180)
-                            {
-                                camerLocation1[cX, cY] = realLoaction[(int)(nX1 + cX), (int)(nY1 + cY)]; //(nX1 * Ratio + cX) + "," + (+nY2 * Ratio - cY);//当处于角度0的时候， 现实坐标乘以比例 x加 ，现实坐标乘以比例 Y 减 
-                            }
-                            else
-                            {
-                                camerLocation1[cX, cY] = realLoaction[(int)(nX1 + cX), (int)(nY1 + cY)];
-                            }
-                        }
-
-                    }
-                }
-
-                listDegress.Add(camerLocation1);
-            }
-        }
+ 
         void RealPoint()
         {
             realLoaction = new string[(int)RealWidth + 1, (int)RealHeight + 1];
@@ -522,6 +436,14 @@ namespace ThermoGroupSample.Pub
         int r;//点到圆心的距离
         int x, y; //已知点
         int x0, y0;//原点
+
+        public double Parts { get => parts; set => parts = value; }
+        public double RealX1 { get => realX1; set => realX1 = value; }
+        public double RalY1 { get => ralY1; set => ralY1 = value; }
+        public double RealWidth { get => realWidth; set => realWidth = value; }
+        public double RealHeight { get => realHeight; set => realHeight = value; }
+        public double Range { get => range; set => range = value; }
+
         //(r^2)/2=(x-x0)^2
         public void T()
         {

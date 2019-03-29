@@ -279,19 +279,14 @@ namespace ThermoGroupSample
         /// 获取要发送的信息
         /// </summary>
         /// <param name="values"></param>
-        public void NewGetInfo(out object[] values)
+        public List<string> NewGetInfo(  )
         {
             try
             {
                 double index =  ( Degrees /45);//当前检测区域的位置
-                int listindex = 0;//数据索引
+                //int listindex = 0;//数据索引
                 MagDevice device = _DataDisplay.GetDevice();
-                List<string> list = new List<string>();
-                values = new object[16];
-                for (int i = 0; i < values.Length; i++)
-                {
-                    values[i] = 0;
-                }
+                List<string> list = new List<string>(); 
                 GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
                 for (int x = 0; x < cAMERA_INFO.intFPAWidth; x++)//X轴
                 {
@@ -314,24 +309,25 @@ namespace ThermoGroupSample
                         }
                     }
                 }
-                list.Sort();
-                foreach (var item in list)
-                {
-                   var date = item.Trim().Split('$');
-                    double temper = Convert.ToDouble( date[0]);
-                    double x = Convert.ToDouble(date[1]);
-                    double y = Convert.ToDouble(date[2]);
-                    double dg = calculator.GetDegress(x, y);//根据坐标求出角度
-                    values[listindex] = temper;//温度
-                    values[listindex + 1] = dg;
-                    values[listindex + 2] = calculator.GetVd(dg, CentrePoint, CentrePoint, x, y);//根据角度，坐标 求出距离
-                    listindex += 3;
-                }
+                list.Sort(); 
                 FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
+                return list;
             }
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        void GerNewList(List<string> list)
+        {
+            foreach (var item in list)
+            {
+                var date = item.Trim().Split('$');
+                for (int i = 0; i < list.Count; i++)
+                {
+
+                }
             }
         }
         //  int r, w, h;//半径 ，离左边距离 ， 离上边距离
