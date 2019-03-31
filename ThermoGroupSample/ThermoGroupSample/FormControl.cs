@@ -447,6 +447,12 @@ namespace ThermoGroupSample
                 if(flag == 0)//允许采集热点信息
                 {
                     double degrees = s7Postion.Read(0).CastTo<double>(-1);//获取机器人的角度 判断热像仪可检测范围
+
+                    //获取相机所在的位置
+                    double Rx = s7Postion.Read(0).CastTo<double>(-1);//x
+                    double Ry = s7Postion.Read(0).CastTo<double>(-1);//y
+
+
                     if (degrees > 0d)
                     {
                       double[] towDegress =  calculator.DegreesTrans(degrees);//取得一个相机角度，获取另个相机所在的角度
@@ -491,10 +497,10 @@ namespace ThermoGroupSample
                                 double temper = Convert.ToDouble(date[0]);
                                 double x = Convert.ToDouble(date[1]);
                                 double y = Convert.ToDouble(date[2]);
-                                double dg = calculator.GetDegress(x, y);//根据坐标求出角度
+                               // double dg = calculator.GetDegress(x, y);//根据坐标求出角度
                                 values[listindex] = temper;//温度
-                                values[listindex + 1] = dg;
-                                values[listindex + 2] = calculator.GetVd(dg, calculator.RealWidth / 2, calculator.RealHeight / 2, x, y);//根据角度，坐标 求出距离
+                                values[listindex + 1] = x;
+                                values[listindex + 2] =y;//根据角度，坐标 求出距离
                                 listindex += 3;
                             } 
                         } 

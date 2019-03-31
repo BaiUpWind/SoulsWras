@@ -45,3 +45,4 @@ D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Rele
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.CopyComplete
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.exe
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
+D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache

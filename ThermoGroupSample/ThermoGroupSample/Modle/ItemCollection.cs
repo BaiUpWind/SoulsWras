@@ -90,7 +90,7 @@ namespace ThermoGroupSample.Modle
             List<string> list = new List<string>
             {
                 "DB31.REAL0",//X
-               
+               "DB31.REAL4"//Y
             };
             return list;
 

@@ -282,11 +282,11 @@ namespace ThermoGroupSample.Pub
         public double GetDegress (double x,double y)
         {
             double atan = Math.Atan2(y, x);
-            double degress = atan * 360 / Math.PI;
+            double degress = atan * 180 / Math.PI;
             return degress;
         }
         /// <summary>
-        /// 根据角度 坐标 求距离
+        /// 坐标 求距离
         /// </summary>
         /// <param name="degress">角度</param>
         /// <param name="ydx">原点x</param>
@@ -294,7 +294,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="x">新坐标x</param>
         /// <param name="y">新坐标y</param>
         /// <returns></returns>
-        public double  GetVd(double degress,double ydx,double ydy, double x,double y)
+        public double  GetVd(double ydx,double ydy, double x,double y)
         {
             double distance = Math.Sqrt(((x - ydx) * (x - ydx) + ((y - ydy) * (y - ydy))));
             return distance;
@@ -322,6 +322,7 @@ namespace ThermoGroupSample.Pub
             } 
             return towDeg;
         }
+        #region 20190329绑定坐标方法
 
         private double parts;
         private double realX1;
@@ -474,6 +475,54 @@ namespace ThermoGroupSample.Pub
 
         }
 
+        #endregion
+
+
+        #region 20190330 计算方式
+
+        ImgPosition imgP1, Imgp2;
+        RobotPosition RobP1, RobP2;
+
+        double[] zgCentrePoint;//圆心坐标 (x,y)
+        double factor;//比例系数
+
+        public RobotPosition GetRobotPosition(RobotPosition robotP1, ImgPosition imgP1)
+        {
+            //robotP1 相机位置坐标（实际坐标）
+            //imgP1 相机坐标（相机内的坐标点）
+            RobotPosition imgP3 = new RobotPosition() ; 
+
+            double  Rd = GetVd(zgCentrePoint[0], zgCentrePoint[1], robotP1.x, robotP1.y);//相机位置坐标离圆心距离
+            double Id = GetVd(1, 1, imgP1.x, Imgp2.x);//相机坐标与 相机圆心坐标的距离
+            factor = Rd / Id;//两个坐标的比例系数
+            double thetaR = GetDegress(robotP1.x, robotP1.y);//当前机器人坐标与甑锅圆心的角度  机器人的夹角
+            double thetaI = GetDegress(imgP1.x, imgP1.y);//相机坐标与相机坐标起始点的角度 相机坐标夹角
+            double thetaRI = thetaR - thetaI;//两个坐标系的偏移角
+
+            double thetaN   = Math.Atan2(imgP1.y, imgP1.x); 
+            imgP3.x = factor * Math.Sqrt(imgP1.x * imgP1.x + imgP1.y * imgP1.y) * Math.Cos(thetaRI+ thetaN) + zgCentrePoint[0];//算出当前相机坐标对应实际坐标的X点
+            imgP3.y = factor * Math.Sqrt(imgP1.x * imgP1.x + imgP1.y * imgP1.y) * Math.Sin(thetaRI+ thetaN) + zgCentrePoint[1];//算出当前相机坐标对应实际坐标的Y点
+
+            return imgP3;
+        }
+        /// <summary>
+        /// 图像坐标
+        /// </summary>
+        public struct ImgPosition
+        {
+            public double x;
+            public double y;
+        }
+        /// <summary>
+        /// 机器人坐标
+        /// </summary>
+      public  struct RobotPosition
+        {
+            public double x;
+            public double y;
+        }
+
+        #endregion
 
     }
 

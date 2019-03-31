@@ -188,8 +188,7 @@
             this.cmbState.FormattingEnabled = true;
             this.cmbState.Items.AddRange(new object[] {
             "禁用",
-            "一号相机",
-            "二号相机"});
+            "启用"});
             this.cmbState.Location = new System.Drawing.Point(184, 209);
             this.cmbState.Name = "cmbState";
             this.cmbState.Size = new System.Drawing.Size(138, 20);
@@ -211,7 +210,6 @@
             this.txtcentpoint.Name = "txtcentpoint";
             this.txtcentpoint.Size = new System.Drawing.Size(138, 21);
             this.txtcentpoint.TabIndex = 14;
-            this.txtcentpoint.Visible = false;
             // 
             // lblCP
             // 
@@ -221,7 +219,6 @@
             this.lblCP.Size = new System.Drawing.Size(59, 12);
             this.lblCP.TabIndex = 13;
             this.lblCP.Text = "圆心坐标:";
-            this.lblCP.Visible = false;
             // 
             // btnSave
             // 

@@ -17,25 +17,25 @@ namespace ThermoGroupSample
         {
             InitializeComponent();
             ReadIntFile();
-            cmbState.SelectedIndex = 0;
+            //cmbState.SelectedIndex = 10;
         }
         RWIniFile rw = new  RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
         void WriteIntFile()
         {
             string name = "";
-            int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+            int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);//获取有多少个甑锅参数
 
-            if (count < 0)
+            if (count < 0)//如果没有
             {
-                count += 2; 
+                count += 2; //默认赋给2个甑锅参数
             }
             else
             {
-                count = comboBoxZG .Items.Count; 
+                count = comboBoxZG .Items.Count; //选择
             }
 
             int index = comboBoxZG.SelectedIndex;
-            if (index < 0)
+            if (index < 0)//如果没有绑定则赋予默认值
             {
                 index += 2;
                 name = "甑锅"+index+"(默认值)";
@@ -54,18 +54,18 @@ namespace ThermoGroupSample
                     DialogResult result = MessageBox.Show("编号为:" + nameOfoK[0] + " 的甑锅参数已经启用,是否强制更改", "确认更改", MessageBoxButtons.YesNo);
                     if (result == DialogResult.Yes)
                     {
-                        rw.IniWriteValue("ZG" + index, "启用相机", selectIndex.ToString());
-                        rw.IniWriteValue("ZG" + nameOfoK[1], "启用相机", "-1");
+                        rw.IniWriteValue("ZG" + index, "启用", selectIndex.ToString());
+                        rw.IniWriteValue("ZG" + nameOfoK[1], "启用", "-1");
                     }
                     else
                     {
                         return;
                     }
                 }
-                else { rw.IniWriteValue("ZG" + index, "启用相机", selectIndex.ToString()); }
+                else { rw.IniWriteValue("ZG" + index, "启用", selectIndex.ToString()); }
             }
             else {
-                rw.IniWriteValue("ZG" + index, "启用相机", "-1");
+                rw.IniWriteValue("ZG" + index, "启用", "-1");//写入默认值
             }
             rw.IniWriteValue("ListCout", "Count", count.ToString());
             rw.IniWriteValue("ZG" + index, "编号", name);
@@ -80,12 +80,17 @@ namespace ThermoGroupSample
             btnSave.Visible = false;
             TxtEnabled(false);
         }
+        /// <summary>
+        /// 检查是否已经启用的参数
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         string CheckCanshuOkbuOk(int index)
         {
              
             for (int i = 1; i <= comboBoxZG.Items.Count; i++)
             {
-                int readIndex = rw.IniReadValue("ZG" + (i), "启用相机").CastTo<int>(-1);
+                int readIndex = rw.IniReadValue("ZG" + (i), "启用").CastTo<int>(-1);
                 if (readIndex != -1)
                 {
                     if(readIndex == index)
@@ -97,10 +102,32 @@ namespace ThermoGroupSample
             }
             return "";
         }
+
+        /// <summary>
+        /// 检查是否已经启用的参数
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        bool CheckCanshuOkbuOk( )
+        {
+
+            for (int i = 1; i <= comboBoxZG.Items.Count; i++)
+            {
+                int readIndex = rw.IniReadValue("ZG" + (i), "启用").CastTo<int>(-1);
+                if (readIndex != -1)
+                { 
+                    return true; 
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 读取ini文件 
+        /// </summary>
         void ReadIntFile()
         {
             comboBoxZG.Items.Clear();
-           int count =  rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+           int count =  rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);//多少甑锅参数
             if(count > 0)
             {
                 for (int i = 1; i <= count; i++)
@@ -112,7 +139,8 @@ namespace ThermoGroupSample
             }
             else
             {
-                WriteIntFile();
+                WriteIntFile();//如果没有则写入
+
             }
         }
 
@@ -148,19 +176,15 @@ namespace ThermoGroupSample
             txtgdzj.Text = rw.IniReadValue("ZG" + index, "锅底直径");
             txtsd.Text = rw.IniReadValue("ZG" + index, "锅深度");
             txtlimitTmper.Text = rw.IniReadValue("ZG" + index, "极限温度");
-             int cindex =  rw.IniReadValue("ZG" + index, "启用相机").CastTo<int>(-1) ;
+             int cindex =  rw.IniReadValue("ZG" + index, "启用").CastTo<int>(-1) ;
             if (cindex == -1)
             {
                 lblState.Text = "状态:禁用"; cmbState.SelectedIndex = 0;
             }
-            else if (cindex == 1) 
+            else 
             {
-                lblState.Text = "状态:一号相机"; cmbState.SelectedIndex = cindex;
-            }
-            else if (cindex == 2)
-            {
-                lblState.Text = "状态:二号相机"; cmbState.SelectedIndex = cindex;
-            }
+                lblState.Text = "状态:启用"; cmbState.SelectedIndex = 1;
+            } 
            
             
         }
@@ -200,7 +224,16 @@ namespace ThermoGroupSample
         public static GetNewZGInfo getNewZGInfo;
         private void FormDateSet_FormClosing(object sender, FormClosingEventArgs e)
         {
-            getNewZGInfo();
+            if (!CheckCanshuOkbuOk())
+            {
+                MessageBox.Show("没有选择启用的一组参数，这会导致无法检测及传输坐标！");
+                e.Cancel = true ;
+            }
+            else
+            {
+
+                getNewZGInfo();
+            }
         }
     }
 }

@@ -266,15 +266,19 @@ namespace ThermoGroupSample
 
         void GetZGinfoToDisplay( )
         {
-            int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+             int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
             for (int i = 1; i <= count; i++)
             {
-                int readIndex = rw.IniReadValue("ZG" + (i), "启用相机").CastTo<int>(-1);
+                int readIndex = rw.IniReadValue("ZG" + (i), "启用").CastTo<int>(-1);
                 if(readIndex != -1)
                 {
-                    _FormDisplayLst[readIndex-1].CentrePoint = rw.IniReadValue("ZG" + (i ), "圆心坐标").CastTo<int>(-1);
-                    _FormDisplayLst[readIndex - 1].InputWidth = rw.IniReadValue("ZG" + (i ), "锅口直径").CastTo<int>(-1);
-                    _FormDisplayLst[readIndex - 1].LimitTmper = rw.IniReadValue("ZG" + (i ), "极限温度").CastTo<int>(-1);
+                    for (int j = 0; j < _FormDisplayLst.Length; j++)
+                    {
+                        _FormDisplayLst[j].CentrePoint = rw.IniReadValue("ZG" + (i), "圆心坐标").CastTo<int>(-1);
+                        _FormDisplayLst[j].InputWidth = rw.IniReadValue("ZG" + (i), "锅口直径").CastTo<int>(-1);
+                        _FormDisplayLst[j].LimitTmper = rw.IniReadValue("ZG" + (i), "极限温度").CastTo<int>(-1);
+                    }
+                    break;
                 }
             }
             //for (int i = 0; i < 2; i++)

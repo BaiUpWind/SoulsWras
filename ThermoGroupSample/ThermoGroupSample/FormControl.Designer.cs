@@ -53,6 +53,7 @@ namespace ThermoGroupSample
             this.list_data = new System.Windows.Forms.ListBox();
             this.btnConnection = new System.Windows.Forms.Button();
             this.groupBoxPLCContrl = new System.Windows.Forms.GroupBox();
+            this.btnRConn = new System.Windows.Forms.Button();
             this.txtTimetim = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnStOP = new System.Windows.Forms.Button();
@@ -61,7 +62,6 @@ namespace ThermoGroupSample
             this.参数设置SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnRConn = new System.Windows.Forms.Button();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxDisplay.SuspendLayout();
@@ -338,6 +338,17 @@ namespace ThermoGroupSample
             this.groupBoxPLCContrl.TabStop = false;
             this.groupBoxPLCContrl.Text = "PLC控制器";
             // 
+            // btnRConn
+            // 
+            this.btnRConn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnRConn.Location = new System.Drawing.Point(6, 76);
+            this.btnRConn.Name = "btnRConn";
+            this.btnRConn.Size = new System.Drawing.Size(56, 23);
+            this.btnRConn.TabIndex = 46;
+            this.btnRConn.Text = "重连";
+            this.btnRConn.UseVisualStyleBackColor = true;
+            this.btnRConn.Click += new System.EventHandler(this.btnRConn_Click);
+            // 
             // txtTimetim
             // 
             this.txtTimetim.Location = new System.Drawing.Point(88, 20);
@@ -408,17 +419,6 @@ namespace ThermoGroupSample
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(0, 12);
             this.label1.TabIndex = 47;
-            // 
-            // btnRConn
-            // 
-            this.btnRConn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRConn.Location = new System.Drawing.Point(6, 76);
-            this.btnRConn.Name = "btnRConn";
-            this.btnRConn.Size = new System.Drawing.Size(56, 23);
-            this.btnRConn.TabIndex = 46;
-            this.btnRConn.Text = "重连";
-            this.btnRConn.UseVisualStyleBackColor = true;
-            this.btnRConn.Click += new System.EventHandler(this.btnRConn_Click);
             // 
             // FormControl
             // 
