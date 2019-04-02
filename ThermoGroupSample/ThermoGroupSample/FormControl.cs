@@ -422,8 +422,12 @@ namespace ThermoGroupSample
             {
                 if (!int.TryParse(txtTimetim.Text, out timeSleep))
                 {
-                    MessageBox.Show("Time input wrong！");
+                    MessageBox.Show("请输入采集的间隔！");
                     return;
+                }
+               if(timeSleep < 100)//如果小于100毫秒， 默认最低间隔是100毫秒
+                {
+                    timeSleep = 100;
                 }
                 isThreadRun = true;
                 thread = new Thread(ThreadReadServer)
@@ -443,7 +447,7 @@ namespace ThermoGroupSample
         {
             while (isThreadRun) //线程的运行状态
             {
-                int flag = s7Task.Read(s7Task.ListCount).CastTo<int>(-1);//获取标志位
+                int flag = s7Task.Read(0).CastTo<int>(-1);//获取标志位
                 if(flag == 0)//允许采集热点信息
                 {
                     double degrees = s7Postion.Read(0).CastTo<double>(-1);//获取机器人的角度 判断热像仪可检测范围
@@ -515,8 +519,8 @@ namespace ThermoGroupSample
                 }
                 else
                 {
-                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag);
-                    Thread.Sleep(2000);//2秒后重新再读取
+                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag+"，十秒后再次读取！");
+                    Thread.Sleep(2000);//5秒后重新再读取
                 }
 
              
@@ -543,6 +547,7 @@ namespace ThermoGroupSample
                 };
               await Task.Run(()=>  s7Task = new SiemensS7(s7server, Modle.ItemCollection.GetBYS7Item()));
                 s7Postion = new SiemensS7(s7server, Modle.ItemCollection.GetRobitPositionbYs7Item());
+                FormMain.GetOPCTaskInfo("PLC创建成功！" );
             }
             catch (Exception ex)
             {
@@ -643,7 +648,7 @@ namespace ThermoGroupSample
             if (MsgBoxResult == DialogResult.Yes)
             {
                 isThreadRun = false;//线程停止
-           
+                FormMain.GetOPCTaskInfo("热点信息停止采集，任务停止发送！");
               
             }
         }

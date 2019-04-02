@@ -19,7 +19,7 @@ namespace ThermoGroupSample.Modle
 
             for (int i = 0; i < 5; i++)
             {
-                list.Add(OpcServer + "DB30,REAL" + (i * 16));
+                list.Add(OpcServer + "DB30,W" + (i * 16));
                 list.Add(OpcServer + "DB30,W" + (4 + (i * 16)));//X
                 list.Add(OpcServer + "DB30,W" + (6 + (i * 16)));//Y
                 list.Add(OpcServer + "DB30,W" + (8 + (i * 16)));//Z
@@ -73,24 +73,28 @@ namespace ThermoGroupSample.Modle
         {
             List<string> list = new List<string>();
 
-            for (int i = 0; i < 5; i++)
-            {
-                list.Add("DB30.REAL" + (i * 10));//角度
-                list.Add("DB30.REAL" + (4 + (i * 10)));//距离
-                list.Add("DB30.W" + (8 + (i * 10)));//距离
-            }
-            list.Add(OpcServer + "DB30,W64");//标志位
+            list.Add("DB30.w0"  );//热点数量
+            for (int i = 1; i < 41; i++)//20个温度点
+            { 
+                list.Add("DB30.w" +  (i*2));//坐标 
+            } 
             return list;
         }
 
         
-         
+         /// <summary>
+         /// 机器人标志位和相机位置块
+         /// </summary>
+         /// <returns></returns>
         public static List<string> GetRobitPositionbYs7Item()
         {
             List<string> list = new List<string>
-            {
-                "DB31.REAL0",//X
-               "DB31.REAL4"//Y
+            { 
+                "DB31.w0",//标志位
+                "DB31.w2",// I1X
+               "DB31.w4",//I1Y
+                 "DB31.w6",//I2X
+               "DB31.w8"//I2Y
             };
             return list;
 

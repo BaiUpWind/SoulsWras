@@ -20,7 +20,7 @@ namespace ThermoGroupSample.Server
             OperateResult operate = SiemensTcpNet.ConnectServer();
             if (!operate.IsSuccess)
             {
-                throw new Exception("连接失败！" + operate.Message);
+                throw new Exception("PLC连接失败！" + operate.Message);
             }
             else
             {

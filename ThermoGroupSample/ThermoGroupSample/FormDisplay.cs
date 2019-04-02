@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using SDK;
 using ThermoGroupSample.Pub;
+using static ThermoGroupSample.Pub.CalculatorClass;
 
 namespace ThermoGroupSample
 {
@@ -318,7 +319,31 @@ namespace ThermoGroupSample
                 throw ex;
             }
         }
+        /// <summary>
+        /// 移除小于区间的坐标点
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        RobotPosition whileziji(List<RobotPosition> list)
+        {
+            RobotPosition newpostion = new RobotPosition();
+            RobotPosition  postion;
+            if ( list.Count == 0)
+            {
+                return newpostion;
+            }
+            postion.x = list[0].x;
+            postion.y = list[0].y;
 
+            foreach (var item in list)
+            {
+                if((postion.x + postion.y)  - (item.x +item.y) < 15)
+                {
+                    list.Remove(item);
+                }
+            }
+            return whileziji(list);
+        }
         void GerNewList(List<string> list)
         {
             foreach (var item in list)

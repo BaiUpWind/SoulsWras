@@ -266,11 +266,11 @@ namespace ThermoGroupSample.Pub
         /// <param name="degres">角度</param>
         /// <param name="yx">圆心坐标</param>
         /// <returns></returns>
-        public NewPosition GetRobotPosition(double degres , double yx)
+        public NewPosition GetRobotPosition(double degres, double yx)
         {
-            NewPosition newPos; 
-             newPos.x = Math.Cos(degres) * TowProp + yx;
-             newPos.y = Math.Sin(degres) * TowProp + yx; 
+            NewPosition newPos;
+            newPos.x = Math.Cos(degres) * TowProp + yx;
+            newPos.y = Math.Sin(degres) * TowProp + yx;
             return newPos;
         }
         /// <summary>
@@ -279,7 +279,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public double GetDegress (double x,double y)
+        public double GetDegress(double x, double y)
         {
             double atan = Math.Atan2(y, x);
             double degress = atan * 180 / Math.PI;
@@ -294,7 +294,7 @@ namespace ThermoGroupSample.Pub
         /// <param name="x">新坐标x</param>
         /// <param name="y">新坐标y</param>
         /// <returns></returns>
-        public double  GetVd(double ydx,double ydy, double x,double y)
+        public double GetVd(double ydx, double ydy, double x, double y)
         {
             double distance = Math.Sqrt(((x - ydx) * (x - ydx) + ((y - ydy) * (y - ydy))));
             return distance;
@@ -308,25 +308,25 @@ namespace ThermoGroupSample.Pub
         public double[] DegreesTrans(double degrees)
         {
             double[] towDeg = new double[2];
-            if(degrees >0)
+            if (degrees > 0)
             {
                 towDeg[0] = degrees;
-                if(degrees + 180 > 360)
+                if (degrees + 180 > 360)
                 {
                     towDeg[1] = degrees - 180;
                 }
                 else
                 {
                     towDeg[1] = degrees + 180;
-                } 
-            } 
+                }
+            }
             return towDeg;
         }
         #region 20190329绑定坐标方法
 
         private double parts;
         private double realX1;
-        private double ralY1;  
+        private double ralY1;
         double realWidth, realHeight;//坐标的长宽
         //ratio 比值：坐标对应的比值
         string[,] camerLocation1;//相机坐标
@@ -336,10 +336,10 @@ namespace ThermoGroupSample.Pub
 
 
         public List<string[,]> listDegress;// 存放的对应坐标 
-        /// <summary>
-        /// 哑办法绑值
-        /// </summary>
-      public  void BindPoint()
+                                           /// <summary>
+                                           /// 哑办法绑值
+                                           /// </summary>
+        public void BindPoint()
         {
             RealWidth = 60;
             RealHeight = 60;
@@ -349,7 +349,7 @@ namespace ThermoGroupSample.Pub
             listDegress = new List<string[,]>();
             for (int i = 0; i < Parts; i++)
             {
-                camerLocation1 = new string[60, 80]; 
+                camerLocation1 = new string[60, 80];
                 //中心坐标
                 RealX1 = RealWidth / 2;
                 RalY1 = RealWidth / 2;
@@ -422,7 +422,7 @@ namespace ThermoGroupSample.Pub
                 listDegress.Add(camerLocation1);
             }
         }
- 
+
         void RealPoint()
         {
             realLoaction = new string[(int)RealWidth + 1, (int)RealHeight + 1];
@@ -490,21 +490,156 @@ namespace ThermoGroupSample.Pub
         {
             //robotP1 相机位置坐标（实际坐标）
             //imgP1 相机坐标（相机内的坐标点）
-            RobotPosition imgP3 = new RobotPosition() ; 
+            RobotPosition imgP3  ;
 
-            double  Rd = GetVd(zgCentrePoint[0], zgCentrePoint[1], robotP1.x, robotP1.y);//相机位置坐标离圆心距离
+            double Rd = GetVd(zgCentrePoint[0], zgCentrePoint[1], robotP1.x, robotP1.y);//相机位置坐标离圆心距离
             double Id = GetVd(1, 1, imgP1.x, Imgp2.x);//相机坐标与 相机圆心坐标的距离
             factor = Rd / Id;//两个坐标的比例系数
             double thetaR = GetDegress(robotP1.x, robotP1.y);//当前机器人坐标与甑锅圆心的角度  机器人的夹角
             double thetaI = GetDegress(imgP1.x, imgP1.y);//相机坐标与相机坐标起始点的角度 相机坐标夹角
             double thetaRI = thetaR - thetaI;//两个坐标系的偏移角
 
-            double thetaN   = Math.Atan2(imgP1.y, imgP1.x); 
-            imgP3.x = factor * Math.Sqrt(imgP1.x * imgP1.x + imgP1.y * imgP1.y) * Math.Cos(thetaRI+ thetaN) + zgCentrePoint[0];//算出当前相机坐标对应实际坐标的X点
-            imgP3.y = factor * Math.Sqrt(imgP1.x * imgP1.x + imgP1.y * imgP1.y) * Math.Sin(thetaRI+ thetaN) + zgCentrePoint[1];//算出当前相机坐标对应实际坐标的Y点
+            double thetaN = Math.Atan2(imgP1.y, imgP1.x);
+            imgP3.x = factor * Math.Sqrt(imgP1.x * imgP1.x + imgP1.y * imgP1.y) * Math.Cos(thetaRI + thetaN) + zgCentrePoint[0];//算出当前相机坐标对应实际坐标的X点
+            imgP3.y = factor * Math.Sqrt(imgP1.x * imgP1.x + imgP1.y * imgP1.y) * Math.Sin(thetaRI + thetaN) + zgCentrePoint[1];//算出当前相机坐标对应实际坐标的Y点
 
             return imgP3;
         }
+
+
+
+        #endregion
+
+        #region 2019.3.31 两点标定法
+        /// <summary>
+        /// 初始化基本参数
+        /// </summary>
+        public CalculatorClass()
+        {
+            //对甑锅中心坐标进行初始化赋值
+            CenterPoint.x = 0;
+            CenterPoint.y = 0;
+
+            RobotP1.y = 0;
+            RobotP1.x = 0;
+
+
+            RobotP2.x = 0;
+            RobotP2.y = 0;
+
+
+            ImageP1.x = 0;
+            ImageP1.y = 0;
+
+            ImageP2.x = 0;
+            ImageP2.y = 0;
+
+        }
+        /// <summary>
+        /// 甑锅中心坐标
+        /// </summary>
+        RobotPosition CenterPoint;
+
+        /// <summary>
+        /// 相机坐标（实际坐标）到 相机起始坐标（实际坐标 ）的距离
+        /// </summary>
+        public double AtoB;
+
+        /// <summary>
+        /// 相机坐标（实际坐标）到甑锅中心距离
+        /// </summary>
+       public  double AtoCenterPoint ;
+
+        /// <summary>
+        /// 旋转角度
+        /// </summary>
+        public double RotationAngle;
+
+
+
+
+        RobotPosition RobotP1, RobotP2;
+        ImgPosition ImageP1, ImageP2;
+
+
+        /// <summary>
+        /// 获取机器人坐标
+        /// </summary>
+        /// <param name="robotP2">相机所在位置（机器人实际坐标）</param>
+        /// <param name="imgP1">图像坐标（拍摄到的热点信息）</param>
+        /// <returns></returns>
+        public RobotPosition GetRobotPositionByImagePoint(RobotPosition robotP2, ImgPosition imgP3)
+        {
+            RobotPosition RobtP3 = new RobotPosition();//转换的实际坐标
+
+
+
+
+            return RobtP3;
+        }
+
+
+
+        /// <summary>
+        /// 递归调用取出范围的的坐标，视为重复 剔除
+        /// </summary>
+        /// <param name="inlist">采集的热点</param>
+        /// <param name="chazhi">取值范围</param>
+        /// <param name="outlist">最终的结果</param>
+        /// <returns></returns>
+      public  List<RobotPosition> RecursiveDeduplication(List<RobotPosition> inlist, double chazhi, ref List<RobotPosition> outlist)
+        {
+            List<RobotPosition> list2 = new List<RobotPosition>();
+            RobotPosition postion;//比对的坐标值  
+            if (inlist.Count == 0)//当全部比对完成后返回最终的坐标值
+            {
+                return outlist;
+            }
+            postion.x = inlist[0].x;
+            postion.y = inlist[0].y;
+            foreach (var item in inlist)//比对 
+            {
+                if (item.Equals(postion))//比对象等于 比对象
+                {
+                    continue;
+                }
+                if ((item.x + item.y) - (postion.x + postion.y) <= chazhi)
+                {
+                    list2.Add(item);//添加重复的坐标值
+                }
+            }
+            foreach (var item in list2)//移除
+            {
+                inlist.Remove(item);//移除重复的坐标值
+            }
+            inlist.Remove(postion);//移除已经参与比对的坐标值
+            outlist.Add(postion);//添加已经参与对比的坐标值 是最终的坐标值
+            return RecursiveDeduplication(inlist, chazhi, ref outlist);
+        }
+
+        public double[] ReplaceIndex (List<RobotPosition> list)
+        {
+            double[] valuesHead = new double[1];//存放头部
+            double[] valuesX = new double[list.Count];//存放坐标X
+            double[] valuesY = new double[list.Count];//存放坐标Y
+            double[] valuesUnion = new double[list.Count * 2 + 1];
+            valuesHead[0] = list.Count;//多少个热点
+
+             
+            for (int i = 0; i < list.Count; i++)
+            {
+                valuesX[i] = list[i].x;
+                valuesY[i] = list[i].y;
+            }
+            var xyUnion = valuesX.Union(valuesY);
+            valuesUnion.Union(valuesHead).Union(xyUnion);
+            return valuesUnion;
+        }
+
+
+        #endregion
+
+
         /// <summary>
         /// 图像坐标
         /// </summary>
@@ -516,13 +651,11 @@ namespace ThermoGroupSample.Pub
         /// <summary>
         /// 机器人坐标
         /// </summary>
-      public  struct RobotPosition
+        public struct RobotPosition
         {
             public double x;
             public double y;
         }
-
-        #endregion
 
     }
 
