@@ -32,8 +32,9 @@ namespace ThermoGroupSample
         public FormDisplay()
         {
             InitializeComponent();
-         
+            device = _DataDisplay.GetDevice();
             _DataDisplay = new DataDisplay();
+            cAMERA_INFO = device.GetCamInfo();
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy);
           
         }
@@ -276,42 +277,43 @@ namespace ThermoGroupSample
             return true;
         }
 
+        MagDevice device  ;
+        List<ImgPosition> list = new List<ImgPosition>();
+        GroupSDK.CAMERA_INFO cAMERA_INFO ;
+        ImgPosition img;
         /// <summary>
-        /// 获取要发送的信息
+        /// 检测大于极限温度的值 
         /// </summary>
         /// <param name="values"></param>
-        public List<string> NewGetInfo(  )
+        public List<ImgPosition> NewGetInfo(  )
         {
             try
             {
-                double index =  ( Degrees /45);//当前检测区域的位置
-                //int listindex = 0;//数据索引
-                MagDevice device = _DataDisplay.GetDevice();
-                List<string> list = new List<string>(); 
-                GroupSDK.CAMERA_INFO cAMERA_INFO = device.GetCamInfo();
-                for (int x = 0; x < cAMERA_INFO.intFPAWidth; x++)//X轴
+                list.Clear(); 
+                for (int x = 1; x <= cAMERA_INFO.intFPAWidth; x++)//X轴
                 {
-                    for (int y = 0; y < cAMERA_INFO.intFPAHeight; y++)//Y轴
+                    for (int y = 1; y <= cAMERA_INFO.intFPAHeight; y++)//Y轴
                     {
-                        float temper = device.GetTemperatureProbe((uint)x, (uint)y, 1) * 0.001f;//获取温度
+                        float temper = device.GetTemperatureProbe((uint)x, (uint)y, 1) * 0.001f;//获取温度 检测精度 1  有60*80的点
                         if (temper >= LimitTmper)//如果大于等于极限温度
                         {
-                            var realPoint = calculator.listDegress[(int)index][x, y].Split(',');//取得在对应角度的 绑定的坐标
-                            var newX = Convert.ToDouble(realPoint[0]);
-                            var newY = Convert.ToDouble(realPoint[1]);
-                            if (newX != -1 && newY != -1)
-                            {
-                                list.Add(temper + "$" + realPoint[0] + "$" + realPoint[y]  ); //温度，实际坐标X，实际坐标Y
-                            }
-                            else
-                            {
-                                FormMain.GetOPCTaskInfo("检测到不在范围的温度坐标,温度：" + temper + " 实际X坐标：" + realPoint[0] + " 实际Y坐标：" + realPoint[y]);
-                            } 
+                            img.tmper = temper; 
+                            img.x = x;
+                            img.y = y;
+                            list.Add(img);
+                            //if (newX != -1 && newY != -1)
+                            //{
+                            //    list.Add(temper + "$" + realPoint[0] + "$" + realPoint[y]  ); //温度，实际坐标X，实际坐标Y
+                            //}
+                            //else
+                            //{
+                            //    FormMain.GetOPCTaskInfo("检测到不在范围的温度坐标,温度：" + temper + " 实际X坐标：" + realPoint[0] + " 实际Y坐标：" + realPoint[y]);
+                            //} 
                         }
                     }
                 }
-                list.Sort(); 
-                FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
+                //list.Sort(new ImgPosition()); 
+               // FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
                 return list;
             }
             catch (Exception ex)
@@ -319,42 +321,7 @@ namespace ThermoGroupSample
                 throw ex;
             }
         }
-        /// <summary>
-        /// 移除小于区间的坐标点
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        RobotPosition whileziji(List<RobotPosition> list)
-        {
-            RobotPosition newpostion = new RobotPosition();
-            RobotPosition  postion;
-            if ( list.Count == 0)
-            {
-                return newpostion;
-            }
-            postion.x = list[0].x;
-            postion.y = list[0].y;
-
-            foreach (var item in list)
-            {
-                if((postion.x + postion.y)  - (item.x +item.y) < 15)
-                {
-                    list.Remove(item);
-                }
-            }
-            return whileziji(list);
-        }
-        void GerNewList(List<string> list)
-        {
-            foreach (var item in list)
-            {
-                var date = item.Trim().Split('$');
-                for (int i = 0; i < list.Count; i++)
-                {
-
-                }
-            }
-        }
+        #region 无用
         //  int r, w, h;//半径 ，离左边距离 ， 离上边距离
         /// <summary>
         /// 检测制定圆形区域的温度
@@ -466,6 +433,7 @@ namespace ThermoGroupSample
                 throw ex;
             }
         }
+        #endregion
         /// <summary>
         /// 鼠标测温
         /// </summary>
@@ -500,7 +468,7 @@ namespace ThermoGroupSample
                 intTemp = device.FixTemperature(intTemp, param.fEmissivity, (uint)intFPAx, (uint)intFPAy);
             }
 
-
+           
             string sText = (intTemp * 0.001f).ToString("0.0") + "坐标X：" + intFPAx + "坐标Y：" + intFPAy;
 
             int cx = (int)graphic.MeasureString(sText, this.Font).Width;

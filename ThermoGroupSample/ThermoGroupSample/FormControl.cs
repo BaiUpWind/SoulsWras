@@ -12,6 +12,8 @@ using ThermoGroupSample.Pub;
 using ThermoGroupSample.Server;
 using HslCommunication.Profinet.Siemens;
 using Pub;
+using static ThermoGroupSample.Pub.CalculatorClass;
+
 namespace ThermoGroupSample
 {
     public partial class FormControl : Form
@@ -406,7 +408,13 @@ namespace ThermoGroupSample
             LableBoxVis(lblL, true);
             LableBoxVis(lblW, true);
         }
+        /// <summary>
+        /// 机器人任务下载块
+        /// </summary>
         SiemensS7 s7Task = null;//机器人任务下载地址
+        /// <summary>
+        /// 机器人角度 标志 块
+        /// </summary>
         SiemensS7 s7Postion = null;//机器人位置（角度）
 
         private Thread thread = null;              // 后台读取的线程
@@ -447,27 +455,23 @@ namespace ThermoGroupSample
         {
             while (isThreadRun) //线程的运行状态
             {
-                int flag = s7Task.Read(0).CastTo<int>(-1);//获取标志位
-                if(flag == 0)//允许采集热点信息
+                int flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
+             
+                if(flag == 1)//允许采集热点信息
                 {
-                    double degrees = s7Postion.Read(0).CastTo<double>(-1);//获取机器人的角度 判断热像仪可检测范围
+                    double axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
+                    double axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标
 
                     //获取相机所在的位置
-                    double Rx = s7Postion.Read(0).CastTo<double>(-1);//x
-                    double Ry = s7Postion.Read(0).CastTo<double>(-1);//y
-
-
-                    if (degrees > 0d)
-                    {
-                      double[] towDegress =  calculator.DegreesTrans(degrees);//取得一个相机角度，获取另个相机所在的角度
-                        object[] values = new object[50]; 
-                        List<List<string>> newInfo = new List<List<string>>();
+                    double angele_1 = s7Postion.Read(3).CastTo<double>(-1);// 角度1
+                    double angele_2 = s7Postion.Read(4).CastTo<double>(-1);//角度2
+                     
+                    if (angele_1 > 0d)
+                    { 
+                        List<List<ImgPosition>> list = new List<List<ImgPosition>>();//两个热像仪的温度集合
+                        List<ImgPosition> newInfo = new List<ImgPosition>(); //存放两个热像仪的温度集合
                         for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)//获取到在线相机
-                        {
-                            if( i >= towDegress.Length)
-                            {
-                                break;
-                            }
+                        { 
                             if( comboBoxOnlineDevice.Items[i].ToString().Contains("conn"))
                             {
                                 FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
@@ -477,10 +481,9 @@ namespace ThermoGroupSample
                                     continue;
                                 }
                                 else
-                                {
-                                    frmDisplay.Degrees = towDegress[i];
-                                    newInfo.Add( frmDisplay.NewGetInfo()); 
-                                    FormMain.GetOPCTaskInfo("窗体:"+ frmDisplay.Name+",存入角度:"+ towDegress[i] + ",IP:" + _LstEnumInfo[i].intCamIp);
+                                { 
+                                    list.Add( frmDisplay.NewGetInfo()); //获取温度信息
+                                    FormMain.GetOPCTaskInfo("窗体:"+ frmDisplay.Name+",IP:" + _LstEnumInfo[i].intCamIp);
                                 }
                             }
                             else
@@ -488,32 +491,28 @@ namespace ThermoGroupSample
                                 FormMain.GetOPCTaskInfo("此相机不处于连接状态："+comboBoxOnlineDevice.Items[i].ToString());
                             }
                         }
-                        int listindex = 0;
-                        foreach (var item in newInfo)
+                        object[] values = new object[82];//任务发送数组
+                        foreach (var onePositionList in list)
                         {
-                            foreach (var item1 in item)
-                            {
-                                if (listindex >= s7Task.ListCount)
-                                {
-                                    break;
-                                }
-                                var date = item1.Trim().Split('$');
-                                double temper = Convert.ToDouble(date[0]);
-                                double x = Convert.ToDouble(date[1]);
-                                double y = Convert.ToDouble(date[2]);
-                               // double dg = calculator.GetDegress(x, y);//根据坐标求出角度
-                                values[listindex] = temper;//温度
-                                values[listindex + 1] = x;
-                                values[listindex + 2] =y;//根据角度，坐标 求出距离
-                                listindex += 3;
-                            } 
+                            var DedupImgS = calculator.RecursiveDeduplication(onePositionList, Globals.ComparisonInterval);  //2.移除在一个区间内的温度点
+                            foreach (var item in DedupImgS)
+                            { 
+                                newInfo.Add(item);//将两个热像仪采集到温度放到一个集合里面
+                            }
+                        }
+                        foreach (var item in newInfo)//对每个温度点进行判断， 
+                        {
+                            //1.移除不在锅内的温度 (未完成)
+                            //2.将温度坐标转换成实际坐标
+        
                         } 
+                        newInfo.Sort(new ImgPosition());//对温度点进行从高到底排序    
                         s7Task.Write(values);
                         Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取
                     }
                     else
                     {
-                        FormMain.GetOPCTaskInfo("未读取到机器人角度:" + degrees);
+                        FormMain.GetOPCTaskInfo("读取到机器人角度为:" + angele_1);
                         Thread.Sleep(3000);//3秒后重新再读取
                     }
                 }

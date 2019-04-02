@@ -275,6 +275,42 @@ namespace ThermoGroupSample
 
             }
         }
-        
+
+
+        /// <summary>
+        /// 排除区间 （两个坐标间距离小于区间，视为同一个温度点 排除）
+        /// </summary>
+        public static double ComparisonInterval
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["ComparisonInterval"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
     }
 }

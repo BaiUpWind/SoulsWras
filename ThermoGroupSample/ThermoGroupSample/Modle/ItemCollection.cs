@@ -91,10 +91,10 @@ namespace ThermoGroupSample.Modle
             List<string> list = new List<string>
             { 
                 "DB31.w0",//标志位
-                "DB31.w2",// I1X
-               "DB31.w4",//I1Y
-                 "DB31.w6",//I2X
-               "DB31.w8"//I2Y
+                "DB31.w2",//axis3 x 
+               "DB31.w4",//axis3 y
+                 "DB31.w6",//angle 3
+               "DB31.w8"//angle 3
             };
             return list;
 

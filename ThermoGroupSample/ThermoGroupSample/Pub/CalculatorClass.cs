@@ -578,7 +578,7 @@ namespace ThermoGroupSample.Pub
             return RobtP3;
         }
 
-
+        List<ImgPosition> outlist = new List<ImgPosition>();
 
         /// <summary>
         /// 递归调用取出范围的的坐标，视为重复 剔除
@@ -587,14 +587,15 @@ namespace ThermoGroupSample.Pub
         /// <param name="chazhi">取值范围</param>
         /// <param name="outlist">最终的结果</param>
         /// <returns></returns>
-      public  List<RobotPosition> RecursiveDeduplication(List<RobotPosition> inlist, double chazhi, ref List<RobotPosition> outlist)
+      public  List<ImgPosition> RecursiveDeduplication(List<ImgPosition> inlist, double chazhi )
         {
-            List<RobotPosition> list2 = new List<RobotPosition>();
-            RobotPosition postion;//比对的坐标值  
+            List<ImgPosition> list2 = new List<ImgPosition>();
+            ImgPosition postion;//比对的坐标值  
             if (inlist.Count == 0)//当全部比对完成后返回最终的坐标值
             {
                 return outlist;
             }
+            postion.tmper = inlist[0].tmper;
             postion.x = inlist[0].x;
             postion.y = inlist[0].y;
             foreach (var item in inlist)//比对 
@@ -603,7 +604,7 @@ namespace ThermoGroupSample.Pub
                 {
                     continue;
                 }
-                if ((item.x + item.y) - (postion.x + postion.y) <= chazhi)
+                if ((item.x + item.y) - (postion.x + postion.y) <= chazhi)//作比较
                 {
                     list2.Add(item);//添加重复的坐标值
                 }
@@ -614,7 +615,7 @@ namespace ThermoGroupSample.Pub
             }
             inlist.Remove(postion);//移除已经参与比对的坐标值
             outlist.Add(postion);//添加已经参与对比的坐标值 是最终的坐标值
-            return RecursiveDeduplication(inlist, chazhi, ref outlist);
+            return RecursiveDeduplication(inlist, chazhi);
         }
 
         public double[] ReplaceIndex (List<RobotPosition> list)
@@ -643,10 +644,23 @@ namespace ThermoGroupSample.Pub
         /// <summary>
         /// 图像坐标
         /// </summary>
-        public struct ImgPosition
-        {
+        public struct ImgPosition:IComparer<ImgPosition>
+
+        { 
             public double x;
             public double y;
+            public double tmper ;
+
+            /// <summary>
+            /// 温度比较 高的排前面
+            /// </summary>
+            /// <param name="x"></param>
+            /// <param name="y"></param>
+            /// <returns></returns>
+            public int Compare(ImgPosition x, ImgPosition y)
+            {
+                return y.tmper.CompareTo(x.tmper);
+            }
         }
         /// <summary>
         /// 机器人坐标
