@@ -24,15 +24,18 @@ namespace ThermoGroupSample
         List<uint> _LstComboIP = new List<uint>();
         FormControl _FormControl = null;
         const int MAX_ENUMDEVICE = 32;
-        CalculatorClass calculator = new CalculatorClass();
+        /// <summary>
+        /// 计算类的实例
+        /// </summary>
+      public  CalculatorClass calculator = new CalculatorClass();
         /// <summary>
         /// 相机数据
         /// </summary>
         GroupSDK.ENUM_INFO[] _LstEnumInfo = new GroupSDK.ENUM_INFO[MAX_ENUMDEVICE];
         OpcServer opcServer = null;
         FormDisplay frmDisplay;
-        MagDevice device;
-        Thread th;
+        
+   
         public DataControl GetDataControl()
         {
             return _DataControl;
@@ -49,7 +52,7 @@ namespace ThermoGroupSample
             opcServer = new OpcServer(_LstEnumInfo);
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy); 
             AsyncConnectionPlc();//创建服务
-         
+            FormMain.GetOPCTaskInfo("与PLC建立连接中！");
         }
 
         private void FormControl_Load(object sender, EventArgs e)
@@ -58,6 +61,8 @@ namespace ThermoGroupSample
 
             RefreshOnlineDevice();
 
+
+           
 
         }
 
@@ -118,14 +123,11 @@ namespace ThermoGroupSample
             }
             int displayCount = Globals.GetMainFrm().GetFormDisplayCount();//获取有多少个摄像头
             //
-            for (int i = 0; i < displayCount; i++)
-            {
-                cmbDisplay.Items.Add(Globals.GetMainFrm().GetFormDisplay((uint)i).Name);//添加
-            }
+         
 
 
             cmbSelect(comboBoxOnlineDevice);
-            cmbSelect(cmbDisplay);
+          
 
         }
         void cmbSelect(ComboBox cmb)
@@ -145,7 +147,7 @@ namespace ThermoGroupSample
         private void RefreshOnlineDevice()
         {
             _DataControl.GetService().EnumCameras();
-            Thread.Sleep(50);
+            Thread.Sleep(100);
             UpdateOnlineDevComboLst();
         }
 
@@ -157,8 +159,11 @@ namespace ThermoGroupSample
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
             RefreshOnlineDevice();
-            opcServer = null;
-            opcServer = new OpcServer(_LstEnumInfo);//重新传入相机数据
+          double a  =  calculator.BotDiameter;
+            double b = calculator.PotDiamerter;
+            double c = calculator.AtoB_Distance;
+            double d = calculator.Axis_Camera_Distance;
+            FormMain.GetOPCTaskInfo(a + "" + b + "" + c + "" + d);
         }
 
         private void buttonLink_Click(object sender, EventArgs e)
@@ -233,7 +238,8 @@ namespace ThermoGroupSample
             MagService service = _DataControl.GetService();
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);//获取在线相机列表
 
-
+            
+           
             DislinkCamera(_LstEnumInfo[index].intCamIp);//断开连接
 
             Thread.Sleep(300);
@@ -253,8 +259,12 @@ namespace ThermoGroupSample
             for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
             {
                 FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp); //选择已经绑定的IP的显示窗口
-                frmDisplay.GetDateDisplay().Play();
-            }  
+                if(frmDisplay != null)
+                {
+                    frmDisplay.GetDateDisplay().Play();
+                }
+               
+            } 
             stop = false; 
         }
 
@@ -280,7 +290,7 @@ namespace ThermoGroupSample
                 frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
                 frmDisplay.Invalidate(false);
             }
-            btnTake.Enabled = true;
+         
             stop = true;
         }
 
@@ -288,22 +298,7 @@ namespace ThermoGroupSample
         bool stop = true;
 
     
-       /// <summary>
-       /// 获取最高温度点
-       /// </summary>
-       /// <param name="sender"></param>
-       /// <param name="e"></param>
-        private void btnTake_Click(object sender, EventArgs e)
-        {
-            if (!stop)
-            {
-                frmDisplay = Globals.GetMainFrm().GetFormDisplay(DataDisplay.CurrSelectedWndIndex);
-                frmDisplay.Stop = true;
-                btnTake.Enabled = false;
-          
-               // frmDisplay.Startasync();
-            }
-        }
+   
         /// <summary>
         /// 鼠标显示图标
         /// </summary>
@@ -400,14 +395,7 @@ namespace ThermoGroupSample
                 e.Handled = true;
             }
         }
-
-        private void cmbDisplay_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            TextBoxVis(txtL, true);
-            TextBoxVis(txtW, true);
-            LableBoxVis(lblL, true);
-            LableBoxVis(lblW, true);
-        }
+ 
         /// <summary>
         /// 机器人任务下载块
         /// </summary>
@@ -415,8 +403,7 @@ namespace ThermoGroupSample
         /// <summary>
         /// 机器人角度 标志 块
         /// </summary>
-        SiemensS7 s7Postion = null;//机器人位置（角度）
-
+        SiemensS7 s7Postion = null;//通信标志位 位置 角度
         private Thread thread = null;              // 后台读取的线程
         private int timeSleep = 300;               // 读取的间隔
         private bool isThreadRun = false;          // 用来标记线程的运行状态
@@ -447,7 +434,20 @@ namespace ThermoGroupSample
             } 
 
         }
-        int r;//半径
+        /// <summary>
+        /// 存放机器人位置计算所需的参数
+        /// </summary>
+        double axis_3_x, axis_3_y, AngleTheta, AngleAlpha;
+        int flag;//标志位
+        object[] values = new object[82];//任务发送数组
+        /// <summary>
+        /// //两个热像仪的温度集合的集合 
+        /// </summary>
+        List<List<ImgPosition>> list = new List<List<ImgPosition>>();
+        /// <summary>
+        /// //实际坐标集合
+        /// </summary>
+        List<RobotPositionSort> listRobot = new List<RobotPositionSort>();
         /// <summary>
         /// 线程读取DB块
         /// </summary>
@@ -455,87 +455,87 @@ namespace ThermoGroupSample
         {
             while (isThreadRun) //线程的运行状态
             {
-                int flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
-             
-                if(flag == 1)//允许采集热点信息
+            aa: flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
+                listRobot.Clear();
+                list.Clear();
+                if (flag == 0)//允许采集热点信息
                 {
-                    double axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
-                    double axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标
-
+                    for (int i = 0; i < values.Length; i++)//初始化
+                    {
+                        values[i] = 0;
+                    }
+                    axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
+                    axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标 
                     //获取相机所在的位置
-                    double angele_1 = s7Postion.Read(3).CastTo<double>(-1);// 角度1
-                    double angele_2 = s7Postion.Read(4).CastTo<double>(-1);//角度2
-                     
-                    if (angele_1 > 0d)
-                    { 
-                        List<List<ImgPosition>> list = new List<List<ImgPosition>>();//两个热像仪的温度集合
-                        List<ImgPosition> newInfo = new List<ImgPosition>(); //存放两个热像仪的温度集合
-                        for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)//获取到在线相机
-                        { 
-                            if( comboBoxOnlineDevice.Items[i].ToString().Contains("conn"))
+                    AngleTheta = s7Postion.Read(3).CastTo<double>(-1) / 1000;// 角度 theta θ
+                    AngleAlpha = s7Postion.Read(4).CastTo<double>(-1) / 1000;//角度2 alpha α 
+                    for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)//获取到在线相机
+                    {
+                        if (comboBoxOnlineDevice.Items[i].ToString().Contains("conn")) 
+                        {
+                            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
+                            if (frmDisplay == null)
                             {
-                                FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
-                                if (frmDisplay == null)
-                                {
-                                    FormMain.GetOPCTaskInfo("未获取到该热像仪画面: IP:" + _LstEnumInfo[i].intCamIp);
-                                    continue;
-                                }
-                                else
-                                { 
-                                    list.Add( frmDisplay.NewGetInfo()); //获取温度信息
-                                    FormMain.GetOPCTaskInfo("窗体:"+ frmDisplay.Name+",IP:" + _LstEnumInfo[i].intCamIp);
-                                }
+                                FormMain.GetOPCTaskInfo("未获取到该热像仪画面: IP:" + _LstEnumInfo[i].intCamIp);
+                                continue;
                             }
                             else
                             {
-                                FormMain.GetOPCTaskInfo("此相机不处于连接状态："+comboBoxOnlineDevice.Items[i].ToString());
+                                calculator.GetCameraPosition(AngleTheta, AngleAlpha, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//计算当前相机所在的位置 
+                                list.Add(frmDisplay.NewGetInfo()); //获取温度信息  
+                                FormMain.GetOPCTaskInfo("窗体:" + frmDisplay.Name + ",IP:" + _LstEnumInfo[i].intCamIp);
                             }
                         }
-                        object[] values = new object[82];//任务发送数组
-                        foreach (var onePositionList in list)
+                        else
                         {
-                            var DedupImgS = calculator.RecursiveDeduplication(onePositionList, Globals.ComparisonInterval);  //2.移除在一个区间内的温度点
-                            foreach (var item in DedupImgS)
-                            { 
-                                newInfo.Add(item);//将两个热像仪采集到温度放到一个集合里面
-                            }
+                            FormMain.GetOPCTaskInfo("此相机不处于连接状态：" + comboBoxOnlineDevice.Items[i].ToString());
                         }
-                        foreach (var item in newInfo)//对每个温度点进行判断， 
-                        {
-                            //1.移除不在锅内的温度 (未完成)
-                            //2.将温度坐标转换成实际坐标
-        
-                        } 
-                        newInfo.Sort(new ImgPosition());//对温度点进行从高到底排序    
-                        s7Task.Write(values);
-                        Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取
                     }
-                    else
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        FormMain.GetOPCTaskInfo("读取到机器人角度为:" + angele_1);
-                        Thread.Sleep(3000);//3秒后重新再读取
+                        List<ImgPosition> outlist = new List<ImgPosition>();
+                        //1.移除在一个区间内的温度点(现在取出来的都是相机里面的坐标)
+                        calculator.RecursiveDeduplication(list[i], Globals.ComparisonInterval, outlist);
+                        //2.将相机温度坐标转换成实际坐标 
+                        var realTmper = calculator.GetRobotPositionByImagePoint(outlist, (AngleTheta + AngleAlpha)+90, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//将一个相机的热点进行实际值的换算
+
+                        foreach (var item in realTmper)
+                        {
+                            listRobot.Add(item);//将实际坐标放到一个集合里面
+                        }
                     }
+
+                    //3.移除锅外和锅边的数据
+
+                    listRobot.Sort(new RobotPositionSort());//温度从高到低排序 
+                    //if (listRobot.Count == 0)
+                    //{
+                    //    goto aa;
+                    //}
+                    s7Task.Write(calculator.ReplaceIndex(listRobot));//写入任务 
+                    Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取 
                 }
                 else
                 {
-                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag+"，十秒后再次读取！");
-                    Thread.Sleep(2000);//5秒后重新再读取
-                }
-
-             
+                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，五秒后再次读取！");
+                    Thread.Sleep(5000);//5秒后重新再读取
+                } 
             }
         }
- 
+        /// <summary>
+        /// 停止任务
+        /// </summary>
+         public void StopAll(string info)
+        { 
+            isThreadRun = false;
+            MessageBox.Show("异常错误",":停止采集与传输任务!\r\n错误信息：" + info, MessageBoxButtons.OK,MessageBoxIcon.Error);
+        }
         /// <summary>
         /// 创建S7协议服务器
         /// </summary>
        async void CreatS7Server()
         {
-            if (s7Task != null)
-            {
-                FormMain.GetOPCTaskInfo("服务已经创建!");
-                return;
-            }
+            
             try
             {
                 SiemensS7Net s7server = new SiemensS7Net(SiemensPLCS.S1500)
@@ -546,6 +546,7 @@ namespace ThermoGroupSample
                 };
               await Task.Run(()=>  s7Task = new SiemensS7(s7server, Modle.ItemCollection.GetBYS7Item()));
                 s7Postion = new SiemensS7(s7server, Modle.ItemCollection.GetRobitPositionbYs7Item());
+                
                 FormMain.GetOPCTaskInfo("PLC创建成功！" );
             }
             catch (Exception ex)
@@ -555,7 +556,7 @@ namespace ThermoGroupSample
             }
 
         }
-        #region OPC方式连接方式
+        #region 连接方式
         /// <summary>
         /// 异步开启连接PLC 并且监听DB块值的变化
         /// </summary>
@@ -572,39 +573,7 @@ namespace ThermoGroupSample
             }
         } 
          
-        private  async void GetConneection()
-        {
-            try
-            {
-                if (opcServer.Create())
-                {
-                    FormMain.GetOPCTaskInfo("OPC创建成功!"); 
-                }
-                else
-                {
-                    FormMain.GetOPCTaskInfo("OPC创建失败!请检查环境");
-                    ChangeBtnCursor(1);
-                }
-                FormMain.GetOPCTaskInfo("PLC连接中...");
-                string info = await Task.Run(()=> opcServer.Connection());
-                if (string.IsNullOrWhiteSpace(info))
-                {
-                    FormMain.GetOPCTaskInfo("PLC连接成功!");
-                    ChangeBtnCursor(2);
-                    opcServer.GetTick();//十秒后自动跳变
-                }
-                else
-                {
-                    FormMain.GetOPCTaskInfo("PLC连接失败" + info);
-                } 
-            }
-            catch (Exception ex)
-            {
-                FormMain.GetOPCTaskInfo("OPC创建失败!请检查网络和环境"+ex.Message);
-                ChangeBtnCursor(1);
-            }
-          
-        }
+
         #endregion
 
 

@@ -78,10 +78,10 @@ namespace ThermoGroupSample.Server
                         case "byte":
                             result = SiemensTcpNet.ReadByte(GetNewItem(item)).Content;
                             break;
-                        case "short":
+                        case "w":
                             result = SiemensTcpNet.ReadInt16(GetNewItem(item)).Content;
                             break;
-                        case "w"://ushort
+                        case "ushort"://ushort
                             result = SiemensTcpNet.ReadUInt16(GetNewItem(item)).Content;
                             break;
                         case "dint":
@@ -142,10 +142,10 @@ namespace ThermoGroupSample.Server
                         case "byte":
                             SiemensTcpNet.Write(GetNewItem(item), Convert.ToByte(values));
                             break;
-                        case "short":
+                        case "w":
                             SiemensTcpNet.Write(GetNewItem(item), short.Parse(values.ToString()));
                             break;
-                        case "w"://ushort
+                        case "ushort"://ushort
                             SiemensTcpNet.Write(GetNewItem(item), ushort.Parse(values.ToString()));
                             break;
                         case "dint":
@@ -186,12 +186,20 @@ namespace ThermoGroupSample.Server
         /// <param name="index"></param>
         public void Write(object[] values)
         {
-            try
-            {
-                if (values.Length == ListItem.Count)
-                {
+            //try
+            //{
+                //if (values.Length == ListItem.Count)
+                //{
                     for (int i = 0; i < ListCount; i++)
                     {
+                        if(i >= ListItem.Count)
+                        {
+                            break;
+                        }
+                        if (i == values.Length)
+                        {
+                            break;
+                        }
                         var item = ListItem[i];
                         var arr = item.Trim().Split('.');
                         if (arr.Length > 1)
@@ -207,10 +215,10 @@ namespace ThermoGroupSample.Server
                                     case "byte":
                                         SiemensTcpNet.Write(GetNewItem(item), Convert.ToByte(values[i]));
                                         break;
-                                    case "short":
+                                    case "w":
                                         SiemensTcpNet.Write(GetNewItem(item), short.Parse(values[i].ToString()));
                                         break;
-                                    case "w"://ushort
+                                    case "ushort"://ushort
                                         SiemensTcpNet.Write(GetNewItem(item), ushort.Parse(values[i].ToString()));
                                         break;
                                     case "dint":
@@ -239,12 +247,12 @@ namespace ThermoGroupSample.Server
                             }
                         }
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                //}
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
         }
         string GetNewItem(string oldString)
         {

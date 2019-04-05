@@ -197,7 +197,7 @@ namespace ThermoGroupSample
                                 FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[CamIndex].intCamIp); //选择已经绑定的IP的显示窗口
                                 FormMain.GetOPCTaskInfo("正在使用窗体：" + frmDisplay.Name + "的热像仪！");
                                 object[] obj = new object[36];
-                                await Task.Run(() => frmDisplay.GetInfo(1, out obj));
+                            
                                 RpyGroup.SyncWrite(obj);//写入坐标和温度
                                 isWork = false;
                             }

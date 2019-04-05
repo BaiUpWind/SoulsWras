@@ -21,7 +21,9 @@ namespace ThermoGroupSample
 
         static string file = System.Windows.Forms.Application.ExecutablePath;
         static System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(file);
-
+        /// <summary>
+        /// PLC坐标
+        /// </summary>
         public static string RobitPlc_Ip
         {
             get
@@ -64,10 +66,15 @@ namespace ThermoGroupSample
             }
         }
 
+ 
+
+ 
+   
+      
         /// <summary>
-        /// 相机坐标原点拍摄的位置（以图像坐标左下角开始的起始坐标，0,0） 距离量测实物的圆心的距离(单位厘米)
+        /// 相机IP1
         /// </summary>
-        public static double TwoProp
+        public static string CameraIp1
         {
             get
             {
@@ -75,105 +82,34 @@ namespace ThermoGroupSample
                 {
                     try
                     {
-                        double result =Convert.ToDouble( config.AppSettings.Settings["TwoProp"].Value) ;
-                        if ( result >0)
+                        string result = config.AppSettings.Settings["CameraIp1"].Value.ToString();
+                        if (!string.IsNullOrWhiteSpace(result))
                         {
                             return result;
                         }
                         else
                         {
-                            return -1;
+                            return "-1";
                         }
                     }
                     catch (Exception)
                     {
 
-                        return -1;
+                        return "-1";
                     }
 
                 }
                 else
                 {
-                    return -1;
-                }
-
-            } 
-        }
-        /// <summary>
-        /// 相机距离机器人垂直距离
-        /// </summary>
-        public static double CamerRototVd
-        {
-            get
-            {
-                if (config != null)
-                {
-                    try
-                    {
-                        double result = Convert.ToDouble(config.AppSettings.Settings["CamerRototVd"].Value);
-                        if (result > 0)
-                        {
-                            return result;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                        return -1;
-                    }
-
-                }
-                else
-                {
-                    return -1;
-                }
-
-            } 
-        }
-
-        /// <summary>
-        /// 实际宽
-        /// </summary>
-        public static double RealWidth
-        {
-            get
-            {
-                if (config != null)
-                {
-                    try
-                    {
-                        double result = Convert.ToDouble(config.AppSettings.Settings["RealWidth"].Value);
-                        if (result > 0)
-                        {
-                            return result;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                        return -1;
-                    }
-
-                }
-                else
-                {
-                    return -1;
+                    return "-1";
                 }
 
             }
         }
         /// <summary>
-        /// 实际高
+        /// 相机2IP 
         /// </summary>
-        public static double RealHeight
+        public static string CameraIp2
         {
             get
             {
@@ -181,96 +117,26 @@ namespace ThermoGroupSample
                 {
                     try
                     {
-                        double result = Convert.ToDouble(config.AppSettings.Settings["RealHeight"].Value);
-                        if (result > 0)
+                        string result =  config.AppSettings.Settings["CameraIp2"].Value.ToString();
+                        if (!string.IsNullOrWhiteSpace(result))
                         {
                             return result;
                         }
                         else
                         {
-                            return -1;
+                            return "-1";
                         }
                     }
                     catch (Exception)
                     {
 
-                        return -1;
+                        return "-1";
                     }
 
                 }
                 else
                 {
-                    return -1;
-                }
-
-            }
-        }
-        /// <summary>
-        /// 等分
-        /// </summary>
-        public static double  Parts
-        {
-            get
-            {
-                if (config != null)
-                {
-                    try
-                    {
-                        double result = Convert.ToDouble(config.AppSettings.Settings["Parts"].Value);
-                        if (result > 0)
-                        {
-                            return result;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                        return -1;
-                    }
-
-                }
-                else
-                {
-                    return -1;
-                }
-
-            }
-        }
-        /// <summary>
-        /// 距离
-        /// </summary>
-        public static double Range
-        {
-            get
-            {
-                if (config != null)
-                {
-                    try
-                    {
-                        double result = Convert.ToDouble(config.AppSettings.Settings["Range"].Value);
-                        if (result > 0)
-                        {
-                            return result;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                    }
-                    catch (Exception)
-                    {
-
-                        return -1;
-                    }
-
-                }
-                else
-                {
-                    return -1;
+                    return "-1";
                 }
 
             }
@@ -308,6 +174,42 @@ namespace ThermoGroupSample
                 else
                 {
                     return -1;
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 检测精度 检测精度 默认1  有60*80的点 精度越高时间越长
+        /// </summary>
+        public static int DetectionAccuracy
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        int result = Convert.ToInt32(config.AppSettings.Settings["DetectionAccuracy"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return  1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return  1;
+                    }
+
+                }
+                else
+                {
+                    return  1;
                 }
 
             }

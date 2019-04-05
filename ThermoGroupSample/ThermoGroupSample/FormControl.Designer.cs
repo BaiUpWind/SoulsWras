@@ -37,34 +37,18 @@ namespace ThermoGroupSample
             this.groupBoxTras = new System.Windows.Forms.GroupBox();
             this.buttonStop = new System.Windows.Forms.Button();
             this.buttonPlay = new System.Windows.Forms.Button();
-            this.lblDisplay = new System.Windows.Forms.Label();
-            this.cmbDisplay = new System.Windows.Forms.ComboBox();
-            this.btnTake = new System.Windows.Forms.Button();
-            this.groupBoxDisplay = new System.Windows.Forms.GroupBox();
-            this.txtY = new System.Windows.Forms.TextBox();
-            this.txtX = new System.Windows.Forms.TextBox();
-            this.lblY = new System.Windows.Forms.Label();
-            this.lblX = new System.Windows.Forms.Label();
-            this.txtL = new System.Windows.Forms.TextBox();
-            this.txtW = new System.Windows.Forms.TextBox();
-            this.lblL = new System.Windows.Forms.Label();
-            this.lblW = new System.Windows.Forms.Label();
-            this.btnSelect = new System.Windows.Forms.Button();
             this.list_data = new System.Windows.Forms.ListBox();
             this.btnConnection = new System.Windows.Forms.Button();
             this.groupBoxPLCContrl = new System.Windows.Forms.GroupBox();
-            this.btnRConn = new System.Windows.Forms.Button();
             this.txtTimetim = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnStOP = new System.Windows.Forms.Button();
-            this.btnEnter = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.参数设置SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
-            this.groupBoxDisplay.SuspendLayout();
             this.groupBoxPLCContrl.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -74,7 +58,7 @@ namespace ThermoGroupSample
             this.comboBoxOnlineDevice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOnlineDevice.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.comboBoxOnlineDevice.FormattingEnabled = true;
-            this.comboBoxOnlineDevice.Location = new System.Drawing.Point(61, 31);
+            this.comboBoxOnlineDevice.Location = new System.Drawing.Point(70, 32);
             this.comboBoxOnlineDevice.Name = "comboBoxOnlineDevice";
             this.comboBoxOnlineDevice.Size = new System.Drawing.Size(148, 20);
             this.comboBoxOnlineDevice.TabIndex = 0;
@@ -84,7 +68,7 @@ namespace ThermoGroupSample
             // buttonRefresh
             // 
             this.buttonRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonRefresh.Location = new System.Drawing.Point(22, 25);
+            this.buttonRefresh.Location = new System.Drawing.Point(12, 25);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(58, 26);
             this.buttonRefresh.TabIndex = 1;
@@ -96,7 +80,7 @@ namespace ThermoGroupSample
             // 
             this.labelOnlineDevice.AutoSize = true;
             this.labelOnlineDevice.BackColor = System.Drawing.SystemColors.Control;
-            this.labelOnlineDevice.Location = new System.Drawing.Point(3, 34);
+            this.labelOnlineDevice.Location = new System.Drawing.Point(12, 35);
             this.labelOnlineDevice.Name = "labelOnlineDevice";
             this.labelOnlineDevice.Size = new System.Drawing.Size(53, 12);
             this.labelOnlineDevice.TabIndex = 2;
@@ -107,9 +91,9 @@ namespace ThermoGroupSample
             this.groupBoxDevice.Controls.Add(this.buttonLink);
             this.groupBoxDevice.Controls.Add(this.buttonRefresh);
             this.groupBoxDevice.Controls.Add(this.buttonDislink);
-            this.groupBoxDevice.Location = new System.Drawing.Point(1, 62);
+            this.groupBoxDevice.Location = new System.Drawing.Point(3, 62);
             this.groupBoxDevice.Name = "groupBoxDevice";
-            this.groupBoxDevice.Size = new System.Drawing.Size(217, 61);
+            this.groupBoxDevice.Size = new System.Drawing.Size(221, 61);
             this.groupBoxDevice.TabIndex = 3;
             this.groupBoxDevice.TabStop = false;
             this.groupBoxDevice.Text = "设备";
@@ -140,7 +124,7 @@ namespace ThermoGroupSample
             // 
             this.groupBoxTras.Controls.Add(this.buttonStop);
             this.groupBoxTras.Controls.Add(this.buttonPlay);
-            this.groupBoxTras.Location = new System.Drawing.Point(5, 129);
+            this.groupBoxTras.Location = new System.Drawing.Point(7, 129);
             this.groupBoxTras.Name = "groupBoxTras";
             this.groupBoxTras.Size = new System.Drawing.Size(217, 59);
             this.groupBoxTras.TabIndex = 4;
@@ -150,7 +134,7 @@ namespace ThermoGroupSample
             // buttonStop
             // 
             this.buttonStop.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonStop.Location = new System.Drawing.Point(86, 20);
+            this.buttonStop.Location = new System.Drawing.Point(82, 20);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(58, 26);
             this.buttonStop.TabIndex = 0;
@@ -161,146 +145,13 @@ namespace ThermoGroupSample
             // buttonPlay
             // 
             this.buttonPlay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.buttonPlay.Location = new System.Drawing.Point(22, 20);
+            this.buttonPlay.Location = new System.Drawing.Point(8, 20);
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(58, 26);
             this.buttonPlay.TabIndex = 0;
             this.buttonPlay.Text = "播放";
             this.buttonPlay.UseVisualStyleBackColor = true;
             this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
-            // 
-            // lblDisplay
-            // 
-            this.lblDisplay.AutoSize = true;
-            this.lblDisplay.BackColor = System.Drawing.SystemColors.Control;
-            this.lblDisplay.Location = new System.Drawing.Point(3, 530);
-            this.lblDisplay.Name = "lblDisplay";
-            this.lblDisplay.Size = new System.Drawing.Size(53, 12);
-            this.lblDisplay.TabIndex = 3;
-            this.lblDisplay.Text = "选择窗口";
-            this.lblDisplay.Visible = false;
-            // 
-            // cmbDisplay
-            // 
-            this.cmbDisplay.FormattingEnabled = true;
-            this.cmbDisplay.Location = new System.Drawing.Point(66, 530);
-            this.cmbDisplay.Name = "cmbDisplay";
-            this.cmbDisplay.Size = new System.Drawing.Size(147, 20);
-            this.cmbDisplay.TabIndex = 0;
-            this.cmbDisplay.Visible = false;
-            this.cmbDisplay.SelectedIndexChanged += new System.EventHandler(this.cmbDisplay_SelectedIndexChanged);
-            // 
-            // btnTake
-            // 
-            this.btnTake.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnTake.Location = new System.Drawing.Point(11, 350);
-            this.btnTake.Name = "btnTake";
-            this.btnTake.Size = new System.Drawing.Size(75, 23);
-            this.btnTake.TabIndex = 5;
-            this.btnTake.Text = "获取温度点";
-            this.btnTake.UseVisualStyleBackColor = true;
-            this.btnTake.Click += new System.EventHandler(this.btnTake_Click);
-            // 
-            // groupBoxDisplay
-            // 
-            this.groupBoxDisplay.Controls.Add(this.txtY);
-            this.groupBoxDisplay.Controls.Add(this.txtX);
-            this.groupBoxDisplay.Controls.Add(this.lblY);
-            this.groupBoxDisplay.Controls.Add(this.lblX);
-            this.groupBoxDisplay.Controls.Add(this.txtL);
-            this.groupBoxDisplay.Controls.Add(this.txtW);
-            this.groupBoxDisplay.Controls.Add(this.lblL);
-            this.groupBoxDisplay.Controls.Add(this.lblW);
-            this.groupBoxDisplay.Location = new System.Drawing.Point(5, 413);
-            this.groupBoxDisplay.Name = "groupBoxDisplay";
-            this.groupBoxDisplay.Size = new System.Drawing.Size(217, 108);
-            this.groupBoxDisplay.TabIndex = 6;
-            this.groupBoxDisplay.TabStop = false;
-            this.groupBoxDisplay.Text = "摄像头检测区域控制";
-            this.groupBoxDisplay.Visible = false;
-            // 
-            // txtY
-            // 
-            this.txtY.Location = new System.Drawing.Point(107, 52);
-            this.txtY.Name = "txtY";
-            this.txtY.Size = new System.Drawing.Size(47, 21);
-            this.txtY.TabIndex = 8;
-            // 
-            // txtX
-            // 
-            this.txtX.Location = new System.Drawing.Point(31, 52);
-            this.txtX.Name = "txtX";
-            this.txtX.Size = new System.Drawing.Size(47, 21);
-            this.txtX.TabIndex = 8;
-            // 
-            // lblY
-            // 
-            this.lblY.AutoSize = true;
-            this.lblY.Location = new System.Drawing.Point(84, 55);
-            this.lblY.Name = "lblY";
-            this.lblY.Size = new System.Drawing.Size(17, 12);
-            this.lblY.TabIndex = 7;
-            this.lblY.Text = "Y:";
-            // 
-            // lblX
-            // 
-            this.lblX.AutoSize = true;
-            this.lblX.Location = new System.Drawing.Point(8, 55);
-            this.lblX.Name = "lblX";
-            this.lblX.Size = new System.Drawing.Size(17, 12);
-            this.lblX.TabIndex = 6;
-            this.lblX.Text = "X:";
-            // 
-            // txtL
-            // 
-            this.txtL.Location = new System.Drawing.Point(31, 82);
-            this.txtL.MaxLength = 6;
-            this.txtL.Name = "txtL";
-            this.txtL.Size = new System.Drawing.Size(47, 21);
-            this.txtL.TabIndex = 5;
-            this.txtL.Visible = false;
-            this.txtL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtL_KeyPress);
-            // 
-            // txtW
-            // 
-            this.txtW.Location = new System.Drawing.Point(107, 82);
-            this.txtW.MaxLength = 6;
-            this.txtW.Name = "txtW";
-            this.txtW.Size = new System.Drawing.Size(47, 21);
-            this.txtW.TabIndex = 4;
-            this.txtW.Visible = false;
-            this.txtW.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtL_KeyPress);
-            // 
-            // lblL
-            // 
-            this.lblL.AutoSize = true;
-            this.lblL.Location = new System.Drawing.Point(6, 88);
-            this.lblL.Name = "lblL";
-            this.lblL.Size = new System.Drawing.Size(23, 12);
-            this.lblL.TabIndex = 3;
-            this.lblL.Text = "长:";
-            this.lblL.Visible = false;
-            // 
-            // lblW
-            // 
-            this.lblW.AutoSize = true;
-            this.lblW.Location = new System.Drawing.Point(84, 88);
-            this.lblW.Name = "lblW";
-            this.lblW.Size = new System.Drawing.Size(23, 12);
-            this.lblW.TabIndex = 2;
-            this.lblW.Text = "宽:";
-            this.lblW.Visible = false;
-            // 
-            // btnSelect
-            // 
-            this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSelect.Location = new System.Drawing.Point(106, 368);
-            this.btnSelect.Name = "btnSelect";
-            this.btnSelect.Size = new System.Drawing.Size(91, 23);
-            this.btnSelect.TabIndex = 1;
-            this.btnSelect.Text = "获取检测区域";
-            this.btnSelect.UseVisualStyleBackColor = true;
-            this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
             // 
             // list_data
             // 
@@ -316,7 +167,7 @@ namespace ThermoGroupSample
             // btnConnection
             // 
             this.btnConnection.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnConnection.Location = new System.Drawing.Point(6, 47);
+            this.btnConnection.Location = new System.Drawing.Point(10, 47);
             this.btnConnection.Name = "btnConnection";
             this.btnConnection.Size = new System.Drawing.Size(56, 23);
             this.btnConnection.TabIndex = 41;
@@ -326,28 +177,16 @@ namespace ThermoGroupSample
             // 
             // groupBoxPLCContrl
             // 
-            this.groupBoxPLCContrl.Controls.Add(this.btnRConn);
             this.groupBoxPLCContrl.Controls.Add(this.txtTimetim);
             this.groupBoxPLCContrl.Controls.Add(this.label2);
             this.groupBoxPLCContrl.Controls.Add(this.btnStOP);
             this.groupBoxPLCContrl.Controls.Add(this.btnConnection);
-            this.groupBoxPLCContrl.Location = new System.Drawing.Point(5, 194);
+            this.groupBoxPLCContrl.Location = new System.Drawing.Point(7, 194);
             this.groupBoxPLCContrl.Name = "groupBoxPLCContrl";
-            this.groupBoxPLCContrl.Size = new System.Drawing.Size(217, 150);
+            this.groupBoxPLCContrl.Size = new System.Drawing.Size(217, 113);
             this.groupBoxPLCContrl.TabIndex = 43;
             this.groupBoxPLCContrl.TabStop = false;
-            this.groupBoxPLCContrl.Text = "PLC控制器";
-            // 
-            // btnRConn
-            // 
-            this.btnRConn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnRConn.Location = new System.Drawing.Point(6, 76);
-            this.btnRConn.Name = "btnRConn";
-            this.btnRConn.Size = new System.Drawing.Size(56, 23);
-            this.btnRConn.TabIndex = 46;
-            this.btnRConn.Text = "重连";
-            this.btnRConn.UseVisualStyleBackColor = true;
-            this.btnRConn.Click += new System.EventHandler(this.btnRConn_Click);
+            this.groupBoxPLCContrl.Text = "温度检测与坐标发送";
             // 
             // txtTimetim
             // 
@@ -355,6 +194,7 @@ namespace ThermoGroupSample
             this.txtTimetim.Name = "txtTimetim";
             this.txtTimetim.Size = new System.Drawing.Size(66, 21);
             this.txtTimetim.TabIndex = 45;
+            this.txtTimetim.Text = "100";
             // 
             // label2
             // 
@@ -368,24 +208,13 @@ namespace ThermoGroupSample
             // btnStOP
             // 
             this.btnStOP.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnStOP.Location = new System.Drawing.Point(68, 47);
+            this.btnStOP.Location = new System.Drawing.Point(82, 47);
             this.btnStOP.Name = "btnStOP";
             this.btnStOP.Size = new System.Drawing.Size(54, 23);
             this.btnStOP.TabIndex = 43;
             this.btnStOP.Text = "停止";
             this.btnStOP.UseVisualStyleBackColor = true;
             this.btnStOP.Click += new System.EventHandler(this.btnStOP_Click);
-            // 
-            // btnEnter
-            // 
-            this.btnEnter.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnEnter.Location = new System.Drawing.Point(11, 379);
-            this.btnEnter.Name = "btnEnter";
-            this.btnEnter.Size = new System.Drawing.Size(56, 23);
-            this.btnEnter.TabIndex = 42;
-            this.btnEnter.Text = "ok";
-            this.btnEnter.UseVisualStyleBackColor = true;
-            this.btnEnter.Click += new System.EventHandler(this.btnEnter_Click);
             // 
             // menuStrip1
             // 
@@ -427,14 +256,8 @@ namespace ThermoGroupSample
             this.ClientSize = new System.Drawing.Size(224, 616);
             this.ControlBox = false;
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblDisplay);
             this.Controls.Add(this.list_data);
-            this.Controls.Add(this.btnEnter);
-            this.Controls.Add(this.groupBoxDisplay);
             this.Controls.Add(this.groupBoxTras);
-            this.Controls.Add(this.btnTake);
-            this.Controls.Add(this.btnSelect);
-            this.Controls.Add(this.cmbDisplay);
             this.Controls.Add(this.groupBoxDevice);
             this.Controls.Add(this.labelOnlineDevice);
             this.Controls.Add(this.comboBoxOnlineDevice);
@@ -449,8 +272,6 @@ namespace ThermoGroupSample
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormControl_Paint);
             this.groupBoxDevice.ResumeLayout(false);
             this.groupBoxTras.ResumeLayout(false);
-            this.groupBoxDisplay.ResumeLayout(false);
-            this.groupBoxDisplay.PerformLayout();
             this.groupBoxPLCContrl.ResumeLayout(false);
             this.groupBoxPLCContrl.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -471,30 +292,15 @@ namespace ThermoGroupSample
         private System.Windows.Forms.GroupBox groupBoxTras;
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button buttonPlay;
-        private System.Windows.Forms.Button btnTake;
-        private System.Windows.Forms.GroupBox groupBoxDisplay;
-        private System.Windows.Forms.TextBox txtL;
-        private System.Windows.Forms.TextBox txtW;
-        private System.Windows.Forms.Label lblL;
-        private System.Windows.Forms.Label lblW;
-        private System.Windows.Forms.Button btnSelect;
-        private System.Windows.Forms.ComboBox cmbDisplay;
-        private System.Windows.Forms.TextBox txtY;
-        private System.Windows.Forms.TextBox txtX;
-        private System.Windows.Forms.Label lblY;
-        private System.Windows.Forms.Label lblX;
         private System.Windows.Forms.ListBox list_data;
         private System.Windows.Forms.Button btnConnection;
         private System.Windows.Forms.GroupBox groupBoxPLCContrl;
-        private System.Windows.Forms.Button btnEnter;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 参数设置SToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 一号甑锅ToolStripMenuItem;
-        private System.Windows.Forms.Label lblDisplay;
         private System.Windows.Forms.Button btnStOP;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtTimetim;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnRConn;
     }
 }

@@ -64,7 +64,7 @@ namespace ThermoGroupSample.Modle
 
 
 
-
+        
         /// <summary>
         /// 机器人任务下载块
         /// </summary>
@@ -78,7 +78,8 @@ namespace ThermoGroupSample.Modle
             { 
                 list.Add("DB30.w" +  (i*2));//坐标 
             } 
-            return list;
+           
+            return list; 
         }
 
         
@@ -89,12 +90,12 @@ namespace ThermoGroupSample.Modle
         public static List<string> GetRobitPositionbYs7Item()
         {
             List<string> list = new List<string>
-            { 
-                "DB31.w0",//标志位
-                "DB31.w2",//axis3 x 
-               "DB31.w4",//axis3 y
-                 "DB31.w6",//angle 3
-               "DB31.w8"//angle 3
+            {
+                "DB31.w0",//标志位 0
+                "DB31.Real2",//axis3 x  1
+               "DB31.Real6",//axis3 y 2 
+                 "DB31.dint10",//angle 3 3 
+               "DB31.dint14"//angle 3 4
             };
             return list;
 

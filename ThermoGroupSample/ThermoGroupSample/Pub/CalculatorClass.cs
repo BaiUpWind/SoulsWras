@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace ThermoGroupSample.Pub
 {
-    public class CalculatorClass
+    /// <summary>
+    /// 计算类
+    /// </summary>
+    public class CalculatorClass  
     {
+        #region 姿态值计算
 
         private const string ALL = "1";
         private const string ORT = "0";
@@ -257,22 +261,10 @@ namespace ThermoGroupSample.Pub
             return re;
         }
 
-        readonly double TowProp = Globals.TwoProp;//相机坐标原点拍摄的位置（以图像坐标左下角开始的起始坐标，0,0） 距离量测实物的圆心的距离(单位厘米)
+        #endregion
 
-        readonly double CamerRototVd = Globals.CamerRototVd;//机器人与相机的垂直距离
-        /// <summary>
-        /// 根据机器人角度取得偏移量
-        /// </summary>
-        /// <param name="degres">角度</param>
-        /// <param name="yx">圆心坐标</param>
-        /// <returns></returns>
-        public NewPosition GetRobotPosition(double degres, double yx)
-        {
-            NewPosition newPos;
-            newPos.x = Math.Cos(degres) * TowProp + yx;
-            newPos.y = Math.Sin(degres) * TowProp + yx;
-            return newPos;
-        }
+        #region 基本公式计算
+
         /// <summary>
         /// 根据坐标求出角度
         /// </summary>
@@ -299,29 +291,7 @@ namespace ThermoGroupSample.Pub
             double distance = Math.Sqrt(((x - ydx) * (x - ydx) + ((y - ydy) * (y - ydy))));
             return distance;
         }
-
-        /// <summary>
-        /// 圆心对角
-        /// </summary>
-        /// <param name="degrees"></param>
-        /// <returns></returns>
-        public double[] DegreesTrans(double degrees)
-        {
-            double[] towDeg = new double[2];
-            if (degrees > 0)
-            {
-                towDeg[0] = degrees;
-                if (degrees + 180 > 360)
-                {
-                    towDeg[1] = degrees - 180;
-                }
-                else
-                {
-                    towDeg[1] = degrees + 180;
-                }
-            }
-            return towDeg;
-        }
+        #endregion
         #region 20190329绑定坐标方法
 
         private double parts;
@@ -516,70 +486,172 @@ namespace ThermoGroupSample.Pub
         /// </summary>
         public CalculatorClass()
         {
-            //对甑锅中心坐标进行初始化赋值
-            CenterPoint.x = 0;
-            CenterPoint.y = 0;
-
-            RobotP1.y = 0;
-            RobotP1.x = 0;
-
-
-            RobotP2.x = 0;
-            RobotP2.y = 0;
-
-
-            ImageP1.x = 0;
-            ImageP1.y = 0;
-
-            ImageP2.x = 0;
-            ImageP2.y = 0;
-
+            //初始化
+            CmaerIp1 = Globals.CameraIp1;
+            CmaerIp2 = Globals.CameraIp2;
         }
         /// <summary>
-        /// 甑锅中心坐标
+        /// 锅底直径
         /// </summary>
-        RobotPosition CenterPoint;
+       public double BotDiameter { get; set; } 
+        /// <summary>
+        /// 锅口直径
+        /// </summary>
+        public double PotDiamerter { get; set; } 
+        /// <summary>
+        /// 相机与物料距离
+        /// </summary>
+        public double AtoB_Distance { get; set; } 
+        /// <summary>
+        /// 相机与柱心距离
+        /// </summary>
+        public double Axis_Camera_Distance { get; set; } 
+
+ 
+        /// <summary>
+        /// 两个相机的位置
+        /// </summary>
+        RobotPosition CameraLocation1, CameraLocation2;
 
         /// <summary>
-        /// 相机坐标（实际坐标）到 相机起始坐标（实际坐标 ）的距离
+        /// 机器人坐标标定的两个点 
         /// </summary>
-        public double AtoB;
-
+        RobotPosition RobotP1, RobotP2;  
         /// <summary>
-        /// 相机坐标（实际坐标）到甑锅中心距离
+        /// 实际标定的两个点
         /// </summary>
-       public  double AtoCenterPoint ;
-
-        /// <summary>
-        /// 旋转角度
-        /// </summary>
-        public double RotationAngle;
-
-
-
-
-        RobotPosition RobotP1, RobotP2;
         ImgPosition ImageP1, ImageP2;
 
+        /// <summary>
+        /// 当前相机IP
+        /// </summary>
+        string ip; 
+        /// <summary>
+        /// 相机 1 和2的IP地址
+        /// </summary>
+        string CmaerIp1, CmaerIp2;
+        /// <summary>
+        /// robotP3是相机坐标转换后的实际坐标点
+        /// </summary>
+        RobotPositionSort RobotP3;
 
         /// <summary>
-        /// 获取机器人坐标
+        /// 转换的实际坐标
         /// </summary>
-        /// <param name="robotP2">相机所在位置（机器人实际坐标）</param>
-        /// <param name="imgP1">图像坐标（拍摄到的热点信息）</param>
-        /// <returns></returns>
-        public RobotPosition GetRobotPositionByImagePoint(RobotPosition robotP2, ImgPosition imgP3)
-        {
-            RobotPosition RobtP3 = new RobotPosition();//转换的实际坐标
+        List<RobotPositionSort> RobotP3List = new List<RobotPositionSort>();//
 
+         
 
+        /// <summary>
+        /// 获取热相机所在的实际位置
+        /// </summary>
+        /// <param name="angeleTheta">旋转角θ</param>
+        /// <param name="angeleAlpha">旋转角α</param>
+        /// <param name="axis3_x">轴三中心点X坐标</param>
+        /// <param name="axis3_y">轴三中心点Y坐标</param>
+        public void GetCameraPosition(double angeleTheta, double angeleAlpha, double axis3_x, double axis3_y, UInt32 camerIp)
+        { 
+            ip = IntToIP(camerIp);
+            if (ip == CmaerIp1)//一号相机
+            {
+                var angleTheta = ((angeleTheta + angeleAlpha)) * (Math.PI / 180);
+            
+                var cos1 = Math.Cos(angleTheta);
+                var cos2 = Math.Cos(angleTheta);
+             
+                CameraLocation1.x = axis3_x - Axis_Camera_Distance * cos1;
+                CameraLocation1.y = axis3_y - Axis_Camera_Distance * cos2;
+            }
+            else if (ip == CmaerIp2)//二号相机
+            {
+                CameraLocation2.x = axis3_x + Axis_Camera_Distance * Math.Cos(angeleTheta + angeleAlpha);
+                CameraLocation2.y = axis3_y + Axis_Camera_Distance * Math.Cos(angeleTheta + angeleAlpha);
+            }
+            else
+            {
+          
+                throw new Exception("相机IP" + ip + "错误！请关闭程序检查修改配置文件并重启程序！");
+            }
 
-
-            return RobtP3;
         }
 
-        List<ImgPosition> outlist = new List<ImgPosition>();
+        /// <summary>
+        /// 热点坐标转换机器人坐标
+        /// </summary>
+        /// <param name="imgP3">热点坐标集合</param>
+        /// <param name="angleBeta">角度</param>
+        /// <param name="axis3_x">立柱X坐标</param>
+        /// <param name="axis3_y">立柱Y坐标</param>
+        /// <param name="camerIp">相机IP</param>
+        /// <returns></returns>
+        public List<RobotPositionSort> GetRobotPositionByImagePoint(List< ImgPosition> imgP3,double angleBeta, double axis3_x, double axis3_y, UInt32 camerIp)
+        {
+            try
+            { 
+                RobotP3List.Clear();
+                ip = IntToIP(camerIp);
+                //标定第一个点
+                ImageP1.x = 40;//相机坐标
+                ImageP1.y = 30;
+                if (ip == CmaerIp1)//一号相机
+                {
+                    RobotP1.x = CameraLocation1.x;//实际坐标
+                    RobotP1.y = CameraLocation1.y;
+                }
+                else if (ip == CmaerIp2)//二号相机
+                {
+                    RobotP1.x = CameraLocation2.x;//实际坐标
+                    RobotP1.y = CameraLocation2.y;
+                }
+                 
+                //标定第二个点
+                //这两个点的角度固定是 45度
+                ImageP2.x = 40;//相机坐标
+                ImageP2.y = 11;
+                // var radian = (Math.PI / 180) * 45;//根据角度求出弧度
+                RobotP2.x = axis3_x ; //AtoB_Distance * Math.Cos(radian);
+                RobotP2.y = axis3_y ;  // AtoB_Distance * Math.Sin(radian); 
 
+                ImgPosition imgP1P3;
+                double sqrt = 0;//开方
+                double atan2 = 0;//正切值
+                foreach (var ItemP3 in imgP3)//循环采集到相机坐标集合  PS:imgP3 是个集合 里面存放的是这个相机采集到的热点信息（x，y）
+                {
+                    //求出相机坐标系下的差值
+                    imgP1P3.x = 55- ImageP1.x;
+                    imgP1P3.y = 42 - ImageP1.y;
+                    //开方  
+                    sqrt = Math.Sqrt(imgP1P3.x * imgP1P3.x + imgP1P3.y * imgP1P3.y);
+                    atan2 = Math.Atan2(imgP1P3.y, imgP1P3.x);//p1p3的正切值 弧度
+                    RobotP3.tmper = ItemP3.tmper;
+                    angleBeta = angleBeta * (Math.PI / 180);//计算旋转角度的弧度
+                                                            //实际坐标 angleBeta 是旋转角度的弧度
+                    RobotP3.x = (sqrt * Math.Cos(atan2 + angleBeta) + RobotP1.x ) *29.825;
+                    RobotP3.y = (sqrt * Math.Sin(atan2 + angleBeta) + RobotP1.y ) *27.35;
+                    if (Math.Abs( RobotP3.x)  <= PotDiamerter ||Math.Abs( RobotP3.y )  <= PotDiamerter)//如果坐标在指定区间内 添加
+                    {
+                        RobotP3List.Add(RobotP3);//添加热点到集合
+                    } 
+                }
+                return RobotP3List; 
+            }
+            catch (Exception ex)
+            {
+                throw ex = new Exception();
+            }
+            
+        }
+      
+
+
+
+      
+
+
+        /// <summary>
+        /// 临时集合 存放重复的坐标点
+        /// </summary>
+        List<ImgPosition> list2 = new List<ImgPosition>();
         /// <summary>
         /// 递归调用取出范围的的坐标，视为重复 剔除
         /// </summary>
@@ -587,80 +659,111 @@ namespace ThermoGroupSample.Pub
         /// <param name="chazhi">取值范围</param>
         /// <param name="outlist">最终的结果</param>
         /// <returns></returns>
-      public  List<ImgPosition> RecursiveDeduplication(List<ImgPosition> inlist, double chazhi )
+        public  List<ImgPosition> RecursiveDeduplication(List<ImgPosition> inlist, double chazhi, List<ImgPosition> outlist)
         {
-            List<ImgPosition> list2 = new List<ImgPosition>();
-            ImgPosition postion;//比对的坐标值  
-            if (inlist.Count == 0)//当全部比对完成后返回最终的坐标值
-            {
-                return outlist;
-            }
-            postion.tmper = inlist[0].tmper;
-            postion.x = inlist[0].x;
-            postion.y = inlist[0].y;
-            foreach (var item in inlist)//比对 
-            {
-                if (item.Equals(postion))//比对象等于 比对象
+            try
+            { 
+                list2.Clear();
+                ImgPosition postion;//比对的坐标值  
+                if (inlist.Count == 0)//当全部比对完成后返回最终的坐标值
                 {
-                    continue;
+                    return outlist;
                 }
-                if ((item.x + item.y) - (postion.x + postion.y) <= chazhi)//作比较
+                postion.tmper = inlist[0].tmper;
+                postion.x = inlist[0].x;
+                postion.y = inlist[0].y;
+                foreach (var item in inlist)//比对 
                 {
-                    list2.Add(item);//添加重复的坐标值
+                    if (item.Equals(postion))//比对象等于 比对象
+                    {
+                        continue;
+                    }
+                    if (Math.Abs((item.x + item.y) - (postion.x + postion.y)) <= chazhi/6.1)//作比较
+                    {
+                        list2.Add(item);//添加重复的坐标值
+                    }
                 }
+                foreach (var item in list2)//移除
+                {
+                    inlist.Remove(item);//移除重复的坐标值
+                }
+                inlist.Remove(postion);//移除已经参与比对的坐标值
+                outlist.Add(postion);//添加已经参与对比的坐标值 是最终的坐标值
+                return RecursiveDeduplication(inlist, chazhi, outlist);
             }
-            foreach (var item in list2)//移除
+            catch (Exception ex)
             {
-                inlist.Remove(item);//移除重复的坐标值
+                throw ex = new Exception();
             }
-            inlist.Remove(postion);//移除已经参与比对的坐标值
-            outlist.Add(postion);//添加已经参与对比的坐标值 是最终的坐标值
-            return RecursiveDeduplication(inlist, chazhi);
         }
 
-        public double[] ReplaceIndex (List<RobotPosition> list)
+        /// <summary>
+        /// 重新排序，有多少个热点，先存放x 后存放y 
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public object[] ReplaceIndex (List<RobotPositionSort> list)
         {
-            double[] valuesHead = new double[1];//存放头部
-            double[] valuesX = new double[list.Count];//存放坐标X
-            double[] valuesY = new double[list.Count];//存放坐标Y
-            double[] valuesUnion = new double[list.Count * 2 + 1];
-            valuesHead[0] = list.Count;//多少个热点
-
-             
-            for (int i = 0; i < list.Count; i++)
-            {
-                valuesX[i] = list[i].x;
-                valuesY[i] = list[i].y;
+            try
+            { 
+                object[] valuesHead = new object[1];//存放头部
+                object[] valuesX = new object[list.Count];//存放坐标X
+                object[] valuesY = new object[list.Count];//存放坐标Y
+                object[] valuesUnion = new object[list.Count * 2 + 1];
+                for (int i = 0; i < valuesUnion.Length; i++)
+                {
+                    valuesUnion[i] = -1;
+                }
+                valuesHead[0] = list.Count;//多少个热点 
+                for (int i = 0; i < list.Count; i++)
+                {
+                    valuesX[i] = list[i].x;//先放X
+                    valuesY[i] = list[i].y;//后放Y
+                }
+                valuesHead.CopyTo(valuesUnion, 0);
+                valuesX.CopyTo(valuesUnion, valuesUnion.Where(a => Convert.ToInt32(a) != -1).Count());
+                valuesY.CopyTo(valuesUnion, valuesUnion.Where(a => Convert.ToInt32(a) != -1).Count());
+                return valuesUnion; 
             }
-            var xyUnion = valuesX.Union(valuesY);
-            valuesUnion.Union(valuesHead).Union(xyUnion);
-            return valuesUnion;
+            catch (Exception ex)
+            {
+                throw ex = new Exception();
+            }
         }
 
-
+        /// <summary>
+        /// IP地址转换
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <returns></returns>
+        public string IntToIP(uint ipAddress)
+        {
+            long ui1 = ipAddress & 0xFF000000;
+            ui1 = ui1 >> 24;
+            long ui2 = ipAddress & 0x00FF0000;
+            ui2 = ui2 >> 16;
+            long ui3 = ipAddress & 0x0000FF00;
+            ui3 = ui3 >> 8;
+            long ui4 = ipAddress & 0x000000FF;
+            string IPstr = System.Convert.ToString(ui4) + "."
+            + System.Convert.ToString(ui3) + "."
+            + System.Convert.ToString(ui2)
+            + "." + System.Convert.ToString(ui1);
+            return IPstr;
+        }
         #endregion
 
 
         /// <summary>
         /// 图像坐标
         /// </summary>
-        public struct ImgPosition:IComparer<ImgPosition>
+        public struct ImgPosition 
 
         { 
             public double x;
             public double y;
-            public double tmper ;
-
-            /// <summary>
-            /// 温度比较 高的排前面
-            /// </summary>
-            /// <param name="x"></param>
-            /// <param name="y"></param>
-            /// <returns></returns>
-            public int Compare(ImgPosition x, ImgPosition y)
-            {
-                return y.tmper.CompareTo(x.tmper);
-            }
+            public double tmper ; 
+            
         }
         /// <summary>
         /// 机器人坐标
@@ -671,16 +774,23 @@ namespace ThermoGroupSample.Pub
             public double y;
         }
 
-    }
+        /// <summary>
+        /// 机器人排序坐标
+        /// </summary>
+        public struct RobotPositionSort : IComparer<RobotPositionSort>
+        {
+            public double tmper;
+            public double x;
+            public double y;
 
-    public struct NewPosition
-    {
-        public double x;
-        public double y;
+            public int Compare(RobotPositionSort x, RobotPositionSort y)
+            {
+                return y.tmper.CompareTo(x.tmper);
+            }
+        }
+
     }
-   
-       
-    
+  
     /// <summary>
     /// 向量
     /// </summary>

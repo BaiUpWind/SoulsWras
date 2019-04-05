@@ -24,7 +24,7 @@ namespace ThermoGroupSample
         const uint DISPLAYWND_MARGIN = 6;
         const uint DISPLAYWND_BORDER_WIDTH = DISPLAYWND_GAP / 2;
         const uint MAX_DEVWINDOW_NUM = 2;
-        CalculatorClass cc;
+       
         FormControl _FormControl;
         FormDisplay[] _FormDisplayLst;
         FormDisplayBG _FormDisplayBG;
@@ -105,15 +105,7 @@ namespace ThermoGroupSample
         #endregion
         public FormMain()
         {
-            try
-            {
-                ItemCollection.OpcServer = System.Configuration.ConfigurationManager.AppSettings["OpcPresortServer"].ToString();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("配置文件错误,请配置正确并且重启程序");
-                Close();
-            }
+           
             InitializeComponent();
 
             InitializeAllWindows();
@@ -125,9 +117,17 @@ namespace ThermoGroupSample
            
         }
         private System.Windows.Forms.ListBox list_data = new ListBox();
+       // Label lblErrInfo = new Label();
         void InitializeAllWindows()
         {
-            cc = new CalculatorClass();
+            //this.label2.AutoSize = true;
+            //this.label2.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            //this.label2.Location = new System.Drawing.Point(15, 71);
+            //this.label2.Name = "label2";
+            //this.label2.Size = new System.Drawing.Size(21, 20);
+            //this.label2.TabIndex = 1;
+            //this.label2.Text = "y:";
+           
             //主窗口
             this.Width = (int)MAINWINDOW_WIDTH;
             this.Height = (int)MAINWINDOW_HEIGHT;
@@ -139,6 +139,12 @@ namespace ThermoGroupSample
             this.list_data.Name = "list_data";
             handle += upDateList;
             this.list_data.TabIndex = 40;
+            //lblErrInfo.Location = new Point(0, list_data.Height );
+            //lblErrInfo.Text = "错误信息";
+            //lblErrInfo.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            //lblErrInfo.Size = new Size(21, 20);
+            //list_data.Controls.Add(lblErrInfo);
+
             //控制窗口
             _FormControl = new FormControl();
 
@@ -243,7 +249,7 @@ namespace ThermoGroupSample
             FormDateSet.getNewZGInfo += GetZGinfoToDisplay;
             if (zgCOunt < 0)
             {
-                FormMain.GetOPCTaskInfo("未找到任何甑锅的参数,请录入甑锅参数后重启程序");
+                GetOPCTaskInfo("未找到任何甑锅的参数,请录入甑锅参数后重启程序");
                 return;
             }
             //更新显示窗口的显示与隐藏
@@ -254,29 +260,47 @@ namespace ThermoGroupSample
               
 
             }
-            GetZGinfoToDisplay();
+        
             for (uint i = num; i < MAX_DEVWINDOW_NUM; i++)
             {
                 _FormDisplayLst[i].Hide();
             }
-            cc.BindPoint();///绑定坐标
-
+          
 
         }
-
+        bool CheckCanshuOkbuOk(int index)
+        { 
+            for (int i = 1; i <= index; i++)
+            {
+                int readIndex = rw.IniReadValue("ZG" + (i), "启用").CastTo<int>(-1);
+                if (readIndex != -1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         void GetZGinfoToDisplay( )
         {
              int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+            if (!CheckCanshuOkbuOk(count))
+            {
+                GetOPCTaskInfo("检测到没有锅参数为启用状态，会导致传入数据有误！");
+                return;
+            }
             for (int i = 1; i <= count; i++)
             {
                 int readIndex = rw.IniReadValue("ZG" + (i), "启用").CastTo<int>(-1);
                 if(readIndex != -1)
                 {
+
+                    _FormControl.calculator.BotDiameter =   rw.IniReadValue("ZG" + (i), "锅底直径").CastTo<double>(-1);
+                    _FormControl.calculator.PotDiamerter = rw.IniReadValue("ZG" + (i), "锅口直径").CastTo<double>(-1);
+                    _FormControl.calculator.Axis_Camera_Distance = rw.IniReadValue("ZG" + (i), "相机与柱心距离").CastTo<double>(-1);
+                    _FormControl.calculator.AtoB_Distance = rw.IniReadValue("ZG" + (i), "相机与物料距离").CastTo<double>(-1);
                     for (int j = 0; j < _FormDisplayLst.Length; j++)
-                    {
-                        _FormDisplayLst[j].CentrePoint = rw.IniReadValue("ZG" + (i), "圆心坐标").CastTo<int>(-1);
-                        _FormDisplayLst[j].InputWidth = rw.IniReadValue("ZG" + (i), "锅口直径").CastTo<int>(-1);
-                        _FormDisplayLst[j].LimitTmper = rw.IniReadValue("ZG" + (i), "极限温度").CastTo<int>(-1);
+                    { 
+                        _FormDisplayLst[j].LimitTmper = rw.IniReadValue("ZG" + (i), "极限温度").CastTo<float>(-1);
                     }
                     break;
                 }
@@ -297,6 +321,12 @@ namespace ThermoGroupSample
                 OnDestroy.Invoke();
                 
             }
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+
+            GetZGinfoToDisplay();
         }
     }
 }

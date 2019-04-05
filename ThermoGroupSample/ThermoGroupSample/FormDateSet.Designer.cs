@@ -29,13 +29,11 @@
         private void InitializeComponent()
         {
             this.lblXX = new System.Windows.Forms.Label();
-            this.txtLoca = new System.Windows.Forms.TextBox();
+            this.txtCamToZd = new System.Windows.Forms.TextBox();
             this.txtgkzj = new System.Windows.Forms.TextBox();
             this.lblgkzj = new System.Windows.Forms.Label();
             this.txtgdzj = new System.Windows.Forms.TextBox();
             this.lblgdzj = new System.Windows.Forms.Label();
-            this.txtsd = new System.Windows.Forms.TextBox();
-            this.lblsd = new System.Windows.Forms.Label();
             this.txtlimitTmper = new System.Windows.Forms.TextBox();
             this.lbljxwd = new System.Windows.Forms.Label();
             this.txtZgname = new System.Windows.Forms.TextBox();
@@ -43,7 +41,7 @@
             this.groupBoxAturbit = new System.Windows.Forms.GroupBox();
             this.cmbState = new System.Windows.Forms.ComboBox();
             this.lblState = new System.Windows.Forms.Label();
-            this.txtcentpoint = new System.Windows.Forms.TextBox();
+            this.txtCamToWD = new System.Windows.Forms.TextBox();
             this.lblCP = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.comboBoxZG = new System.Windows.Forms.ComboBox();
@@ -56,24 +54,24 @@
             // lblXX
             // 
             this.lblXX.AutoSize = true;
-            this.lblXX.Location = new System.Drawing.Point(27, 51);
+            this.lblXX.Location = new System.Drawing.Point(27, 46);
             this.lblXX.Name = "lblXX";
-            this.lblXX.Size = new System.Drawing.Size(131, 12);
+            this.lblXX.Size = new System.Drawing.Size(95, 12);
             this.lblXX.TabIndex = 0;
-            this.lblXX.Text = "圆心坐标(机器人象限):";
+            this.lblXX.Text = "相机与柱心距离:";
             // 
-            // txtLoca
+            // txtCamToZd
             // 
-            this.txtLoca.Enabled = false;
-            this.txtLoca.Location = new System.Drawing.Point(184, 48);
-            this.txtLoca.Name = "txtLoca";
-            this.txtLoca.Size = new System.Drawing.Size(138, 21);
-            this.txtLoca.TabIndex = 1;
+            this.txtCamToZd.Enabled = false;
+            this.txtCamToZd.Location = new System.Drawing.Point(184, 43);
+            this.txtCamToZd.Name = "txtCamToZd";
+            this.txtCamToZd.Size = new System.Drawing.Size(138, 21);
+            this.txtCamToZd.TabIndex = 1;
             // 
             // txtgkzj
             // 
             this.txtgkzj.Enabled = false;
-            this.txtgkzj.Location = new System.Drawing.Point(184, 102);
+            this.txtgkzj.Location = new System.Drawing.Point(184, 97);
             this.txtgkzj.Name = "txtgkzj";
             this.txtgkzj.Size = new System.Drawing.Size(138, 21);
             this.txtgkzj.TabIndex = 3;
@@ -81,7 +79,7 @@
             // lblgkzj
             // 
             this.lblgkzj.AutoSize = true;
-            this.lblgkzj.Location = new System.Drawing.Point(27, 105);
+            this.lblgkzj.Location = new System.Drawing.Point(27, 100);
             this.lblgkzj.Name = "lblgkzj";
             this.lblgkzj.Size = new System.Drawing.Size(59, 12);
             this.lblgkzj.TabIndex = 2;
@@ -90,7 +88,7 @@
             // txtgdzj
             // 
             this.txtgdzj.Enabled = false;
-            this.txtgdzj.Location = new System.Drawing.Point(184, 129);
+            this.txtgdzj.Location = new System.Drawing.Point(184, 124);
             this.txtgdzj.Name = "txtgdzj";
             this.txtgdzj.Size = new System.Drawing.Size(138, 21);
             this.txtgdzj.TabIndex = 5;
@@ -98,33 +96,16 @@
             // lblgdzj
             // 
             this.lblgdzj.AutoSize = true;
-            this.lblgdzj.Location = new System.Drawing.Point(27, 132);
+            this.lblgdzj.Location = new System.Drawing.Point(27, 127);
             this.lblgdzj.Name = "lblgdzj";
             this.lblgdzj.Size = new System.Drawing.Size(59, 12);
             this.lblgdzj.TabIndex = 4;
             this.lblgdzj.Text = "锅底直径:";
             // 
-            // txtsd
-            // 
-            this.txtsd.Enabled = false;
-            this.txtsd.Location = new System.Drawing.Point(184, 156);
-            this.txtsd.Name = "txtsd";
-            this.txtsd.Size = new System.Drawing.Size(138, 21);
-            this.txtsd.TabIndex = 7;
-            // 
-            // lblsd
-            // 
-            this.lblsd.AutoSize = true;
-            this.lblsd.Location = new System.Drawing.Point(27, 159);
-            this.lblsd.Name = "lblsd";
-            this.lblsd.Size = new System.Drawing.Size(35, 12);
-            this.lblsd.TabIndex = 6;
-            this.lblsd.Text = "深度:";
-            // 
             // txtlimitTmper
             // 
             this.txtlimitTmper.Enabled = false;
-            this.txtlimitTmper.Location = new System.Drawing.Point(184, 183);
+            this.txtlimitTmper.Location = new System.Drawing.Point(184, 151);
             this.txtlimitTmper.Name = "txtlimitTmper";
             this.txtlimitTmper.Size = new System.Drawing.Size(138, 21);
             this.txtlimitTmper.TabIndex = 9;
@@ -132,7 +113,7 @@
             // lbljxwd
             // 
             this.lbljxwd.AutoSize = true;
-            this.lbljxwd.Location = new System.Drawing.Point(27, 186);
+            this.lbljxwd.Location = new System.Drawing.Point(27, 154);
             this.lbljxwd.Name = "lbljxwd";
             this.lbljxwd.Size = new System.Drawing.Size(59, 12);
             this.lbljxwd.TabIndex = 8;
@@ -141,7 +122,7 @@
             // txtZgname
             // 
             this.txtZgname.Enabled = false;
-            this.txtZgname.Location = new System.Drawing.Point(184, 21);
+            this.txtZgname.Location = new System.Drawing.Point(184, 16);
             this.txtZgname.Name = "txtZgname";
             this.txtZgname.Size = new System.Drawing.Size(138, 21);
             this.txtZgname.TabIndex = 10;
@@ -149,31 +130,29 @@
             // lblname
             // 
             this.lblname.AutoSize = true;
-            this.lblname.Location = new System.Drawing.Point(27, 30);
+            this.lblname.Location = new System.Drawing.Point(27, 19);
             this.lblname.Name = "lblname";
-            this.lblname.Size = new System.Drawing.Size(53, 12);
+            this.lblname.Size = new System.Drawing.Size(59, 12);
             this.lblname.TabIndex = 11;
-            this.lblname.Text = "甑锅编号";
+            this.lblname.Text = "甑锅编号:";
             // 
             // groupBoxAturbit
             // 
             this.groupBoxAturbit.Controls.Add(this.cmbState);
             this.groupBoxAturbit.Controls.Add(this.lblState);
-            this.groupBoxAturbit.Controls.Add(this.txtcentpoint);
+            this.groupBoxAturbit.Controls.Add(this.txtCamToWD);
             this.groupBoxAturbit.Controls.Add(this.lblCP);
             this.groupBoxAturbit.Controls.Add(this.txtgkzj);
             this.groupBoxAturbit.Controls.Add(this.btnSave);
             this.groupBoxAturbit.Controls.Add(this.lblname);
             this.groupBoxAturbit.Controls.Add(this.lblXX);
             this.groupBoxAturbit.Controls.Add(this.txtZgname);
-            this.groupBoxAturbit.Controls.Add(this.txtLoca);
+            this.groupBoxAturbit.Controls.Add(this.txtCamToZd);
             this.groupBoxAturbit.Controls.Add(this.txtlimitTmper);
             this.groupBoxAturbit.Controls.Add(this.lblgkzj);
             this.groupBoxAturbit.Controls.Add(this.lbljxwd);
             this.groupBoxAturbit.Controls.Add(this.lblgdzj);
-            this.groupBoxAturbit.Controls.Add(this.txtsd);
             this.groupBoxAturbit.Controls.Add(this.txtgdzj);
-            this.groupBoxAturbit.Controls.Add(this.lblsd);
             this.groupBoxAturbit.Location = new System.Drawing.Point(12, 41);
             this.groupBoxAturbit.Name = "groupBoxAturbit";
             this.groupBoxAturbit.Size = new System.Drawing.Size(388, 277);
@@ -189,7 +168,7 @@
             this.cmbState.Items.AddRange(new object[] {
             "禁用",
             "启用"});
-            this.cmbState.Location = new System.Drawing.Point(184, 209);
+            this.cmbState.Location = new System.Drawing.Point(184, 178);
             this.cmbState.Name = "cmbState";
             this.cmbState.Size = new System.Drawing.Size(138, 20);
             this.cmbState.TabIndex = 16;
@@ -197,33 +176,33 @@
             // lblState
             // 
             this.lblState.AutoSize = true;
-            this.lblState.Location = new System.Drawing.Point(27, 212);
+            this.lblState.Location = new System.Drawing.Point(27, 181);
             this.lblState.Name = "lblState";
             this.lblState.Size = new System.Drawing.Size(29, 12);
             this.lblState.TabIndex = 15;
             this.lblState.Text = "状态";
             // 
-            // txtcentpoint
+            // txtCamToWD
             // 
-            this.txtcentpoint.Enabled = false;
-            this.txtcentpoint.Location = new System.Drawing.Point(184, 75);
-            this.txtcentpoint.Name = "txtcentpoint";
-            this.txtcentpoint.Size = new System.Drawing.Size(138, 21);
-            this.txtcentpoint.TabIndex = 14;
+            this.txtCamToWD.Enabled = false;
+            this.txtCamToWD.Location = new System.Drawing.Point(184, 70);
+            this.txtCamToWD.Name = "txtCamToWD";
+            this.txtCamToWD.Size = new System.Drawing.Size(138, 21);
+            this.txtCamToWD.TabIndex = 14;
             // 
             // lblCP
             // 
             this.lblCP.AutoSize = true;
-            this.lblCP.Location = new System.Drawing.Point(27, 78);
+            this.lblCP.Location = new System.Drawing.Point(27, 73);
             this.lblCP.Name = "lblCP";
-            this.lblCP.Size = new System.Drawing.Size(59, 12);
+            this.lblCP.Size = new System.Drawing.Size(95, 12);
             this.lblCP.TabIndex = 13;
-            this.lblCP.Text = "圆心坐标:";
+            this.lblCP.Text = "相机与物料距离:";
             // 
             // btnSave
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSave.Location = new System.Drawing.Point(154, 237);
+            this.btnSave.Location = new System.Drawing.Point(154, 218);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(53, 23);
             this.btnSave.TabIndex = 12;
@@ -298,13 +277,11 @@
         #endregion
 
         private System.Windows.Forms.Label lblXX;
-        private System.Windows.Forms.TextBox txtLoca;
+        private System.Windows.Forms.TextBox txtCamToZd;
         private System.Windows.Forms.TextBox txtgkzj;
         private System.Windows.Forms.Label lblgkzj;
         private System.Windows.Forms.TextBox txtgdzj;
         private System.Windows.Forms.Label lblgdzj;
-        private System.Windows.Forms.TextBox txtsd;
-        private System.Windows.Forms.Label lblsd;
         private System.Windows.Forms.TextBox txtlimitTmper;
         private System.Windows.Forms.Label lbljxwd;
         private System.Windows.Forms.TextBox txtZgname;
@@ -315,7 +292,7 @@
         private System.Windows.Forms.Label lblSelect;
         private System.Windows.Forms.Button btnChange;
         private System.Windows.Forms.Button btnAdd;
-        private System.Windows.Forms.TextBox txtcentpoint;
+        private System.Windows.Forms.TextBox txtCamToWD;
         private System.Windows.Forms.Label lblCP;
         private System.Windows.Forms.ComboBox cmbState;
         private System.Windows.Forms.Label lblState;

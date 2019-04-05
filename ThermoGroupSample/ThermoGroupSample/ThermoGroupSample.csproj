@@ -122,7 +122,6 @@
     <Compile Include="Modle\Group.cs" />
     <Compile Include="Modle\ItemCollection.cs" />
     <Compile Include="Modle\M_CalInfo.cs" />
-    <Compile Include="Server\DemoUtils.cs" />
     <Compile Include="Server\OpcServer.cs" />
     <Compile Include="Server\SiemensS7.cs" />
     <Compile Include="Program.cs" />

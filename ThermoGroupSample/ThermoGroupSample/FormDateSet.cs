@@ -51,6 +51,11 @@ namespace ThermoGroupSample
                 string[] nameOfoK = CheckCanshuOkbuOk(selectIndex ).Split('$');
                 if (!string.IsNullOrWhiteSpace(nameOfoK[0]))
                 {
+                    if (!name.Equals(nameOfoK[0]))
+                    {
+
+                    
+                    
                     DialogResult result = MessageBox.Show("编号为:" + nameOfoK[0] + " 的甑锅参数已经启用,是否强制更改", "确认更改", MessageBoxButtons.YesNo);
                     if (result == DialogResult.Yes)
                     {
@@ -61,6 +66,7 @@ namespace ThermoGroupSample
                     {
                         return;
                     }
+                    }
                 }
                 else { rw.IniWriteValue("ZG" + index, "启用", selectIndex.ToString()); }
             }
@@ -69,11 +75,10 @@ namespace ThermoGroupSample
             }
             rw.IniWriteValue("ListCout", "Count", count.ToString());
             rw.IniWriteValue("ZG" + index, "编号", name);
-            rw.IniWriteValue("ZG" + index, "机器人象限", txtLoca.Text);
-            rw.IniWriteValue("ZG" + index, "圆心坐标", txtcentpoint.Text);
+            rw.IniWriteValue("ZG" + index, "相机与柱心距离", txtCamToZd.Text);
+            rw.IniWriteValue("ZG" + index, "相机与物料距离", txtCamToWD.Text);
             rw.IniWriteValue("ZG" + index, "锅口直径", txtgkzj.Text);
-            rw.IniWriteValue("ZG" + index, "锅底直径", txtgdzj.Text);
-            rw.IniWriteValue("ZG" + index, "锅深度", txtsd.Text);
+            rw.IniWriteValue("ZG" + index, "锅底直径", txtgdzj.Text); 
             rw.IniWriteValue("ZG" + index, "极限温度", txtlimitTmper.Text);
          
             ReadIntFile();
@@ -146,9 +151,9 @@ namespace ThermoGroupSample
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtLoca.Text)
-             && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text) &&
-             !string.IsNullOrWhiteSpace(txtsd.Text) && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string .IsNullOrWhiteSpace(txtcentpoint.Text))
+            if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtCamToZd.Text)
+             && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text)  
+             && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string .IsNullOrWhiteSpace(txtCamToWD.Text))
             { 
                 WriteIntFile();
                 comboBoxZG.Enabled = true;
@@ -170,11 +175,11 @@ namespace ThermoGroupSample
             
 
             txtZgname.Text = rw.IniReadValue("ZG" + index, "编号") ;
-            txtLoca.Text = rw.IniReadValue("ZG" + index, "机器人象限");
-            txtcentpoint.Text = rw.IniReadValue("ZG" + index, "圆心坐标");
+            txtCamToZd.Text = rw.IniReadValue("ZG" + index, "相机与柱心距离");
+            txtCamToWD.Text = rw.IniReadValue("ZG" + index, "相机与物料距离");
             txtgkzj.Text = rw.IniReadValue("ZG" + index, "锅口直径");
             txtgdzj.Text = rw.IniReadValue("ZG" + index, "锅底直径");
-            txtsd.Text = rw.IniReadValue("ZG" + index, "锅深度");
+            
             txtlimitTmper.Text = rw.IniReadValue("ZG" + index, "极限温度");
              int cindex =  rw.IniReadValue("ZG" + index, "启用").CastTo<int>(-1) ;
             if (cindex == -1)
@@ -197,20 +202,20 @@ namespace ThermoGroupSample
         void TxtEnabled(bool ok)
         {
             txtZgname.Enabled = ok;
-            txtLoca.Enabled = ok;
+            txtCamToZd.Enabled = ok;
             txtgkzj.Enabled = ok;
             txtgdzj.Enabled = ok;
-            txtsd.Enabled = ok;
+            comboBoxZG.Enabled = false;
             txtlimitTmper.Enabled = ok;
             btnSave.Visible = ok;
-            txtcentpoint.Enabled = ok;
+            txtCamToWD.Enabled = ok;
             cmbState.Enabled = ok;
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtLoca.Text)
-               && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text) &&
-               !string.IsNullOrWhiteSpace(txtsd.Text) && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string.IsNullOrWhiteSpace(txtcentpoint.Text))
+            if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtCamToZd.Text)
+               && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text) 
+                && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string.IsNullOrWhiteSpace(txtCamToWD.Text))
             {
                 int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
                 comboBoxZG.Items.Add("甑锅" + (count + 1));
