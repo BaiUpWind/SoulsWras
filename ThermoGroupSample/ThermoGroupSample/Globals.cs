@@ -144,6 +144,21 @@ namespace ThermoGroupSample
 
 
         /// <summary>
+        /// IP地址转换为数字
+        /// </summary>
+        /// <param name="ip">ip地址</param>
+        /// <returns></returns>
+        static string ipToLong(string ip)
+        {
+            long IntIp = 0;
+            string[] ips = ip.Split('.');
+            IntIp = long.Parse(ips[0]) << 0x18 | long.Parse(ips[1]) << 0x10 | long.Parse(ips[2]) << 0x8 | long.Parse(ips[3]);
+            return IntIp.ToString();
+
+        }
+
+
+        /// <summary>
         /// 排除区间 （两个坐标间距离小于区间，视为同一个温度点 排除）
         /// </summary>
         public static double ComparisonInterval

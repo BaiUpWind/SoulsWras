@@ -16,7 +16,7 @@ namespace ThermoGroupSample
         public FormDateSet()
         {
             InitializeComponent();
-            ReadIntFile();
+           
             //cmbState.SelectedIndex = 10;
         }
         RWIniFile rw = new  RWIniFile(System.IO.Directory.GetCurrentDirectory().ToString() + "\\Detection.ini");
@@ -239,6 +239,11 @@ namespace ThermoGroupSample
 
                 getNewZGInfo();
             }
+        }
+
+        private void FormDateSet_Load(object sender, EventArgs e)
+        {
+            ReadIntFile();
         }
     }
 }

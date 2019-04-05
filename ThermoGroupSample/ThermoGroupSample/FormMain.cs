@@ -245,13 +245,9 @@ namespace ThermoGroupSample
             _FormDisplayBG.BackColor = Color.Red;
             _FormDisplayBG.Show();
 
-            int zgCOunt =    rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
+            int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
             FormDateSet.getNewZGInfo += GetZGinfoToDisplay;
-            if (zgCOunt < 0)
-            {
-                GetOPCTaskInfo("未找到任何甑锅的参数,请录入甑锅参数后重启程序");
-                return;
-            }
+           
             //更新显示窗口的显示与隐藏
             uint num = row * col;
             for (uint i = 0; i < num; i++)
@@ -265,9 +261,15 @@ namespace ThermoGroupSample
             {
                 _FormDisplayLst[i].Hide();
             }
-          
+            if (!CheckCanshuOkbuOk(count))
+            {
+                GetOPCTaskInfo("未找到任何甑锅的参数,请录入甑锅参数后重启程序");
+                MessageBox.Show("未找到任何甑锅的参数,请录入甑锅参数！", "参数文件未找到！", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                fds.ShowDialog();
+            }
 
         }
+        FormDateSet fds = new FormDateSet();
         bool CheckCanshuOkbuOk(int index)
         { 
             for (int i = 1; i <= index; i++)
@@ -301,7 +303,9 @@ namespace ThermoGroupSample
                     for (int j = 0; j < _FormDisplayLst.Length; j++)
                     { 
                         _FormDisplayLst[j].LimitTmper = rw.IniReadValue("ZG" + (i), "极限温度").CastTo<float>(-1);
+                      
                     }
+                    GetOPCTaskInfo("数据读取成功！");
                     break;
                 }
             }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using HslCommunication.Profinet.Siemens;
 using HslCommunication;
 using HslCommunication.Profinet;
-using OpcServer;
+
 using System.Text.RegularExpressions;
 
 namespace ThermoGroupSample.Server
@@ -216,8 +216,8 @@ namespace ThermoGroupSample.Server
                                         SiemensTcpNet.Write(GetNewItem(item), Convert.ToByte(values[i]));
                                         break;
                                     case "w":
-                                        SiemensTcpNet.Write(GetNewItem(item), short.Parse(values[i].ToString()));
-                                        break;
+                                        SiemensTcpNet.Write(GetNewItem(item), short.Parse(string.Format("{0:0}" , values[i]) ));//string.Format( "0.##"", values[i])
+                                break;
                                     case "ushort"://ushort
                                         SiemensTcpNet.Write(GetNewItem(item), ushort.Parse(values[i].ToString()));
                                         break;

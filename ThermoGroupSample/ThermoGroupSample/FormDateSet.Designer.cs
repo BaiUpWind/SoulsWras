@@ -56,9 +56,9 @@
             this.lblXX.AutoSize = true;
             this.lblXX.Location = new System.Drawing.Point(27, 46);
             this.lblXX.Name = "lblXX";
-            this.lblXX.Size = new System.Drawing.Size(95, 12);
+            this.lblXX.Size = new System.Drawing.Size(119, 12);
             this.lblXX.TabIndex = 0;
-            this.lblXX.Text = "相机与柱心距离:";
+            this.lblXX.Text = "相机与柱心距离(mm):";
             // 
             // txtCamToZd
             // 
@@ -81,9 +81,9 @@
             this.lblgkzj.AutoSize = true;
             this.lblgkzj.Location = new System.Drawing.Point(27, 100);
             this.lblgkzj.Name = "lblgkzj";
-            this.lblgkzj.Size = new System.Drawing.Size(59, 12);
+            this.lblgkzj.Size = new System.Drawing.Size(83, 12);
             this.lblgkzj.TabIndex = 2;
-            this.lblgkzj.Text = "锅口直径:";
+            this.lblgkzj.Text = "锅口直径(mm):";
             // 
             // txtgdzj
             // 
@@ -98,9 +98,9 @@
             this.lblgdzj.AutoSize = true;
             this.lblgdzj.Location = new System.Drawing.Point(27, 127);
             this.lblgdzj.Name = "lblgdzj";
-            this.lblgdzj.Size = new System.Drawing.Size(59, 12);
+            this.lblgdzj.Size = new System.Drawing.Size(83, 12);
             this.lblgdzj.TabIndex = 4;
-            this.lblgdzj.Text = "锅底直径:";
+            this.lblgdzj.Text = "锅底直径(mm):";
             // 
             // txtlimitTmper
             // 
@@ -115,9 +115,9 @@
             this.lbljxwd.AutoSize = true;
             this.lbljxwd.Location = new System.Drawing.Point(27, 154);
             this.lbljxwd.Name = "lbljxwd";
-            this.lbljxwd.Size = new System.Drawing.Size(59, 12);
+            this.lbljxwd.Size = new System.Drawing.Size(95, 12);
             this.lbljxwd.TabIndex = 8;
-            this.lbljxwd.Text = "极限温度:";
+            this.lbljxwd.Text = "极限温度（℃）:";
             // 
             // txtZgname
             // 
@@ -195,9 +195,9 @@
             this.lblCP.AutoSize = true;
             this.lblCP.Location = new System.Drawing.Point(27, 73);
             this.lblCP.Name = "lblCP";
-            this.lblCP.Size = new System.Drawing.Size(95, 12);
+            this.lblCP.Size = new System.Drawing.Size(119, 12);
             this.lblCP.TabIndex = 13;
-            this.lblCP.Text = "相机与物料距离:";
+            this.lblCP.Text = "相机与物料距离(mm):";
             // 
             // btnSave
             // 
@@ -267,6 +267,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "参数输入";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormDateSet_FormClosing);
+            this.Load += new System.EventHandler(this.FormDateSet_Load);
             this.groupBoxAturbit.ResumeLayout(false);
             this.groupBoxAturbit.PerformLayout();
             this.ResumeLayout(false);

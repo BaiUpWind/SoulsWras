@@ -207,7 +207,7 @@ namespace ThermoGroupSample
                     Globals.GetMainFrm().GetFormDisplayBG().Invalidate(false);
                 }
             }
-            stop = false;
+            
             RefreshOnlineDevice();
         }
         /// <summary>
@@ -265,7 +265,7 @@ namespace ThermoGroupSample
                 }
                
             } 
-            stop = false; 
+         
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -276,26 +276,35 @@ namespace ThermoGroupSample
             { 
                 return;
             }
-
-            MagService service = _DataControl.GetService();
-            uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
-            for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+            DialogResult MsgBoxResult = MessageBox.Show("确定要停止播放且停止采集热点?",//对话框的显示内容 
+                                                     "操作提示",//对话框的标题 
+                                                     MessageBoxButtons.YesNo,//定义对话框的按钮，这里定义了YSE和NO两个按钮 
+                                                     MessageBoxIcon.Question,//定义对话框内的图表式样，这里是一个黄色三角型内加一个感叹号 
+                                                     MessageBoxDefaultButton.Button2);//定义对话框的按钮式样 
+            if (MsgBoxResult == DialogResult.Yes)
             {
-                FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
-                if (frmDisplay == null)
+                MagService service = _DataControl.GetService();
+                uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);
+                for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
                 {
-                    continue;
+                    FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
+                    if (frmDisplay == null)
+                    {
+                        continue;
+                    }
+                    frmDisplay.Stop = false;
+                    frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
+                    frmDisplay.Invalidate(false);
+                    isThreadRun = false;
+                    FormMain.GetOPCTaskInfo("视频停止播放，热点信息停止采集，任务停止发送！");
                 }
-                frmDisplay.Stop = false; 
-                frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
-                frmDisplay.Invalidate(false);
+               
             }
-         
-            stop = true;
+          
         }
 
 
-        bool stop = true;
+    
 
     
    
@@ -458,12 +467,9 @@ namespace ThermoGroupSample
             aa: flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
                 listRobot.Clear();
                 list.Clear();
-                if (flag == 0)//允许采集热点信息
+                if (flag == 0 && isThreadRun)//允许采集热点信息
                 {
-                    for (int i = 0; i < values.Length; i++)//初始化
-                    {
-                        values[i] = 0;
-                    }
+                     
                     axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
                     axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标 
                     //获取相机所在的位置
@@ -476,19 +482,19 @@ namespace ThermoGroupSample
                             FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp);
                             if (frmDisplay == null)
                             {
-                                FormMain.GetOPCTaskInfo("未获取到该热像仪画面: IP:" + _LstEnumInfo[i].intCamIp);
+                                //FormMain.GetOPCTaskInfo("未获取到该热像仪画面: IP:" + _LstEnumInfo[i].intCamIp);
                                 continue;
                             }
                             else
                             {
                                 calculator.GetCameraPosition(AngleTheta, AngleAlpha, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//计算当前相机所在的位置 
                                 list.Add(frmDisplay.NewGetInfo()); //获取温度信息  
-                                FormMain.GetOPCTaskInfo("窗体:" + frmDisplay.Name + ",IP:" + _LstEnumInfo[i].intCamIp);
+                                //FormMain.GetOPCTaskInfo("窗体:" + frmDisplay.Name + ",IP:" + _LstEnumInfo[i].intCamIp);
                             }
                         }
                         else
                         {
-                            FormMain.GetOPCTaskInfo("此相机不处于连接状态：" + comboBoxOnlineDevice.Items[i].ToString());
+                            //FormMain.GetOPCTaskInfo("此相机不处于连接状态：" + comboBoxOnlineDevice.Items[i].ToString());
                         }
                     }
                     for (int i = 0; i < list.Count; i++)
@@ -497,22 +503,21 @@ namespace ThermoGroupSample
                         //1.移除在一个区间内的温度点(现在取出来的都是相机里面的坐标)
                         calculator.RecursiveDeduplication(list[i], Globals.ComparisonInterval, outlist);
                         //2.将相机温度坐标转换成实际坐标 
-                        var realTmper = calculator.GetRobotPositionByImagePoint(outlist, (AngleTheta + AngleAlpha)+90, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//将一个相机的热点进行实际值的换算
+                        List<RobotPositionSort> realTmper = calculator.GetRobotPositionByImagePoint(outlist, (AngleTheta + AngleAlpha), axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//将一个相机的热点进行实际值的换算
 
                         foreach (var item in realTmper)
                         {
                             listRobot.Add(item);//将实际坐标放到一个集合里面
                         }
-                    }
-
-                    //3.移除锅外和锅边的数据
-
+                    } 
                     listRobot.Sort(new RobotPositionSort());//温度从高到低排序 
-                    //if (listRobot.Count == 0)
-                    //{
-                    //    goto aa;
-                    //}
+                    if (listRobot.Count == 0)
+                    {
+                        FormMain.GetOPCTaskInfo("未采集到热点，重新采集");
+                        goto aa;
+                    }
                     s7Task.Write(calculator.ReplaceIndex(listRobot));//写入任务 
+                    FormMain.GetOPCTaskInfo("写入任务！");
                     Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取 
                 }
                 else

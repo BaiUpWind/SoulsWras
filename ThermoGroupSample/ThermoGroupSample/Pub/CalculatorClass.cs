@@ -540,8 +540,10 @@ namespace ThermoGroupSample.Pub
         /// </summary>
         List<RobotPositionSort> RobotP3List = new List<RobotPositionSort>();//
 
-         
-
+        /// <summary>
+        /// 开方 正切弧度 机器人弧度
+        /// </summary>
+        double sqrt, ThetaN, degressR,ThetaI,ThetaR,ThetaRI;//
         /// <summary>
         /// 获取热相机所在的实际位置
         /// </summary>
@@ -551,21 +553,16 @@ namespace ThermoGroupSample.Pub
         /// <param name="axis3_y">轴三中心点Y坐标</param>
         public void GetCameraPosition(double angeleTheta, double angeleAlpha, double axis3_x, double axis3_y, UInt32 camerIp)
         { 
-            ip = IntToIP(camerIp);
+            ip = IntToIP(camerIp); 
             if (ip == CmaerIp1)//一号相机
-            {
-                var angleTheta = ((angeleTheta + angeleAlpha)) * (Math.PI / 180);
-            
-                var cos1 = Math.Cos(angleTheta);
-                var cos2 = Math.Cos(angleTheta);
-             
-                CameraLocation1.x = axis3_x - Axis_Camera_Distance * cos1;
-                CameraLocation1.y = axis3_y - Axis_Camera_Distance * cos2;
+            { 
+                CameraLocation1.x = axis3_x - Axis_Camera_Distance * Math.Cos((angeleTheta + angeleAlpha) * (Math.PI / 180));
+                CameraLocation1.y = axis3_y - Axis_Camera_Distance * Math.Sin((angeleTheta + angeleAlpha) * (Math.PI / 180));
             }
             else if (ip == CmaerIp2)//二号相机
             {
-                CameraLocation2.x = axis3_x + Axis_Camera_Distance * Math.Cos(angeleTheta + angeleAlpha);
-                CameraLocation2.y = axis3_y + Axis_Camera_Distance * Math.Cos(angeleTheta + angeleAlpha);
+                CameraLocation2.x = axis3_x + Axis_Camera_Distance * Math.Cos(angeleTheta + angeleAlpha * (Math.PI / 180));
+                CameraLocation2.y = axis3_y + Axis_Camera_Distance * Math.Sin(angeleTheta + angeleAlpha * (Math.PI / 180));
             }
             else
             {
@@ -595,8 +592,8 @@ namespace ThermoGroupSample.Pub
                 ImageP1.y = 30;
                 if (ip == CmaerIp1)//一号相机
                 {
-                    RobotP1.x = CameraLocation1.x;//实际坐标
-                    RobotP1.y = CameraLocation1.y;
+                    RobotP1.x =  CameraLocation1.x;//实际坐标-513.0841;// 
+                    RobotP1.y =  CameraLocation1.y;// -43.528;
                 }
                 else if (ip == CmaerIp2)//二号相机
                 {
@@ -605,30 +602,31 @@ namespace ThermoGroupSample.Pub
                 }
                  
                 //标定第二个点
-                //这两个点的角度固定是 45度
                 ImageP2.x = 40;//相机坐标
-                ImageP2.y = 11;
+                ImageP2.y = 11.15;
                 // var radian = (Math.PI / 180) * 45;//根据角度求出弧度
-                RobotP2.x = axis3_x ; //AtoB_Distance * Math.Cos(radian);
-                RobotP2.y = axis3_y ;  // AtoB_Distance * Math.Sin(radian); 
+                RobotP2.x = axis3_x;// 0.501 ; //AtoB_Distance * Math.Cos(radian);
+                RobotP2.y = axis3_y ; //0.862;   // AtoB_Distance * Math.Sin(radian); 
 
                 ImgPosition imgP1P3;
-                double sqrt = 0;//开方
-                double atan2 = 0;//正切值
+
+              
+                //开方   
+                ThetaR = Math.Atan2(RobotP2.y - RobotP1.y, RobotP2.x - RobotP1.x);//rp1 rp2 差的正切值 
+                ThetaI = Math.Atan2(ImageP2.y - ImageP1.y, ImageP2.x - ImageP1.x);//ip1ip2 差的正切值
+                ThetaRI = (ThetaR - ThetaI)    ;//偏转角 
                 foreach (var ItemP3 in imgP3)//循环采集到相机坐标集合  PS:imgP3 是个集合 里面存放的是这个相机采集到的热点信息（x，y）
                 {
-                    //求出相机坐标系下的差值
-                    imgP1P3.x = 55- ImageP1.x;
-                    imgP1P3.y = 42 - ImageP1.y;
-                    //开方  
+                    imgP1P3.x = ItemP3 .x- ImageP1.x;
+                    imgP1P3.y = ItemP3 .y - ImageP1.y;
                     sqrt = Math.Sqrt(imgP1P3.x * imgP1P3.x + imgP1P3.y * imgP1P3.y);
-                    atan2 = Math.Atan2(imgP1P3.y, imgP1P3.x);//p1p3的正切值 弧度
+                    ThetaN = Math.Atan2(imgP1P3.y, imgP1P3.x);//p1p3的正切值 弧度 
                     RobotP3.tmper = ItemP3.tmper;
-                    angleBeta = angleBeta * (Math.PI / 180);//计算旋转角度的弧度
-                                                            //实际坐标 angleBeta 是旋转角度的弧度
-                    RobotP3.x = (sqrt * Math.Cos(atan2 + angleBeta) + RobotP1.x ) *29.825;
-                    RobotP3.y = (sqrt * Math.Sin(atan2 + angleBeta) + RobotP1.y ) *27.35;
-                    if (Math.Abs( RobotP3.x)  <= PotDiamerter ||Math.Abs( RobotP3.y )  <= PotDiamerter)//如果坐标在指定区间内 添加
+                    //degressR = angleBeta * (Math.PI / 180);//计算旋转角度的弧度
+                    //                                           // angleBeta 是旋转角度 
+                    RobotP3.x = 29.825 * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x  ;
+                    RobotP3.y = 27.35 * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y   ;
+                    if (Math.Abs( RobotP3.x)  <= PotDiamerter  && Math.Abs( RobotP3.y )  <= PotDiamerter)//如果坐标在指定区间内 添加
                     {
                         RobotP3List.Add(RobotP3);//添加热点到集合
                     } 
@@ -678,7 +676,7 @@ namespace ThermoGroupSample.Pub
                     {
                         continue;
                     }
-                    if (Math.Abs((item.x + item.y) - (postion.x + postion.y)) <= chazhi/6.1)//作比较
+                    if (Math.Abs((item.x + item.y) - (postion.x + postion.y)) <= chazhi)//作比较
                     {
                         list2.Add(item);//添加重复的坐标值
                     }
@@ -751,19 +749,25 @@ namespace ThermoGroupSample.Pub
             + "." + System.Convert.ToString(ui1);
             return IPstr;
         }
+
+ 
         #endregion
 
 
         /// <summary>
         /// 图像坐标
         /// </summary>
-        public struct ImgPosition 
-
-        { 
+        public struct ImgPosition : IComparer<ImgPosition> 
+        {
+            public double tmper;
             public double x;
             public double y;
-            public double tmper ; 
-            
+           
+
+            public int Compare(ImgPosition x, ImgPosition y)
+            {
+                return y.tmper.CompareTo(x.tmper);
+            }
         }
         /// <summary>
         /// 机器人坐标

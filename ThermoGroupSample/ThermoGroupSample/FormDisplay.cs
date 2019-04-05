@@ -177,7 +177,8 @@ namespace ThermoGroupSample
                         
                         }
                     }
-                } 
+                }
+                list.Sort(new ImgPosition());
                // FormMain.GetOPCTaskInfo("一共有" + list.Count + "个点");
                 return list;
             }
