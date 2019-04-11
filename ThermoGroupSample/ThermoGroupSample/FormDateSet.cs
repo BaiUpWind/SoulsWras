@@ -77,6 +77,8 @@ namespace ThermoGroupSample
             rw.IniWriteValue("ZG" + index, "编号", name);
             rw.IniWriteValue("ZG" + index, "相机与柱心距离", txtCamToZd.Text);
             rw.IniWriteValue("ZG" + index, "相机与物料距离", txtCamToWD.Text);
+            rw.IniWriteValue("ZG" + index, "相机像素长",txtCamLenght.Text);
+            rw.IniWriteValue("ZG" + index, "相机像素宽",txtCamWidth.Text);
             rw.IniWriteValue("ZG" + index, "锅口直径", txtgkzj.Text);
             rw.IniWriteValue("ZG" + index, "锅底直径", txtgdzj.Text); 
             rw.IniWriteValue("ZG" + index, "极限温度", txtlimitTmper.Text);
@@ -153,7 +155,9 @@ namespace ThermoGroupSample
         {
             if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtCamToZd.Text)
              && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text)  
-             && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string .IsNullOrWhiteSpace(txtCamToWD.Text))
+             && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string .IsNullOrWhiteSpace(txtCamToWD.Text)
+             && !string.IsNullOrWhiteSpace(txtCamLenght.Text) && !string.IsNullOrWhiteSpace(txtCamWidth.Text)
+             )
             { 
                 WriteIntFile();
                 comboBoxZG.Enabled = true;
@@ -179,7 +183,8 @@ namespace ThermoGroupSample
             txtCamToWD.Text = rw.IniReadValue("ZG" + index, "相机与物料距离");
             txtgkzj.Text = rw.IniReadValue("ZG" + index, "锅口直径");
             txtgdzj.Text = rw.IniReadValue("ZG" + index, "锅底直径");
-            
+            txtCamLenght.Text = rw.IniReadValue("ZG" + index, "相机像素长");
+            txtCamWidth.Text = rw.IniReadValue("ZG" + index, "相机像素宽");
             txtlimitTmper.Text = rw.IniReadValue("ZG" + index, "极限温度");
              int cindex =  rw.IniReadValue("ZG" + index, "启用").CastTo<int>(-1) ;
             if (cindex == -1)
@@ -208,8 +213,11 @@ namespace ThermoGroupSample
             comboBoxZG.Enabled = false;
             txtlimitTmper.Enabled = ok;
             btnSave.Visible = ok;
+            btnDefault.Visible = ok  ;
             txtCamToWD.Enabled = ok;
             cmbState.Enabled = ok;
+            txtCamLenght.Enabled = ok;
+            txtCamWidth.Enabled = ok;
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -238,12 +246,27 @@ namespace ThermoGroupSample
             {
 
                 getNewZGInfo();
+                FormMain.GetOPCTaskInfo("甑锅参数数据保存成功！程序读取成功！");
             }
         }
 
         private void FormDateSet_Load(object sender, EventArgs e)
         {
             ReadIntFile();
+        }
+
+        private void btnDefault_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("您所输入的值都将没有保存且被默认值覆盖！\r\n 不包括甑锅编号，极限温度", "确认恢复", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.OK)
+            {
+                txtCamToZd.Text = 515.5+"";
+                txtCamToWD.Text = 1660+"";
+                txtgkzj.Text = 2400+"";
+                txtgdzj.Text = 2290+"";
+                txtCamLenght.Text = 29.825+"";
+                txtCamWidth.Text = 27.35+"";
+            }
         }
     }
 }

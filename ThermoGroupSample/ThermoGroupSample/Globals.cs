@@ -229,5 +229,95 @@ namespace ThermoGroupSample
 
             }
         }
+        /// <summary>
+        /// 相机像素长
+        /// </summary>
+        public static double CamerPixLenght
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["CamerPixLenght"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+            set
+            {
+                if (config != null)//存入包装机号
+                {
+                    config.AppSettings.Settings["CamerPixLenght"].Value = value.ToString();
+                    config.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection("appSettings");
+                }
+            }
+        }
+        /// <summary>
+        ///相机像素宽
+        /// </summary>
+        public static double CamerPixWidth
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["CamerPixWidth"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+            set
+            {
+                if (config != null)//存入包装机号
+                {
+                    config.AppSettings.Settings["CamerPixWidth"].Value = value.ToString();
+                    config.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection("appSettings");
+                }
+            }
+        }
     }
+
+
 }

@@ -514,6 +514,11 @@ namespace ThermoGroupSample.Pub
         RobotPosition CameraLocation1, CameraLocation2;
 
         /// <summary>
+        /// 相机像素长 相机像素宽
+        /// </summary>
+        double CamerPXLenght, CamerPXWidth;
+
+        /// <summary>
         /// 机器人坐标标定的两个点 
         /// </summary>
         RobotPosition RobotP1, RobotP2;  
@@ -561,8 +566,8 @@ namespace ThermoGroupSample.Pub
             }
             else if (ip == CmaerIp2)//二号相机
             {
-                CameraLocation2.x = axis3_x + Axis_Camera_Distance * Math.Cos(angeleTheta + angeleAlpha * (Math.PI / 180));
-                CameraLocation2.y = axis3_y + Axis_Camera_Distance * Math.Sin(angeleTheta + angeleAlpha * (Math.PI / 180));
+                CameraLocation2.x = axis3_x + Axis_Camera_Distance * Math.Cos((angeleTheta + angeleAlpha) * (Math.PI / 180));
+                CameraLocation2.y = axis3_y + Axis_Camera_Distance * Math.Sin((angeleTheta + angeleAlpha) * (Math.PI / 180));
             }
             else
             {
@@ -587,6 +592,8 @@ namespace ThermoGroupSample.Pub
             { 
                 RobotP3List.Clear();
                 ip = IntToIP(camerIp);
+                CamerPXLenght =  Globals.CamerPixLenght;
+                CamerPXWidth = Globals.CamerPixWidth;
                 //标定第一个点
                 ImageP1.x = 40;//相机坐标
                 ImageP1.y = 30;
@@ -624,8 +631,8 @@ namespace ThermoGroupSample.Pub
                     RobotP3.tmper = ItemP3.tmper;
                     //degressR = angleBeta * (Math.PI / 180);//计算旋转角度的弧度
                     //                                           // angleBeta 是旋转角度 
-                    RobotP3.x = 29.825 * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x  ;
-                    RobotP3.y = 27.35 * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y   ;
+                    RobotP3.x = CamerPXLenght * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x;// 29.825
+                    RobotP3.y = CamerPXWidth * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y   ; //27.35
                     if (Math.Abs( RobotP3.x)  <= PotDiamerter  && Math.Abs( RobotP3.y )  <= PotDiamerter)//如果坐标在指定区间内 添加
                     {
                         RobotP3List.Add(RobotP3);//添加热点到集合
@@ -705,22 +712,22 @@ namespace ThermoGroupSample.Pub
             try
             { 
                 object[] valuesHead = new object[1];//存放头部
-                object[] valuesX = new object[list.Count];//存放坐标X
-                object[] valuesY = new object[list.Count];//存放坐标Y
-                object[] valuesUnion = new object[list.Count * 2 + 1];
+                double[] valuesX = new double[20];//存放坐标X
+                double[] valuesY = new double[20];//存放坐标Y
+                object[] valuesUnion = new object[41];
+                valuesHead[0] = list.Count;//多少个热点 
                 for (int i = 0; i < valuesUnion.Length; i++)
                 {
-                    valuesUnion[i] = -1;
-                }
-                valuesHead[0] = list.Count;//多少个热点 
+                    valuesUnion[i] = 0;
+                } 
                 for (int i = 0; i < list.Count; i++)
                 {
                     valuesX[i] = list[i].x;//先放X
                     valuesY[i] = list[i].y;//后放Y
                 }
                 valuesHead.CopyTo(valuesUnion, 0);
-                valuesX.CopyTo(valuesUnion, valuesUnion.Where(a => Convert.ToInt32(a) != -1).Count());
-                valuesY.CopyTo(valuesUnion, valuesUnion.Where(a => Convert.ToInt32(a) != -1).Count());
+                valuesX.CopyTo(valuesUnion, 1);
+                valuesY.CopyTo(valuesUnion, 21);
                 return valuesUnion; 
             }
             catch (Exception ex)

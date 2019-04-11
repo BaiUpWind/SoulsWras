@@ -467,7 +467,7 @@ namespace ThermoGroupSample
             aa: flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
                 listRobot.Clear();
                 list.Clear();
-                if (flag == 0 && isThreadRun)//允许采集热点信息
+                if (flag == 1 && isThreadRun)//允许采集热点信息
                 {
                      
                     axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
@@ -527,14 +527,7 @@ namespace ThermoGroupSample
                 } 
             }
         }
-        /// <summary>
-        /// 停止任务
-        /// </summary>
-         public void StopAll(string info)
-        { 
-            isThreadRun = false;
-            MessageBox.Show("异常错误",":停止采集与传输任务!\r\n错误信息：" + info, MessageBoxButtons.OK,MessageBoxIcon.Error);
-        }
+ 
         /// <summary>
         /// 创建S7协议服务器
         /// </summary>
@@ -556,7 +549,8 @@ namespace ThermoGroupSample
             }
             catch (Exception ex)
             {
-                FormMain.GetOPCTaskInfo("服务创建失败:" + ex.Message);
+                FormMain.GetOPCTaskInfo("PLC连接失败，请检查网络连接:")  ;
+                FormMain.GetOPCTaskInfo("PLC连接失败，错误:" + ex.Message);
 
             }
 

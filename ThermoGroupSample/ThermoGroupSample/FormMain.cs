@@ -179,6 +179,7 @@ namespace ThermoGroupSample
                 
             }
             this.list_data.Size = new System.Drawing.Size(Width - _FormControl.Width -30, Height - _FormDisplayLst[0].Height - 250);
+            list_data.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             _FormControl.Height = (int)(CONTROLWINDOW_HEIGHT) - 40 - list_data.Size.Height;
             _FormControl.Show();
         }
@@ -300,12 +301,14 @@ namespace ThermoGroupSample
                     _FormControl.calculator.PotDiamerter = rw.IniReadValue("ZG" + (i), "锅口直径").CastTo<double>(-1);
                     _FormControl.calculator.Axis_Camera_Distance = rw.IniReadValue("ZG" + (i), "相机与柱心距离").CastTo<double>(-1);
                     _FormControl.calculator.AtoB_Distance = rw.IniReadValue("ZG" + (i), "相机与物料距离").CastTo<double>(-1);
+                    Globals.CamerPixLenght =   rw.IniReadValue("ZG" + (i), "相机像素长").CastTo<double>(-1);
+                    Globals.CamerPixWidth = rw.IniReadValue("ZG" + (i), "相机像素宽").CastTo<double>(-1);
                     for (int j = 0; j < _FormDisplayLst.Length; j++)
                     { 
                         _FormDisplayLst[j].LimitTmper = rw.IniReadValue("ZG" + (i), "极限温度").CastTo<float>(-1);
                       
                     }
-                    GetOPCTaskInfo("数据读取成功！");
+                  
                     break;
                 }
             }
@@ -331,6 +334,7 @@ namespace ThermoGroupSample
         {
 
             GetZGinfoToDisplay();
+            GetOPCTaskInfo("甑锅参数数据读取成功！");
         }
     }
 }

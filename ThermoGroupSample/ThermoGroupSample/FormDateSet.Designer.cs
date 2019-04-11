@@ -43,96 +43,111 @@
             this.lblState = new System.Windows.Forms.Label();
             this.txtCamToWD = new System.Windows.Forms.TextBox();
             this.lblCP = new System.Windows.Forms.Label();
+            this.txtCamLenght = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
+            this.lblpixl = new System.Windows.Forms.Label();
+            this.lblpixw = new System.Windows.Forms.Label();
+            this.txtCamWidth = new System.Windows.Forms.TextBox();
             this.comboBoxZG = new System.Windows.Forms.ComboBox();
             this.lblSelect = new System.Windows.Forms.Label();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.btnDefault = new System.Windows.Forms.Button();
             this.groupBoxAturbit.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblXX
             // 
             this.lblXX.AutoSize = true;
-            this.lblXX.Location = new System.Drawing.Point(27, 46);
+            this.lblXX.Location = new System.Drawing.Point(40, 104);
+            this.lblXX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblXX.Name = "lblXX";
-            this.lblXX.Size = new System.Drawing.Size(119, 12);
+            this.lblXX.Size = new System.Drawing.Size(156, 20);
             this.lblXX.TabIndex = 0;
             this.lblXX.Text = "相机与柱心距离(mm):";
             // 
             // txtCamToZd
             // 
             this.txtCamToZd.Enabled = false;
-            this.txtCamToZd.Location = new System.Drawing.Point(184, 43);
+            this.txtCamToZd.Location = new System.Drawing.Point(276, 99);
+            this.txtCamToZd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtCamToZd.Name = "txtCamToZd";
-            this.txtCamToZd.Size = new System.Drawing.Size(138, 21);
+            this.txtCamToZd.Size = new System.Drawing.Size(205, 27);
             this.txtCamToZd.TabIndex = 1;
             // 
             // txtgkzj
             // 
             this.txtgkzj.Enabled = false;
-            this.txtgkzj.Location = new System.Drawing.Point(184, 97);
+            this.txtgkzj.Location = new System.Drawing.Point(276, 319);
+            this.txtgkzj.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtgkzj.Name = "txtgkzj";
-            this.txtgkzj.Size = new System.Drawing.Size(138, 21);
+            this.txtgkzj.Size = new System.Drawing.Size(205, 27);
             this.txtgkzj.TabIndex = 3;
             // 
             // lblgkzj
             // 
             this.lblgkzj.AutoSize = true;
-            this.lblgkzj.Location = new System.Drawing.Point(27, 100);
+            this.lblgkzj.Location = new System.Drawing.Point(40, 323);
+            this.lblgkzj.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblgkzj.Name = "lblgkzj";
-            this.lblgkzj.Size = new System.Drawing.Size(83, 12);
+            this.lblgkzj.Size = new System.Drawing.Size(111, 20);
             this.lblgkzj.TabIndex = 2;
             this.lblgkzj.Text = "锅口直径(mm):";
             // 
             // txtgdzj
             // 
             this.txtgdzj.Enabled = false;
-            this.txtgdzj.Location = new System.Drawing.Point(184, 124);
+            this.txtgdzj.Location = new System.Drawing.Point(276, 373);
+            this.txtgdzj.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtgdzj.Name = "txtgdzj";
-            this.txtgdzj.Size = new System.Drawing.Size(138, 21);
+            this.txtgdzj.Size = new System.Drawing.Size(205, 27);
             this.txtgdzj.TabIndex = 5;
             // 
             // lblgdzj
             // 
             this.lblgdzj.AutoSize = true;
-            this.lblgdzj.Location = new System.Drawing.Point(27, 127);
+            this.lblgdzj.Location = new System.Drawing.Point(40, 379);
+            this.lblgdzj.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblgdzj.Name = "lblgdzj";
-            this.lblgdzj.Size = new System.Drawing.Size(83, 12);
+            this.lblgdzj.Size = new System.Drawing.Size(111, 20);
             this.lblgdzj.TabIndex = 4;
             this.lblgdzj.Text = "锅底直径(mm):";
             // 
             // txtlimitTmper
             // 
             this.txtlimitTmper.Enabled = false;
-            this.txtlimitTmper.Location = new System.Drawing.Point(184, 151);
+            this.txtlimitTmper.Location = new System.Drawing.Point(276, 428);
+            this.txtlimitTmper.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtlimitTmper.Name = "txtlimitTmper";
-            this.txtlimitTmper.Size = new System.Drawing.Size(138, 21);
+            this.txtlimitTmper.Size = new System.Drawing.Size(205, 27);
             this.txtlimitTmper.TabIndex = 9;
             // 
             // lbljxwd
             // 
             this.lbljxwd.AutoSize = true;
-            this.lbljxwd.Location = new System.Drawing.Point(27, 154);
+            this.lbljxwd.Location = new System.Drawing.Point(40, 433);
+            this.lbljxwd.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbljxwd.Name = "lbljxwd";
-            this.lbljxwd.Size = new System.Drawing.Size(95, 12);
+            this.lbljxwd.Size = new System.Drawing.Size(118, 20);
             this.lbljxwd.TabIndex = 8;
             this.lbljxwd.Text = "极限温度（℃）:";
             // 
             // txtZgname
             // 
             this.txtZgname.Enabled = false;
-            this.txtZgname.Location = new System.Drawing.Point(184, 16);
+            this.txtZgname.Location = new System.Drawing.Point(276, 43);
+            this.txtZgname.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtZgname.Name = "txtZgname";
-            this.txtZgname.Size = new System.Drawing.Size(138, 21);
+            this.txtZgname.Size = new System.Drawing.Size(205, 27);
             this.txtZgname.TabIndex = 10;
             // 
             // lblname
             // 
             this.lblname.AutoSize = true;
-            this.lblname.Location = new System.Drawing.Point(27, 19);
+            this.lblname.Location = new System.Drawing.Point(40, 48);
+            this.lblname.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblname.Name = "lblname";
-            this.lblname.Size = new System.Drawing.Size(59, 12);
+            this.lblname.Size = new System.Drawing.Size(73, 20);
             this.lblname.TabIndex = 11;
             this.lblname.Text = "甑锅编号:";
             // 
@@ -142,20 +157,28 @@
             this.groupBoxAturbit.Controls.Add(this.lblState);
             this.groupBoxAturbit.Controls.Add(this.txtCamToWD);
             this.groupBoxAturbit.Controls.Add(this.lblCP);
+            this.groupBoxAturbit.Controls.Add(this.txtCamLenght);
             this.groupBoxAturbit.Controls.Add(this.txtgkzj);
+            this.groupBoxAturbit.Controls.Add(this.btnDefault);
             this.groupBoxAturbit.Controls.Add(this.btnSave);
             this.groupBoxAturbit.Controls.Add(this.lblname);
             this.groupBoxAturbit.Controls.Add(this.lblXX);
             this.groupBoxAturbit.Controls.Add(this.txtZgname);
             this.groupBoxAturbit.Controls.Add(this.txtCamToZd);
             this.groupBoxAturbit.Controls.Add(this.txtlimitTmper);
+            this.groupBoxAturbit.Controls.Add(this.lblpixl);
             this.groupBoxAturbit.Controls.Add(this.lblgkzj);
             this.groupBoxAturbit.Controls.Add(this.lbljxwd);
+            this.groupBoxAturbit.Controls.Add(this.lblpixw);
             this.groupBoxAturbit.Controls.Add(this.lblgdzj);
+            this.groupBoxAturbit.Controls.Add(this.txtCamWidth);
             this.groupBoxAturbit.Controls.Add(this.txtgdzj);
-            this.groupBoxAturbit.Location = new System.Drawing.Point(12, 41);
+            this.groupBoxAturbit.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.groupBoxAturbit.Location = new System.Drawing.Point(12, 62);
+            this.groupBoxAturbit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxAturbit.Name = "groupBoxAturbit";
-            this.groupBoxAturbit.Size = new System.Drawing.Size(388, 277);
+            this.groupBoxAturbit.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxAturbit.Size = new System.Drawing.Size(542, 588);
             this.groupBoxAturbit.TabIndex = 12;
             this.groupBoxAturbit.TabStop = false;
             this.groupBoxAturbit.Text = "甑锅属性";
@@ -168,74 +191,124 @@
             this.cmbState.Items.AddRange(new object[] {
             "禁用",
             "启用"});
-            this.cmbState.Location = new System.Drawing.Point(184, 178);
+            this.cmbState.Location = new System.Drawing.Point(276, 483);
+            this.cmbState.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbState.Name = "cmbState";
-            this.cmbState.Size = new System.Drawing.Size(138, 20);
+            this.cmbState.Size = new System.Drawing.Size(205, 28);
             this.cmbState.TabIndex = 16;
             // 
             // lblState
             // 
             this.lblState.AutoSize = true;
-            this.lblState.Location = new System.Drawing.Point(27, 181);
+            this.lblState.Location = new System.Drawing.Point(40, 488);
+            this.lblState.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(29, 12);
+            this.lblState.Size = new System.Drawing.Size(39, 20);
             this.lblState.TabIndex = 15;
             this.lblState.Text = "状态";
             // 
             // txtCamToWD
             // 
             this.txtCamToWD.Enabled = false;
-            this.txtCamToWD.Location = new System.Drawing.Point(184, 70);
+            this.txtCamToWD.Location = new System.Drawing.Point(276, 153);
+            this.txtCamToWD.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtCamToWD.Name = "txtCamToWD";
-            this.txtCamToWD.Size = new System.Drawing.Size(138, 21);
+            this.txtCamToWD.Size = new System.Drawing.Size(205, 27);
             this.txtCamToWD.TabIndex = 14;
             // 
             // lblCP
             // 
             this.lblCP.AutoSize = true;
-            this.lblCP.Location = new System.Drawing.Point(27, 73);
+            this.lblCP.Location = new System.Drawing.Point(40, 159);
+            this.lblCP.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblCP.Name = "lblCP";
-            this.lblCP.Size = new System.Drawing.Size(119, 12);
+            this.lblCP.Size = new System.Drawing.Size(156, 20);
             this.lblCP.TabIndex = 13;
             this.lblCP.Text = "相机与物料距离(mm):";
+            // 
+            // txtCamLenght
+            // 
+            this.txtCamLenght.Enabled = false;
+            this.txtCamLenght.Location = new System.Drawing.Point(276, 208);
+            this.txtCamLenght.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtCamLenght.Name = "txtCamLenght";
+            this.txtCamLenght.Size = new System.Drawing.Size(205, 27);
+            this.txtCamLenght.TabIndex = 3;
             // 
             // btnSave
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnSave.Location = new System.Drawing.Point(154, 218);
+            this.btnSave.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSave.Location = new System.Drawing.Point(242, 535);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(53, 23);
+            this.btnSave.Size = new System.Drawing.Size(90, 30);
             this.btnSave.TabIndex = 12;
             this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Visible = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // lblpixl
+            // 
+            this.lblpixl.AutoSize = true;
+            this.lblpixl.Location = new System.Drawing.Point(40, 213);
+            this.lblpixl.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblpixl.Name = "lblpixl";
+            this.lblpixl.Size = new System.Drawing.Size(116, 20);
+            this.lblpixl.TabIndex = 2;
+            this.lblpixl.Text = "相机像素长(px):";
+            // 
+            // lblpixw
+            // 
+            this.lblpixw.AutoSize = true;
+            this.lblpixw.Location = new System.Drawing.Point(40, 268);
+            this.lblpixw.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblpixw.Name = "lblpixw";
+            this.lblpixw.Size = new System.Drawing.Size(116, 20);
+            this.lblpixw.TabIndex = 4;
+            this.lblpixw.Text = "相机像素宽(px):";
+            // 
+            // txtCamWidth
+            // 
+            this.txtCamWidth.Enabled = false;
+            this.txtCamWidth.Location = new System.Drawing.Point(276, 264);
+            this.txtCamWidth.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtCamWidth.Name = "txtCamWidth";
+            this.txtCamWidth.Size = new System.Drawing.Size(205, 27);
+            this.txtCamWidth.TabIndex = 5;
+            // 
             // comboBoxZG
             // 
             this.comboBoxZG.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxZG.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.comboBoxZG.FormattingEnabled = true;
-            this.comboBoxZG.Location = new System.Drawing.Point(83, 14);
+            this.comboBoxZG.Location = new System.Drawing.Point(147, 24);
+            this.comboBoxZG.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxZG.Name = "comboBoxZG";
-            this.comboBoxZG.Size = new System.Drawing.Size(97, 20);
+            this.comboBoxZG.Size = new System.Drawing.Size(144, 28);
             this.comboBoxZG.TabIndex = 13;
             this.comboBoxZG.SelectedIndexChanged += new System.EventHandler(this.comboBoxZG_SelectedIndexChanged);
             // 
             // lblSelect
             // 
             this.lblSelect.AutoSize = true;
-            this.lblSelect.Location = new System.Drawing.Point(13, 17);
+            this.lblSelect.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblSelect.Location = new System.Drawing.Point(19, 28);
+            this.lblSelect.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblSelect.Name = "lblSelect";
-            this.lblSelect.Size = new System.Drawing.Size(59, 12);
+            this.lblSelect.Size = new System.Drawing.Size(73, 20);
             this.lblSelect.TabIndex = 14;
             this.lblSelect.Text = "选择甑锅:";
             // 
             // btnChange
             // 
             this.btnChange.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnChange.Location = new System.Drawing.Point(196, 12);
+            this.btnChange.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnChange.Location = new System.Drawing.Point(338, 20);
+            this.btnChange.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnChange.Name = "btnChange";
-            this.btnChange.Size = new System.Drawing.Size(40, 23);
+            this.btnChange.Size = new System.Drawing.Size(90, 30);
             this.btnChange.TabIndex = 13;
             this.btnChange.Text = "修改";
             this.btnChange.UseVisualStyleBackColor = true;
@@ -244,25 +317,45 @@
             // btnAdd
             // 
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAdd.Location = new System.Drawing.Point(257, 12);
+            this.btnAdd.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnAdd.Location = new System.Drawing.Point(436, 20);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(40, 23);
+            this.btnAdd.Size = new System.Drawing.Size(90, 30);
             this.btnAdd.TabIndex = 13;
             this.btnAdd.Text = "新增";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // btnDefault
+            // 
+            this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnDefault.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnDefault.Location = new System.Drawing.Point(44, 535);
+            this.btnDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnDefault.Name = "btnDefault";
+            this.btnDefault.Size = new System.Drawing.Size(103, 30);
+            this.btnDefault.TabIndex = 12;
+            this.btnDefault.Text = "恢复默认值";
+            this.btnDefault.UseVisualStyleBackColor = true;
+            this.btnDefault.Visible = false;
+            this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+            // 
             // FormDateSet
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(412, 333);
+            this.ClientSize = new System.Drawing.Size(566, 661);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.lblSelect);
             this.Controls.Add(this.comboBoxZG);
             this.Controls.Add(this.groupBoxAturbit);
             this.Controls.Add(this.btnChange);
+            this.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "FormDateSet";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "参数输入";
@@ -297,5 +390,10 @@
         private System.Windows.Forms.Label lblCP;
         private System.Windows.Forms.ComboBox cmbState;
         private System.Windows.Forms.Label lblState;
+        private System.Windows.Forms.TextBox txtCamLenght;
+        private System.Windows.Forms.Label lblpixl;
+        private System.Windows.Forms.Label lblpixw;
+        private System.Windows.Forms.TextBox txtCamWidth;
+        private System.Windows.Forms.Button btnDefault;
     }
 }

@@ -203,7 +203,7 @@ namespace ThermoGroupSample
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 44;
-            this.label2.Text = "¼ä¸ô£¨mm£©£º";
+            this.label2.Text = "¼ä¸ô£¨ms£©£º";
             // 
             // btnStOP
             // 
