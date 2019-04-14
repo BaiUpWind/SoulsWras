@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -736,6 +737,20 @@ namespace ThermoGroupSample.Pub
             }
         }
 
+        private string IntToIp(uint ipAddress)
+        {
+            string[] ips = IPAddress.Parse(ipAddress.ToString()).ToString().Split('.');
+
+            string temp = ips[0];
+            ips[0] = ips[3];
+            ips[3] = temp;
+
+            temp = ips[1];
+            ips[1] = ips[2];
+            ips[2] = temp;
+
+            return String.Join(".", ips);
+        }
         /// <summary>
         /// IP地址转换
         /// </summary>
