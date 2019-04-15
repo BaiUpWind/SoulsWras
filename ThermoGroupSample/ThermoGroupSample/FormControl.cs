@@ -634,11 +634,15 @@ namespace ThermoGroupSample
 
         private void btnAutoConn_Click(object sender, EventArgs e)
         {
+
+            if (comboBoxOnlineDevice.Items.Count == 0)
+            {
+                return;
+            }
+
             if (btnAutoConn.Text == "一键连接播放")
             {
-
-
-                if (comboBoxOnlineDevice.Items.Count > 0)
+                if (comboBoxOnlineDevice.Items.Count >= 1)
                 {
                     for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
                     {
@@ -651,11 +655,13 @@ namespace ThermoGroupSample
                         }
 
                     }
-                }
-                btnAutoConn.Text = "一键断开停止播放";
+                    btnAutoConn.Text = "一键断开停止播放";
+                } 
             }
             else if (btnAutoConn.Text == "一键断开停止播放")
             {
+               
+
                 DialogResult MsgBoxResult = MessageBox.Show("确定要停止播放且停止采集热点?",//对话框的显示内容 
                                                    "操作提示",//对话框的标题 
                                                    MessageBoxButtons.YesNo,//定义对话框的按钮，这里定义了YSE和NO两个按钮 
@@ -663,7 +669,7 @@ namespace ThermoGroupSample
                                                    MessageBoxDefaultButton.Button2);//定义对话框的按钮式样 
                 if (MsgBoxResult == DialogResult.Yes)
                 {
-                    if (comboBoxOnlineDevice.Items.Count > 0)
+                    if (comboBoxOnlineDevice.Items.Count >= 1)
                     {
                         for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
                         {
@@ -674,14 +680,14 @@ namespace ThermoGroupSample
                                 frmDisplay.Stop = false;
                                 frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
                                 frmDisplay.Invalidate(false);
-                                isThreadRun = false; 
+                                isThreadRun = false;
                                 ChangeBtnCursor(1);
-                            } 
+                            }
                         }
                         FormMain.GetOPCTaskInfo("视频停止播放，热点信息停止采集，任务停止发送！");
                     }
                     btnAutoConn.Text = "一键连接播放";
-                } 
+                }
             }
             RefreshOnlineDevice();
         }
