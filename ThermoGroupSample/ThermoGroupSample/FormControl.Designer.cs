@@ -32,6 +32,7 @@ namespace ThermoGroupSample
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.labelOnlineDevice = new System.Windows.Forms.Label();
             this.groupBoxDevice = new System.Windows.Forms.GroupBox();
+            this.btnAutoConn = new System.Windows.Forms.Button();
             this.buttonLink = new System.Windows.Forms.Button();
             this.buttonDislink = new System.Windows.Forms.Button();
             this.groupBoxTras = new System.Windows.Forms.GroupBox();
@@ -47,7 +48,6 @@ namespace ThermoGroupSample
             this.参数设置SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnAutoConn = new System.Windows.Forms.Button();
             this.checkAuotuoConn = new System.Windows.Forms.CheckBox();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
@@ -105,6 +105,18 @@ namespace ThermoGroupSample
             this.groupBoxDevice.TabIndex = 3;
             this.groupBoxDevice.TabStop = false;
             this.groupBoxDevice.Text = "设备";
+            // 
+            // btnAutoConn
+            // 
+            this.btnAutoConn.Enabled = false;
+            this.btnAutoConn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnAutoConn.Location = new System.Drawing.Point(18, 87);
+            this.btnAutoConn.Name = "btnAutoConn";
+            this.btnAutoConn.Size = new System.Drawing.Size(118, 38);
+            this.btnAutoConn.TabIndex = 2;
+            this.btnAutoConn.Text = "一键连接播放";
+            this.btnAutoConn.UseVisualStyleBackColor = true;
+            this.btnAutoConn.Click += new System.EventHandler(this.btnAutoConn_Click);
             // 
             // buttonLink
             // 
@@ -259,7 +271,7 @@ namespace ThermoGroupSample
             // 一号甑锅ToolStripMenuItem
             // 
             this.一号甑锅ToolStripMenuItem.Name = "一号甑锅ToolStripMenuItem";
-            this.一号甑锅ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.一号甑锅ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.一号甑锅ToolStripMenuItem.Text = "甑锅设置";
             this.一号甑锅ToolStripMenuItem.Click += new System.EventHandler(this.一号甑锅ToolStripMenuItem_Click);
             // 
@@ -271,18 +283,6 @@ namespace ThermoGroupSample
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(0, 20);
             this.label1.TabIndex = 47;
-            // 
-            // btnAutoConn
-            // 
-            this.btnAutoConn.Enabled = false;
-            this.btnAutoConn.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnAutoConn.Location = new System.Drawing.Point(18, 87);
-            this.btnAutoConn.Name = "btnAutoConn";
-            this.btnAutoConn.Size = new System.Drawing.Size(118, 38);
-            this.btnAutoConn.TabIndex = 2;
-            this.btnAutoConn.Text = "一键连接播放";
-            this.btnAutoConn.UseVisualStyleBackColor = true;
-            this.btnAutoConn.Click += new System.EventHandler(this.btnAutoConn_Click);
             // 
             // checkAuotuoConn
             // 
@@ -320,6 +320,7 @@ namespace ThermoGroupSample
             this.MinimizeBox = false;
             this.Name = "FormControl";
             this.Load += new System.EventHandler(this.FormControl_Load);
+            this.SizeChanged += new System.EventHandler(this.FormControl_SizeChanged);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormControl_Paint);
             this.groupBoxDevice.ResumeLayout(false);
             this.groupBoxTras.ResumeLayout(false);

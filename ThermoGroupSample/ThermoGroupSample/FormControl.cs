@@ -53,6 +53,7 @@ namespace ThermoGroupSample
             FormMain.OnDestroy += new FormMain.delegateDestroy(OnDestroy); 
             AsyncConnectionPlc();//创建服务
             FormMain.GetOPCTaskInfo("与PLC建立连接中！");
+            ChangeBtnCursor(1);
         }
 
         private void FormControl_Load(object sender, EventArgs e)
@@ -269,6 +270,7 @@ namespace ThermoGroupSample
                 if(frmDisplay != null)
                 {
                     frmDisplay.GetDateDisplay().Play();
+                    ChangeBtnCursor(2);
                 }
                
             } 
@@ -304,6 +306,7 @@ namespace ThermoGroupSample
                     frmDisplay.Invalidate(false);
                     isThreadRun = false;
                     FormMain.GetOPCTaskInfo("视频停止播放，热点信息停止采集，任务停止发送！");
+                    ChangeBtnCursor(1);
                 }
                
             }
@@ -631,18 +634,54 @@ namespace ThermoGroupSample
 
         private void btnAutoConn_Click(object sender, EventArgs e)
         {
-            if(comboBoxOnlineDevice.Items.Count > 0)
+            if (btnAutoConn.Text == "一键连接播放")
             {
-                for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
-                {
-                    ConnectionCamer(_LstEnumInfo[i].intCamIp);
-                    FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp); //选择已经绑定的IP的显示窗口
-                    if (frmDisplay != null)
-                    {
-                        frmDisplay.GetDateDisplay().Play();
-                    }
 
+
+                if (comboBoxOnlineDevice.Items.Count > 0)
+                {
+                    for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+                    {
+                        ConnectionCamer(_LstEnumInfo[i].intCamIp);
+                        FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp); //选择已经绑定的IP的显示窗口
+                        if (frmDisplay != null)
+                        {
+                            frmDisplay.GetDateDisplay().Play();
+                            ChangeBtnCursor(2);
+                        }
+
+                    }
                 }
+                btnAutoConn.Text = "一键断开停止播放";
+            }
+            else if (btnAutoConn.Text == "一键断开停止播放")
+            {
+                DialogResult MsgBoxResult = MessageBox.Show("确定要停止播放且停止采集热点?",//对话框的显示内容 
+                                                   "操作提示",//对话框的标题 
+                                                   MessageBoxButtons.YesNo,//定义对话框的按钮，这里定义了YSE和NO两个按钮 
+                                                   MessageBoxIcon.Question,//定义对话框内的图表式样，这里是一个黄色三角型内加一个感叹号 
+                                                   MessageBoxDefaultButton.Button2);//定义对话框的按钮式样 
+                if (MsgBoxResult == DialogResult.Yes)
+                {
+                    if (comboBoxOnlineDevice.Items.Count > 0)
+                    {
+                        for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+                        {
+                            DislinkCamera(_LstEnumInfo[i].intCamIp);
+                            FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp); //选择已经绑定的IP的显示窗口
+                            if (frmDisplay != null)
+                            {
+                                frmDisplay.Stop = false;
+                                frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
+                                frmDisplay.Invalidate(false);
+                                isThreadRun = false; 
+                                ChangeBtnCursor(1);
+                            } 
+                        }
+                        FormMain.GetOPCTaskInfo("视频停止播放，热点信息停止采集，任务停止发送！");
+                    }
+                    btnAutoConn.Text = "一键连接播放";
+                } 
             }
             RefreshOnlineDevice();
         }
@@ -657,6 +696,11 @@ namespace ThermoGroupSample
             {
                 EnabledContrlos(1);
             }
+        }
+
+        private void FormControl_SizeChanged(object sender, EventArgs e)
+        {
+            _DataControl.SetDisplayWndNum(1, 2);//控制有几个画面
         }
 
         private void btnStOP_Click(object sender, EventArgs e)
