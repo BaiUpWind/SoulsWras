@@ -18,7 +18,7 @@ namespace ThermoGroupSample
 
         const uint MAINWINDOW_WIDTH = 1024;
         const uint MAINWINDOW_HEIGHT = 768;
-        const uint CONTROLWINDOW_WIDTH = 280;
+        const uint CONTROLWINDOW_WIDTH = 353;
         const uint CONTROLWINDOW_HEIGHT = MAINWINDOW_HEIGHT;
         const uint DISPLAYWND_GAP = 5;
         const uint DISPLAYWND_MARGIN = 6;
@@ -155,8 +155,8 @@ namespace ThermoGroupSample
             _FormControl.Left = (int)(MAINWINDOW_WIDTH - CONTROLWINDOW_WIDTH);
             _FormControl.Top = 0;
             _FormControl.Width = (int)CONTROLWINDOW_WIDTH  -20;
-
-           
+            _FormControl.Height = (int)CONTROLWINDOW_HEIGHT;
+            _FormControl.Dock = DockStyle.Right;
             //ÏÔÊ¾´°¿ÚµÄ±³¾°´°¿Ú
             _FormDisplayBG = new FormDisplayBG();
             _FormDisplayBG.TopLevel = false;
@@ -178,7 +178,7 @@ namespace ThermoGroupSample
                 _FormDisplayLst[i].GetDateDisplay().WndIndex = i;
                 
             }
-            this.list_data.Size = new System.Drawing.Size(Width - _FormControl.Width -30, Height - _FormDisplayLst[0].Height - 250);
+            this.list_data.Size = new System.Drawing.Size(Width - _FormControl.Width -30, Height - _FormDisplayLst[0].Height - 320);
             list_data.Font = new System.Drawing.Font("Î¢ÈíÑÅºÚ", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             _FormControl.Height = (int)(CONTROLWINDOW_HEIGHT) - 40 - list_data.Size.Height;
             _FormControl.Show();

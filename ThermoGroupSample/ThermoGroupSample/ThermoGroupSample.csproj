@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ThermoGroupSample</RootNamespace>
-    <AssemblyName>ThermoGroupSample</AssemblyName>
+    <AssemblyName>热点采集程序</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -46,7 +46,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -58,7 +58,7 @@
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>mian.ico</ApplicationIcon>
+    <ApplicationIcon>hotspot_128px_1114554_easyicon.net.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HslCommunication, Version=5.8.0.0, Culture=neutral, PublicKeyToken=cdb2261fa039ed67, processorArchitecture=MSIL">
@@ -194,6 +194,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="hotspot_128px_1114554_easyicon.net.ico" />
     <Content Include="Lib\HslCommunication.dll" />
     <Content Include="Lib\opcrcw.comn.dll" />
     <Content Include="Lib\opcrcw.da.dll" />

@@ -10,8 +10,6 @@ E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Relea
 E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.Cache
 E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojResolveAssemblyReference.cache
 E:\2015Projects\锅炉程序\backup\Sample\C#\VS2005\ThermoGroupSample\obj\Release\ThermoGroupSample.FormMainSc.resources
-D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\ThermoGroupSample.exe
-D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\ThermoGroupSample.pdb
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormControl.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplay.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDisplayBG.resources
@@ -20,9 +18,6 @@ D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Relea
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.Properties.Resources.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.GenerateResource.cache
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.CoreCompileInputs.cache
-D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.exe
-D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
-D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\ThermoGroupSample.exe.config
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FormDateSet.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.FmMianControl.resources
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.CopyComplete
@@ -45,4 +40,9 @@ D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Rele
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.exe
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.pdb
 D:\Users\Documents\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\热点采集程序.exe.config
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\热点采集程序.exe
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\bin\Release\热点采集程序.pdb
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\热点采集程序.exe
+D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\热点采集程序.pdb
 D:\A_Work_ZoomTel\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache

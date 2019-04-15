@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDateSet));
             this.lblXX = new System.Windows.Forms.Label();
             this.txtCamToZd = new System.Windows.Forms.TextBox();
             this.txtgkzj = new System.Windows.Forms.TextBox();
@@ -44,6 +45,7 @@
             this.txtCamToWD = new System.Windows.Forms.TextBox();
             this.lblCP = new System.Windows.Forms.Label();
             this.txtCamLenght = new System.Windows.Forms.TextBox();
+            this.btnDefault = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.lblpixl = new System.Windows.Forms.Label();
             this.lblpixw = new System.Windows.Forms.Label();
@@ -52,7 +54,6 @@
             this.lblSelect = new System.Windows.Forms.Label();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.btnDefault = new System.Windows.Forms.Button();
             this.groupBoxAturbit.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -235,6 +236,20 @@
             this.txtCamLenght.Size = new System.Drawing.Size(205, 27);
             this.txtCamLenght.TabIndex = 3;
             // 
+            // btnDefault
+            // 
+            this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnDefault.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnDefault.Location = new System.Drawing.Point(44, 535);
+            this.btnDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnDefault.Name = "btnDefault";
+            this.btnDefault.Size = new System.Drawing.Size(103, 30);
+            this.btnDefault.TabIndex = 12;
+            this.btnDefault.Text = "恢复默认值";
+            this.btnDefault.UseVisualStyleBackColor = true;
+            this.btnDefault.Visible = false;
+            this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+            // 
             // btnSave
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
@@ -327,20 +342,6 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
-            // btnDefault
-            // 
-            this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnDefault.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnDefault.Location = new System.Drawing.Point(44, 535);
-            this.btnDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnDefault.Name = "btnDefault";
-            this.btnDefault.Size = new System.Drawing.Size(103, 30);
-            this.btnDefault.TabIndex = 12;
-            this.btnDefault.Text = "恢复默认值";
-            this.btnDefault.UseVisualStyleBackColor = true;
-            this.btnDefault.Visible = false;
-            this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
-            // 
             // FormDateSet
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -352,7 +353,8 @@
             this.Controls.Add(this.groupBoxAturbit);
             this.Controls.Add(this.btnChange);
             this.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

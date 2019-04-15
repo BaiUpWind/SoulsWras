@@ -61,8 +61,8 @@ namespace ThermoGroupSample
 
             RefreshOnlineDevice();
 
+            EnabledContrlos(2);
 
-           
 
         }
 
@@ -177,12 +177,21 @@ namespace ThermoGroupSample
 
             MagService service = _DataControl.GetService();//创建
             uint dev_num = service.GetTerminalList(_LstEnumInfo, MAX_ENUMDEVICE);//获取在线相机
+            ConnectionCamer(_LstEnumInfo[index].intCamIp);
+            RefreshOnlineDevice();
+        }
 
-            if (_DataControl.IsLinkedByMyself(_LstEnumInfo[index].intCamIp))//如果是我自己在使用
+        /// <summary>
+        /// 连接相机
+        /// </summary>
+        /// <param name="cmaerIp">相机IP</param>
+        void ConnectionCamer(uint cmaerIp)
+        {
+            if (_DataControl.IsLinkedByMyself(cmaerIp))//如果是我自己在使用
             {
                 return;
             }
-            else if (_DataControl.IsLinkedByOthers(_LstEnumInfo[index].intUsrIp))//如果是其他人在使用
+            else if (_DataControl.IsLinkedByOthers(cmaerIp))//如果是其他人在使用
             {
                 DialogResult result = MessageBox.Show("相机正与其它终端连接,确信要抢占吗?", "连接相机", MessageBoxButtons.YesNo);
                 if (result != DialogResult.Yes)
@@ -191,9 +200,9 @@ namespace ThermoGroupSample
                 }
             }
 
-            if (_DataControl.IsInvadedByOthers(_LstEnumInfo[index].intUsrIp))//如果被别人抢了摄像头
+            if (_DataControl.IsInvadedByOthers(cmaerIp))//如果被别人抢了摄像头
             {
-                DislinkCamera(_LstEnumInfo[index].intCamIp);//就断开连接
+                DislinkCamera(cmaerIp);//就断开连接
             }
 
             FormDisplay display = _DataControl.GetCurrDisplayForm();
@@ -201,14 +210,12 @@ namespace ThermoGroupSample
             {
                 MagDevice device = display.GetDateDisplay().GetDevice();
 
-                if (device.LinkCamera(_LstEnumInfo[index].intCamIp, 2000))//连接相机
+                if (device.LinkCamera(cmaerIp, 2000))//连接相机
                 {
                     DataDisplay.CurrSelectedWndIndex = display.GetDateDisplay().WndIndex;//更新选中框
                     Globals.GetMainFrm().GetFormDisplayBG().Invalidate(false);
                 }
             }
-            
-            RefreshOnlineDevice();
         }
         /// <summary>
         /// 断开摄像头连接
@@ -575,17 +582,41 @@ namespace ThermoGroupSample
 
         #endregion
 
-
-        private void btnEnter_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 启用控件
+        /// </summary>
+        void EnabledContrlos(int flag)
         {
-           
+            if( flag == 1)
+            {
+                buttonRefresh.Enabled = true;
+                buttonLink.Enabled = true;
+                buttonDislink.Enabled = true;
+                buttonPlay.Enabled = true;
+                buttonStop.Enabled = true;
+                btnAutoConn.Enabled = false;
+            }
+            else if (flag == 2)
+            {
+                buttonRefresh.Enabled = false;
+                buttonLink.Enabled = false;
+                buttonDislink.Enabled = false;
+                buttonPlay.Enabled = false;
+                buttonStop.Enabled = false;
+                btnAutoConn.Enabled = true;
+            }
+          
+
+    
         }
- 
+
+
 
         private void 一号甑锅ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
+              
                 FormDateSet fds = new FormDateSet();
                 fds.ShowDialog();
             }
@@ -597,6 +628,37 @@ namespace ThermoGroupSample
            
         }
         ManualResetEvent manu = new ManualResetEvent(false);
+
+        private void btnAutoConn_Click(object sender, EventArgs e)
+        {
+            if(comboBoxOnlineDevice.Items.Count > 0)
+            {
+                for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)
+                {
+                    ConnectionCamer(_LstEnumInfo[i].intCamIp);
+                    FormDisplay frmDisplay = _DataControl.GetBindedDisplayForm(_LstEnumInfo[i].intCamIp); //选择已经绑定的IP的显示窗口
+                    if (frmDisplay != null)
+                    {
+                        frmDisplay.GetDateDisplay().Play();
+                    }
+
+                }
+            }
+            RefreshOnlineDevice();
+        }
+
+        private void checkAuotuoConn_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkAuotuoConn.Checked)
+            {
+                EnabledContrlos(2);
+            }
+            else
+            {
+                EnabledContrlos(1);
+            }
+        }
+
         private void btnStOP_Click(object sender, EventArgs e)
         {
              
