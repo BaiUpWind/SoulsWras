@@ -127,7 +127,7 @@ namespace ThermoGroupSample
             //this.label2.Size = new System.Drawing.Size(21, 20);
             //this.label2.TabIndex = 1;
             //this.label2.Text = "y:";
-           
+            FormPwd = new FormPwd();
             //主窗口
             this.Width = (int)MAINWINDOW_WIDTH;
             this.Height = (int)MAINWINDOW_HEIGHT;
@@ -335,6 +335,19 @@ namespace ThermoGroupSample
 
             GetZGinfoToDisplay();
             GetOPCTaskInfo("甑锅参数数据读取成功！");
+        }
+        FormPwd FormPwd;
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            FormPwd.ShowDialog();
+            if(FormPwd.DialogResult == DialogResult.OK)
+            {
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true ;
+            }
         }
     }
 }

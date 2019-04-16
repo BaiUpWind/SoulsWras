@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ThermoGroupSample
@@ -317,6 +318,64 @@ namespace ThermoGroupSample
                 }
             }
         }
+        public static string SecCode
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        string result = config.AppSettings.Settings["SecCode"].Value.ToString();
+                        if (!string.IsNullOrWhiteSpace(result ))
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return "´íÎó";
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return "´íÎó";
+                    }
+
+                }
+                else
+                {
+                    return "´íÎó";
+                }
+
+            }
+            set
+            {
+                if (config != null)//´æÈë°ü×°»úºÅ
+                {
+                    config.AppSettings.Settings["SecCode"].Value = MD5Encrypt(value.ToString());
+                    config.Save(ConfigurationSaveMode.Modified);
+                    ConfigurationManager.RefreshSection("appSettings");
+                }
+            }
+        }
+
+        public static string MD5Encrypt(string text, Encoding encoding)
+        {
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+            byte[] result = encoding.GetBytes(text);
+            result = md5.ComputeHash(result);
+            StringBuilder ret = new StringBuilder();
+            foreach (byte b in result) ret.AppendFormat("{0:X2}", b);
+            return ret.ToString();
+        }
+
+
+        public static string MD5Encrypt(string text)
+        {
+            return MD5Encrypt(text, Encoding.UTF8);
+        }
+
     }
 
 

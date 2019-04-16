@@ -49,6 +49,8 @@ namespace ThermoGroupSample
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.checkAuotuoConn = new System.Windows.Forms.CheckBox();
+            this.系统XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.密码管理MToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxPLCContrl.SuspendLayout();
@@ -251,8 +253,11 @@ namespace ThermoGroupSample
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.系统XToolStripMenuItem,
             this.参数设置SToolStripMenuItem});
+            this.menuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(9, 4, 0, 4);
@@ -271,7 +276,7 @@ namespace ThermoGroupSample
             // 一号甑锅ToolStripMenuItem
             // 
             this.一号甑锅ToolStripMenuItem.Name = "一号甑锅ToolStripMenuItem";
-            this.一号甑锅ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.一号甑锅ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.一号甑锅ToolStripMenuItem.Text = "甑锅设置";
             this.一号甑锅ToolStripMenuItem.Click += new System.EventHandler(this.一号甑锅ToolStripMenuItem_Click);
             // 
@@ -296,6 +301,21 @@ namespace ThermoGroupSample
             this.checkAuotuoConn.Text = "启用一键连接播放";
             this.checkAuotuoConn.UseVisualStyleBackColor = true;
             this.checkAuotuoConn.CheckedChanged += new System.EventHandler(this.checkAuotuoConn_CheckedChanged);
+            // 
+            // 系统XToolStripMenuItem
+            // 
+            this.系统XToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.密码管理MToolStripMenuItem});
+            this.系统XToolStripMenuItem.Name = "系统XToolStripMenuItem";
+            this.系统XToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
+            this.系统XToolStripMenuItem.Text = "系统(&X)";
+            // 
+            // 密码管理MToolStripMenuItem
+            // 
+            this.密码管理MToolStripMenuItem.Name = "密码管理MToolStripMenuItem";
+            this.密码管理MToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.密码管理MToolStripMenuItem.Text = "密码管理（&M）";
+            this.密码管理MToolStripMenuItem.Click += new System.EventHandler(this.密码管理MToolStripMenuItem_Click);
             // 
             // FormControl
             // 
@@ -356,5 +376,7 @@ namespace ThermoGroupSample
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnAutoConn;
         private System.Windows.Forms.CheckBox checkAuotuoConn;
+        private System.Windows.Forms.ToolStripMenuItem 系统XToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 密码管理MToolStripMenuItem;
     }
 }

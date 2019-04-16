@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace ThermoGroupSample
@@ -14,7 +15,27 @@ namespace ThermoGroupSample
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormMain());
+            Process[] localNmae = Process.GetProcessesByName("热点采集程序");
+            if (localNmae.Length > 1)
+            {
+                MessageBox.Show("热点采集程序已经打开,请勿重复开启!");
+
+            }
+            else
+            {
+
+
+                FormPwd pwd = new FormPwd();
+                pwd.ShowDialog();
+                if (pwd.DialogResult == DialogResult.OK)
+                {
+                    Application.Run(new FormMain());
+                }
+                else
+                {
+                    return;
+                }
+            }
         }
     }
 }

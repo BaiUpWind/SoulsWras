@@ -63,8 +63,8 @@ namespace ThermoGroupSample
             RefreshOnlineDevice();
 
             EnabledContrlos(2);
-
-
+            FormPwd = new FormPwd();
+            FormPwdManger = new FormPwdManger();
         }
 
         void OnDestroy()
@@ -159,12 +159,7 @@ namespace ThermoGroupSample
 
         private void buttonRefresh_Click(object sender, EventArgs e)
         {
-            RefreshOnlineDevice();
-          double a  =  calculator.BotDiameter;
-            double b = calculator.PotDiamerter;
-            double c = calculator.AtoB_Distance;
-            double d = calculator.Axis_Camera_Distance;
-            FormMain.GetOPCTaskInfo(a + "" + b + "" + c + "" + d);
+            RefreshOnlineDevice(); 
         }
 
         private void buttonLink_Click(object sender, EventArgs e)
@@ -634,7 +629,7 @@ namespace ThermoGroupSample
 
         private void btnAutoConn_Click(object sender, EventArgs e)
         {
-
+            RefreshOnlineDevice();
             if (comboBoxOnlineDevice.Items.Count == 0)
             {
                 return;
@@ -703,10 +698,20 @@ namespace ThermoGroupSample
                 EnabledContrlos(1);
             }
         }
-
+        FormPwd FormPwd;
+        FormPwdManger FormPwdManger;
         private void FormControl_SizeChanged(object sender, EventArgs e)
         {
             _DataControl.SetDisplayWndNum(1, 2);//控制有几个画面
+        }
+
+        private void 密码管理MToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormPwd.ShowDialog();
+            if(FormPwd.DialogResult == DialogResult.OK)
+            {
+                FormPwdManger.ShowDialog();
+            }
         }
 
         private void btnStOP_Click(object sender, EventArgs e)
