@@ -702,7 +702,7 @@ namespace ThermoGroupSample
         FormPwdManger FormPwdManger;
         private void FormControl_SizeChanged(object sender, EventArgs e)
         {
-            _DataControl.SetDisplayWndNum(1, 2);//控制有几个画面
+            //_DataControl.SetDisplayWndNum(1, 2);//控制有几个画面
         }
 
         private void 密码管理MToolStripMenuItem_Click(object sender, EventArgs e)
