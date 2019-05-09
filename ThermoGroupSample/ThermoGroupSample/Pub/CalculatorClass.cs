@@ -536,6 +536,11 @@ namespace ThermoGroupSample.Pub
         /// 相机 1 和2的IP地址
         /// </summary>
         string CmaerIp1, CmaerIp2;
+
+        /// <summary>
+        /// 每个相机的偏差值
+        /// </summary>
+      public  double Cmaer1x, Cmaer1y, Cmaer2x, Cmaer2y;
         /// <summary>
         /// robotP3是相机坐标转换后的实际坐标点
         /// </summary>
@@ -600,13 +605,13 @@ namespace ThermoGroupSample.Pub
                 ImageP1.y = 30;
                 if (ip == CmaerIp1)//一号相机
                 {
-                    RobotP1.x =  CameraLocation1.x;//实际坐标-513.0841;// 
-                    RobotP1.y =  CameraLocation1.y;// -43.528;
+                    RobotP1.x =  CameraLocation1.x+Cmaer1x;//实际坐标-513.0841;// 
+                    RobotP1.y =  CameraLocation1.y + Cmaer1y;// -43.528;
                 }
                 else if (ip == CmaerIp2)//二号相机
                 {
-                    RobotP1.x = CameraLocation2.x;//实际坐标
-                    RobotP1.y = CameraLocation2.y;
+                    RobotP1.x = CameraLocation2.x + Cmaer2x;//实际坐标
+                    RobotP1.y = CameraLocation2.y + Cmaer2y;
                 }
                  
                 //标定第二个点

@@ -82,7 +82,8 @@ namespace ThermoGroupSample
             rw.IniWriteValue("ZG" + index, "锅口直径", txtgkzj.Text);
             rw.IniWriteValue("ZG" + index, "锅底直径", txtgdzj.Text); 
             rw.IniWriteValue("ZG" + index, "极限温度", txtlimitTmper.Text);
-         
+            rw.IniWriteValue("ZG" + index, "相机1偏差", txtCame1.Text);
+            rw.IniWriteValue("ZG" + index, "相机2偏差", txtCame2.Text);
             ReadIntFile();
             btnSave.Visible = false;
             TxtEnabled(false);
@@ -150,6 +151,7 @@ namespace ThermoGroupSample
 
             }
         }
+ 
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -159,8 +161,24 @@ namespace ThermoGroupSample
              && !string.IsNullOrWhiteSpace(txtCamLenght.Text) && !string.IsNullOrWhiteSpace(txtCamWidth.Text)
              )
             { 
-                WriteIntFile();
-                comboBoxZG.Enabled = true;
+                if(Globals. CheckInputInfo(txtCame1.Text))
+                {
+                    if(Globals.CheckInputInfo(txtCame2.Text))
+                    {
+                        WriteIntFile();
+                        comboBoxZG.Enabled = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("相机2偏差输入错误\r\n例：(x,y)14,56", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    } 
+                }
+                else
+                {
+                    MessageBox.Show("相机1偏差输入错误\r\n例：(x,y)14,56", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
             else
             {
@@ -186,7 +204,9 @@ namespace ThermoGroupSample
             txtCamLenght.Text = rw.IniReadValue("ZG" + index, "相机像素长");
             txtCamWidth.Text = rw.IniReadValue("ZG" + index, "相机像素宽");
             txtlimitTmper.Text = rw.IniReadValue("ZG" + index, "极限温度");
-             int cindex =  rw.IniReadValue("ZG" + index, "启用").CastTo<int>(-1) ;
+            txtCame1.Text = rw.IniReadValue("ZG" + index, "相机1偏差");
+            txtCame2.Text = rw.IniReadValue("ZG" + index, "相机2偏差");
+            int cindex =  rw.IniReadValue("ZG" + index, "启用").CastTo<int>(-1) ;
             if (cindex == -1)
             {
                 lblState.Text = "状态:禁用"; cmbState.SelectedIndex = 0;
@@ -218,12 +238,16 @@ namespace ThermoGroupSample
             cmbState.Enabled = ok;
             txtCamLenght.Enabled = ok;
             txtCamWidth.Enabled = ok;
+            txtCame1.Enabled = ok;
+            txtCame2.Enabled = ok;
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(txtZgname.Text) && !string.IsNullOrWhiteSpace(txtCamToZd.Text)
                && !string.IsNullOrWhiteSpace(txtgkzj.Text) && !string.IsNullOrWhiteSpace(txtgdzj.Text) 
-                && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string.IsNullOrWhiteSpace(txtCamToWD.Text))
+                && !string.IsNullOrWhiteSpace(txtlimitTmper.Text) && !string.IsNullOrWhiteSpace(txtCamToWD.Text)
+                && !string.IsNullOrWhiteSpace(txtCame1.Text) && !string.IsNullOrWhiteSpace(txtCame1.Text)
+                )
             {
                 int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
                 comboBoxZG.Items.Add("甑锅" + (count + 1));
@@ -266,6 +290,8 @@ namespace ThermoGroupSample
                 txtgdzj.Text = 2290+"";
                 txtCamLenght.Text = 29.825+"";
                 txtCamWidth.Text = 27.35+"";
+                txtCame1.Text = "0,0";
+                txtCame2.Text = "0,0";
             }
         }
     }

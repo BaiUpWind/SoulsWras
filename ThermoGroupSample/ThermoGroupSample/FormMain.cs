@@ -283,6 +283,8 @@ namespace ThermoGroupSample
             }
             return false;
         }
+
+ 
         void GetZGinfoToDisplay( )
         {
              int count = rw.IniReadValue("ListCout", "Count").CastTo<int>(-1);
@@ -303,6 +305,29 @@ namespace ThermoGroupSample
                     _FormControl.calculator.AtoB_Distance = rw.IniReadValue("ZG" + (i), "相机与物料距离").CastTo<double>(-1);
                     Globals.CamerPixLenght =   rw.IniReadValue("ZG" + (i), "相机像素长").CastTo<double>(-1);
                     Globals.CamerPixWidth = rw.IniReadValue("ZG" + (i), "相机像素宽").CastTo<double>(-1);
+                    string camer1 = rw.IniReadValue("ZG" + (i), "相机1偏差");//相机1偏差
+                    string camer2 = rw.IniReadValue("ZG" + (i), "相机2偏差");//相机2偏差
+                    if (Globals.CheckInputInfo(camer1))//相机1
+                    {
+                        var arr = camer1.Split(',');
+                        _FormControl.calculator.Cmaer1x = arr[0].CastTo<double>(0);
+                        _FormControl.calculator.Cmaer1y = arr[1].CastTo<double>(0);
+                    }
+                    else
+                    {
+                        GetOPCTaskInfo("检测相机1偏差值有误，请在参数设置修改修改偏差值，偏差计算采用默认值(0,0)！");
+                    }
+                    if (Globals.CheckInputInfo(camer2))//相机2
+                    {
+                        var arr = camer2.Split(',');
+                        _FormControl.calculator.Cmaer2x = arr[0].CastTo<double>(0);
+                        _FormControl.calculator.Cmaer2y = arr[1].CastTo<double>(0);
+                    }
+                    else
+                    {
+                        GetOPCTaskInfo("检测相机2偏差值有误，请在参数设置修改修改偏差值，偏差计算采用默认值(0,0)！");
+                    }
+                     
                     for (int j = 0; j < _FormDisplayLst.Length; j++)
                     { 
                         _FormDisplayLst[j].LimitTmper = rw.IniReadValue("ZG" + (i), "极限温度").CastTo<float>(-1);

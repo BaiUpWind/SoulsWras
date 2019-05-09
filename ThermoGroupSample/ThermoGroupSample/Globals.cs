@@ -1,8 +1,10 @@
+using Pub;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ThermoGroupSample
 {
@@ -370,7 +372,32 @@ namespace ThermoGroupSample
             return ret.ToString();
         }
 
-
+        /// <summary>
+        /// 检查数据是否有用
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static bool CheckInputInfo(string text)
+        {
+            var arr = text.Split(',');
+            if (arr.Length < 2)
+            {
+                return false;
+            }
+            else
+            {
+                var num1 = arr[0].CastTo("w");
+                var num2 = arr[1].CastTo("w");
+                if (Regex.IsMatch(num1, @"^[+-]?\d*[.]?\d*$")  && Regex.IsMatch(num2, @"^[+-]?\d*[.]?\d*$"))
+                { 
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
         public static string MD5Encrypt(string text)
         {
             return MD5Encrypt(text, Encoding.UTF8);
