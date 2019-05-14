@@ -107,7 +107,7 @@ namespace ThermoGroupSample
         {
            
             InitializeComponent();
-
+            Text="热点采集["+ System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()+"]";
             InitializeAllWindows();
 
             DataControl.UpdateDisplayPostion += new DataControl.delegateUpdateDisplayPostion(OnUpdateDisplayPostion);

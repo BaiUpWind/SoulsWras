@@ -605,13 +605,13 @@ namespace ThermoGroupSample.Pub
                 ImageP1.y = 30;
                 if (ip == CmaerIp1)//一号相机
                 {
-                    RobotP1.x =  CameraLocation1.x+Cmaer1x;//实际坐标-513.0841;// 
-                    RobotP1.y =  CameraLocation1.y + Cmaer1y;// -43.528;
+                    RobotP1.x = CameraLocation1.x;//实际坐标-513.0841;// 
+                    RobotP1.y = CameraLocation1.y ;// -43.528;
                 }
                 else if (ip == CmaerIp2)//二号相机
                 {
-                    RobotP1.x = CameraLocation2.x + Cmaer2x;//实际坐标
-                    RobotP1.y = CameraLocation2.y + Cmaer2y;
+                    RobotP1.x = CameraLocation2.x ;//实际坐标
+                    RobotP1.y = CameraLocation2.y ;
                 }
                  
                 //标定第二个点
@@ -637,8 +637,17 @@ namespace ThermoGroupSample.Pub
                     RobotP3.tmper = ItemP3.tmper;
                     //degressR = angleBeta * (Math.PI / 180);//计算旋转角度的弧度
                     //                                           // angleBeta 是旋转角度 
-                    RobotP3.x = CamerPXLenght * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x;// 29.825
-                    RobotP3.y = CamerPXWidth * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y   ; //27.35
+                    if( ip == CmaerIp1)
+                    {
+                        RobotP3.x = (CamerPXLenght * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x) + Cmaer1x;// 29.825
+                        RobotP3.y =( CamerPXWidth * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y) + Cmaer1y; //27.35
+                    }
+                    else
+                    {
+                        RobotP3.x = (CamerPXLenght * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x) + Cmaer2x;// 29.825
+                        RobotP3.y = (CamerPXWidth * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y) + Cmaer2y; //27.35
+                    }
+                   
                     if (Math.Abs( RobotP3.x)  <= PotDiamerter  && Math.Abs( RobotP3.y )  <= PotDiamerter)//如果坐标在指定区间内 添加
                     {
                         RobotP3List.Add(RobotP3);//添加热点到集合

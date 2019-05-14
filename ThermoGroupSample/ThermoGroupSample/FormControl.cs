@@ -492,7 +492,14 @@ namespace ThermoGroupSample
                             }
                             else
                             {
-                                calculator.GetCameraPosition(AngleTheta, AngleAlpha, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//计算当前相机所在的位置 
+                                try
+                                {
+                                    calculator.GetCameraPosition(AngleTheta, AngleAlpha, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//计算当前相机所在的位置 
+                                }
+                                catch (Exception ex)
+                                {
+                                    FormMain.GetOPCTaskInfo( ex.Message);
+                                } 
                                 list.Add(frmDisplay.NewGetInfo()); //获取温度信息  
                                 //FormMain.GetOPCTaskInfo("窗体:" + frmDisplay.Name + ",IP:" + _LstEnumInfo[i].intCamIp);
                             }
