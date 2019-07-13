@@ -303,8 +303,8 @@ namespace ThermoGroupSample
                     _FormControl.calculator.PotDiamerter = rw.IniReadValue("ZG" + (i), "锅口直径").CastTo<double>(-1);
                     _FormControl.calculator.Axis_Camera_Distance = rw.IniReadValue("ZG" + (i), "相机与柱心距离").CastTo<double>(-1);
                     _FormControl.calculator.AtoB_Distance = rw.IniReadValue("ZG" + (i), "相机与物料距离").CastTo<double>(-1);
-                    Globals.CamerPixLenght =   rw.IniReadValue("ZG" + (i), "相机像素长").CastTo<double>(-1);
-                    Globals.CamerPixWidth = rw.IniReadValue("ZG" + (i), "相机像素宽").CastTo<double>(-1);
+                    _FormControl.calculator.CamerPXLenght =   rw.IniReadValue("ZG" + (i), "相机像素长").CastTo<double>(-1);
+                    _FormControl.calculator.CamerPXWidth = rw.IniReadValue("ZG" + (i), "相机像素宽").CastTo<double>(-1);
                     string camer1 = rw.IniReadValue("ZG" + (i), "相机1偏差");//相机1偏差
                     string camer2 = rw.IniReadValue("ZG" + (i), "相机2偏差");//相机2偏差
                     if (Globals.CheckInputInfo(camer1))//相机1

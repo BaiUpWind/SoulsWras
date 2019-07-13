@@ -534,8 +534,8 @@ namespace ThermoGroupSample
                 }
                 else
                 {
-                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，五秒后再次读取！");
-                    Thread.Sleep(5000);//5秒后重新再读取
+                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，0.5秒后再次读取！");
+                    Thread.Sleep(500);//5秒后重新再读取
                 } 
             }
         }

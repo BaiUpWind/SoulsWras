@@ -47,17 +47,17 @@
             this.txtCamLenght = new System.Windows.Forms.TextBox();
             this.btnDefault = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.txtCame2 = new System.Windows.Forms.TextBox();
+            this.txtCame1 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.lblpixl = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.lblpixw = new System.Windows.Forms.Label();
             this.txtCamWidth = new System.Windows.Forms.TextBox();
             this.comboBoxZG = new System.Windows.Forms.ComboBox();
             this.lblSelect = new System.Windows.Forms.Label();
             this.btnChange = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtCame1 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtCame2 = new System.Windows.Forms.TextBox();
             this.groupBoxAturbit.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -200,7 +200,7 @@
             this.cmbState.Items.AddRange(new object[] {
             "禁用",
             "启用"});
-            this.cmbState.Location = new System.Drawing.Point(276, 413);
+            this.cmbState.Location = new System.Drawing.Point(276, 439);
             this.cmbState.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbState.Name = "cmbState";
             this.cmbState.Size = new System.Drawing.Size(205, 28);
@@ -209,7 +209,7 @@
             // lblState
             // 
             this.lblState.AutoSize = true;
-            this.lblState.Location = new System.Drawing.Point(40, 418);
+            this.lblState.Location = new System.Drawing.Point(40, 444);
             this.lblState.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblState.Name = "lblState";
             this.lblState.Size = new System.Drawing.Size(39, 20);
@@ -248,7 +248,7 @@
             // 
             this.btnDefault.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnDefault.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnDefault.Location = new System.Drawing.Point(43, 466);
+            this.btnDefault.Location = new System.Drawing.Point(43, 477);
             this.btnDefault.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(103, 30);
@@ -262,7 +262,7 @@
             // 
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnSave.Font = new System.Drawing.Font("微软雅黑", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnSave.Location = new System.Drawing.Point(249, 466);
+            this.btnSave.Location = new System.Drawing.Point(249, 477);
             this.btnSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(90, 30);
@@ -271,6 +271,34 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Visible = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // txtCame2
+            // 
+            this.txtCame2.Enabled = false;
+            this.txtCame2.Location = new System.Drawing.Point(276, 376);
+            this.txtCame2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtCame2.Name = "txtCame2";
+            this.txtCame2.Size = new System.Drawing.Size(205, 27);
+            this.txtCame2.TabIndex = 9;
+            // 
+            // txtCame1
+            // 
+            this.txtCame1.Enabled = false;
+            this.txtCame1.Location = new System.Drawing.Point(276, 339);
+            this.txtCame1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtCame1.Name = "txtCame1";
+            this.txtCame1.Size = new System.Drawing.Size(205, 27);
+            this.txtCame1.TabIndex = 9;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(40, 381);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(120, 20);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "相机2偏差(mm):";
             // 
             // lblpixl
             // 
@@ -281,6 +309,16 @@
             this.lblpixl.Size = new System.Drawing.Size(116, 20);
             this.lblpixl.TabIndex = 2;
             this.lblpixl.Text = "相机像素长(px):";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(40, 344);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(120, 20);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "相机1偏差(mm):";
             // 
             // lblpixw
             // 
@@ -349,44 +387,6 @@
             this.btnAdd.Text = "新增";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(40, 344);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(120, 20);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "相机1偏差(mm):";
-            // 
-            // txtCame1
-            // 
-            this.txtCame1.Enabled = false;
-            this.txtCame1.Location = new System.Drawing.Point(276, 339);
-            this.txtCame1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCame1.Name = "txtCame1";
-            this.txtCame1.Size = new System.Drawing.Size(205, 27);
-            this.txtCame1.TabIndex = 9;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(40, 381);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(116, 20);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "相机2偏差(mm)";
-            // 
-            // txtCame2
-            // 
-            this.txtCame2.Enabled = false;
-            this.txtCame2.Location = new System.Drawing.Point(276, 376);
-            this.txtCame2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtCame2.Name = "txtCame2";
-            this.txtCame2.Size = new System.Drawing.Size(205, 27);
-            this.txtCame2.TabIndex = 9;
             // 
             // FormDateSet
             // 

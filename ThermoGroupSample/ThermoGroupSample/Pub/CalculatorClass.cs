@@ -517,7 +517,7 @@ namespace ThermoGroupSample.Pub
         /// <summary>
         /// 相机像素长 相机像素宽
         /// </summary>
-        double CamerPXLenght, CamerPXWidth;
+        public  double CamerPXLenght, CamerPXWidth;
 
         /// <summary>
         /// 机器人坐标标定的两个点 
@@ -541,6 +541,11 @@ namespace ThermoGroupSample.Pub
         /// 每个相机的偏差值
         /// </summary>
       public  double Cmaer1x, Cmaer1y, Cmaer2x, Cmaer2y;
+
+        /// <summary>
+        /// 1号甑锅，2号甑锅
+        /// </summary>
+        public int Zgno1, Zgno2;
         /// <summary>
         /// robotP3是相机坐标转换后的实际坐标点
         /// </summary>
@@ -564,7 +569,8 @@ namespace ThermoGroupSample.Pub
         /// <param name="axis3_y">轴三中心点Y坐标</param>
         public void GetCameraPosition(double angeleTheta, double angeleAlpha, double axis3_x, double axis3_y, UInt32 camerIp)
         { 
-            ip = IntToIP(camerIp); 
+            ip = IntToIP(camerIp);
+  
             if (ip == CmaerIp1)//一号相机
             { 
                 CameraLocation1.x = axis3_x - Axis_Camera_Distance * Math.Cos((angeleTheta + angeleAlpha) * (Math.PI / 180));
@@ -580,6 +586,7 @@ namespace ThermoGroupSample.Pub
           
                 throw new Exception("相机IP" + ip + "错误！请关闭程序检查修改配置文件并重启程序！");
             }
+ 
 
         }
 
@@ -598,8 +605,6 @@ namespace ThermoGroupSample.Pub
             { 
                 RobotP3List.Clear();
                 ip = IntToIP(camerIp);
-                CamerPXLenght =  Globals.CamerPixLenght;
-                CamerPXWidth = Globals.CamerPixWidth;
                 //标定第一个点
                 ImageP1.x = 40;//相机坐标
                 ImageP1.y = 30;
@@ -637,12 +642,12 @@ namespace ThermoGroupSample.Pub
                     RobotP3.tmper = ItemP3.tmper;
                     //degressR = angleBeta * (Math.PI / 180);//计算旋转角度的弧度
                     //                                           // angleBeta 是旋转角度 
-                    if( ip == CmaerIp1)
+                    if( ip == CmaerIp1)//一号相机
                     {
                         RobotP3.x = (CamerPXLenght * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x) + Cmaer1x;// 29.825
                         RobotP3.y =( CamerPXWidth * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y) + Cmaer1y; //27.35
                     }
-                    else
+                    else if (ip == CmaerIp2)//二号相机
                     {
                         RobotP3.x = (CamerPXLenght * sqrt * Math.Cos(ThetaN + ThetaRI) + RobotP1.x) + Cmaer2x;// 29.825
                         RobotP3.y = (CamerPXWidth * sqrt * Math.Sin(ThetaN + ThetaRI) + RobotP1.y) + Cmaer2y; //27.35
@@ -787,7 +792,7 @@ namespace ThermoGroupSample.Pub
         }
 
  
-        #endregion
+#endregion
 
 
         /// <summary>
