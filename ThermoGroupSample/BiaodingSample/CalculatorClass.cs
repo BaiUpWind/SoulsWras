@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ThermoGroupSample.Pub
+namespace BiaodingSample
 {
     /// <summary>
     /// 计算类
@@ -488,8 +488,7 @@ namespace ThermoGroupSample.Pub
         public CalculatorClass()
         {
             //初始化
-            CmaerIp1 = Globals.CameraIp1;
-            CmaerIp2 = Globals.CameraIp2;
+        
         }
         /// <summary>
         /// 锅底直径
@@ -780,14 +779,14 @@ namespace ThermoGroupSample.Pub
                 RobotPosition rP1P2;
                 ImgPosition iP1P2;
                 rP1P2.x = rP2.x - rP1.x;
-                rP1P2.y = rP2.y - rP2.y;
+                rP1P2.y = rP2.y - rP1.y;
 
                 iP1P2.x = iP2.x - iP1.x;
                 iP1P2.y = iP2.y - iP1.y;
                 factor = Math.Sqrt(rP1P2.x * rP1P2.x + rP1P2.y * rP1P2.y) / Math.Sqrt(iP1P2.x * iP1P2.x + iP1P2.y * iP1P2.y);
 
-                rbotP3.x = factor * sqrt * Math.Cos(ThetaSum) + rP1.x;
-                rbotP3.y = factor * sqrt * Math.Sin(ThetaSum) + rP1.y;
+                rbotP3.x = (factor * sqrt * Math.Cos(ThetaSum) + rP1.x);
+                rbotP3.y = (factor * sqrt * Math.Sin(ThetaSum) + rP1.y);
 
 
                 info += "最终坐标   X:" + rbotP3.x + "Y:" + rbotP3.y + "\n\r";

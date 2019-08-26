@@ -97,7 +97,7 @@
             this.lblgkzj.Name = "lblgkzj";
             this.lblgkzj.Size = new System.Drawing.Size(111, 20);
             this.lblgkzj.TabIndex = 2;
-            this.lblgkzj.Text = "锅口直径(mm):";
+            this.lblgkzj.Text = "锅口半径(mm):";
             // 
             // txtgdzj
             // 
@@ -116,7 +116,7 @@
             this.lblgdzj.Name = "lblgdzj";
             this.lblgdzj.Size = new System.Drawing.Size(111, 20);
             this.lblgdzj.TabIndex = 4;
-            this.lblgdzj.Text = "锅底直径(mm):";
+            this.lblgdzj.Text = "锅底半径(mm):";
             // 
             // txtlimitTmper
             // 

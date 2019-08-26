@@ -79,8 +79,8 @@ namespace ThermoGroupSample
             rw.IniWriteValue("ZG" + index, "相机与物料距离", txtCamToWD.Text);
             rw.IniWriteValue("ZG" + index, "相机像素长",txtCamLenght.Text);
             rw.IniWriteValue("ZG" + index, "相机像素宽",txtCamWidth.Text);
-            rw.IniWriteValue("ZG" + index, "锅口直径", txtgkzj.Text);
-            rw.IniWriteValue("ZG" + index, "锅底直径", txtgdzj.Text); 
+            rw.IniWriteValue("ZG" + index, "锅口半径", txtgkzj.Text);
+            rw.IniWriteValue("ZG" + index, "锅底半径", txtgdzj.Text); 
             rw.IniWriteValue("ZG" + index, "极限温度", txtlimitTmper.Text);
             rw.IniWriteValue("ZG" + index, "相机1偏差", txtCame1.Text);
             rw.IniWriteValue("ZG" + index, "相机2偏差", txtCame2.Text);
@@ -199,8 +199,8 @@ namespace ThermoGroupSample
             txtZgname.Text = rw.IniReadValue("ZG" + index, "编号") ;
             txtCamToZd.Text = rw.IniReadValue("ZG" + index, "相机与柱心距离");
             txtCamToWD.Text = rw.IniReadValue("ZG" + index, "相机与物料距离");
-            txtgkzj.Text = rw.IniReadValue("ZG" + index, "锅口直径");
-            txtgdzj.Text = rw.IniReadValue("ZG" + index, "锅底直径");
+            txtgkzj.Text = rw.IniReadValue("ZG" + index, "锅口半径");
+            txtgdzj.Text = rw.IniReadValue("ZG" + index, "锅底半径");
             txtCamLenght.Text = rw.IniReadValue("ZG" + index, "相机像素长");
             txtCamWidth.Text = rw.IniReadValue("ZG" + index, "相机像素宽");
             txtlimitTmper.Text = rw.IniReadValue("ZG" + index, "极限温度");
@@ -288,8 +288,8 @@ namespace ThermoGroupSample
                 txtCamToWD.Text = 1660+"";
                 txtgkzj.Text = 2400+"";
                 txtgdzj.Text = 2290+"";
-                txtCamLenght.Text = 29.825+"";
-                txtCamWidth.Text = 27.35+"";
+                txtCamLenght.Text = 34+"";
+                txtCamWidth.Text = 29.25 + "";
                 txtCame1.Text = "0,0";
                 txtCame2.Text = "0,0";
             }

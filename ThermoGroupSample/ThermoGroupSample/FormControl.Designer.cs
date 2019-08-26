@@ -45,16 +45,23 @@ namespace ThermoGroupSample
             this.label2 = new System.Windows.Forms.Label();
             this.btnStOP = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.系统XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.密码管理MToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.参数设置SToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.一号甑锅ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.checkAuotuoConn = new System.Windows.Forms.CheckBox();
-            this.系统XToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.密码管理MToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lbl1x = new System.Windows.Forms.Label();
+            this.lbl1y = new System.Windows.Forms.Label();
+            this.lbl2x = new System.Windows.Forms.Label();
+            this.lbl2y = new System.Windows.Forms.Label();
+            this.lbldetail = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxPLCContrl.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // comboBoxOnlineDevice
@@ -215,7 +222,7 @@ namespace ThermoGroupSample
             this.groupBoxPLCContrl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxPLCContrl.Name = "groupBoxPLCContrl";
             this.groupBoxPLCContrl.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxPLCContrl.Size = new System.Drawing.Size(325, 188);
+            this.groupBoxPLCContrl.Size = new System.Drawing.Size(325, 129);
             this.groupBoxPLCContrl.TabIndex = 43;
             this.groupBoxPLCContrl.TabStop = false;
             this.groupBoxPLCContrl.Text = "温度检测与坐标发送";
@@ -265,6 +272,21 @@ namespace ThermoGroupSample
             this.menuStrip1.TabIndex = 46;
             this.menuStrip1.Text = "menuStrip1";
             // 
+            // 系统XToolStripMenuItem
+            // 
+            this.系统XToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.密码管理MToolStripMenuItem});
+            this.系统XToolStripMenuItem.Name = "系统XToolStripMenuItem";
+            this.系统XToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
+            this.系统XToolStripMenuItem.Text = "系统(&X)";
+            // 
+            // 密码管理MToolStripMenuItem
+            // 
+            this.密码管理MToolStripMenuItem.Name = "密码管理MToolStripMenuItem";
+            this.密码管理MToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.密码管理MToolStripMenuItem.Text = "密码管理（&M）";
+            this.密码管理MToolStripMenuItem.Click += new System.EventHandler(this.密码管理MToolStripMenuItem_Click);
+            // 
             // 参数设置SToolStripMenuItem
             // 
             this.参数设置SToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -276,7 +298,7 @@ namespace ThermoGroupSample
             // 一号甑锅ToolStripMenuItem
             // 
             this.一号甑锅ToolStripMenuItem.Name = "一号甑锅ToolStripMenuItem";
-            this.一号甑锅ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.一号甑锅ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.一号甑锅ToolStripMenuItem.Text = "甑锅设置";
             this.一号甑锅ToolStripMenuItem.Click += new System.EventHandler(this.一号甑锅ToolStripMenuItem_Click);
             // 
@@ -302,20 +324,69 @@ namespace ThermoGroupSample
             this.checkAuotuoConn.UseVisualStyleBackColor = true;
             this.checkAuotuoConn.CheckedChanged += new System.EventHandler(this.checkAuotuoConn_CheckedChanged);
             // 
-            // 系统XToolStripMenuItem
+            // lbl1x
             // 
-            this.系统XToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.密码管理MToolStripMenuItem});
-            this.系统XToolStripMenuItem.Name = "系统XToolStripMenuItem";
-            this.系统XToolStripMenuItem.Size = new System.Drawing.Size(60, 21);
-            this.系统XToolStripMenuItem.Text = "系统(&X)";
+            this.lbl1x.AutoSize = true;
+            this.lbl1x.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.lbl1x.Location = new System.Drawing.Point(6, 7);
+            this.lbl1x.Name = "lbl1x";
+            this.lbl1x.Size = new System.Drawing.Size(57, 17);
+            this.lbl1x.TabIndex = 49;
+            this.lbl1x.Text = "相机1x：";
             // 
-            // 密码管理MToolStripMenuItem
+            // lbl1y
             // 
-            this.密码管理MToolStripMenuItem.Name = "密码管理MToolStripMenuItem";
-            this.密码管理MToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.密码管理MToolStripMenuItem.Text = "密码管理（&M）";
-            this.密码管理MToolStripMenuItem.Click += new System.EventHandler(this.密码管理MToolStripMenuItem_Click);
+            this.lbl1y.AutoSize = true;
+            this.lbl1y.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.lbl1y.Location = new System.Drawing.Point(6, 33);
+            this.lbl1y.Name = "lbl1y";
+            this.lbl1y.Size = new System.Drawing.Size(57, 17);
+            this.lbl1y.TabIndex = 49;
+            this.lbl1y.Text = "相机1y：";
+            // 
+            // lbl2x
+            // 
+            this.lbl2x.AutoSize = true;
+            this.lbl2x.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.lbl2x.Location = new System.Drawing.Point(6, 60);
+            this.lbl2x.Name = "lbl2x";
+            this.lbl2x.Size = new System.Drawing.Size(57, 17);
+            this.lbl2x.TabIndex = 49;
+            this.lbl2x.Text = "相机2x：";
+            // 
+            // lbl2y
+            // 
+            this.lbl2y.AutoSize = true;
+            this.lbl2y.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.lbl2y.Location = new System.Drawing.Point(6, 87);
+            this.lbl2y.Name = "lbl2y";
+            this.lbl2y.Size = new System.Drawing.Size(57, 17);
+            this.lbl2y.TabIndex = 49;
+            this.lbl2y.Text = "相机2y：";
+            // 
+            // lbldetail
+            // 
+            this.lbldetail.AutoSize = true;
+            this.lbldetail.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.lbldetail.Location = new System.Drawing.Point(4, 116);
+            this.lbldetail.Name = "lbldetail";
+            this.lbldetail.Size = new System.Drawing.Size(68, 17);
+            this.lbldetail.TabIndex = 49;
+            this.lbldetail.Text = "计算明细：";
+            // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.lbldetail);
+            this.panel1.Controls.Add(this.lbl2y);
+            this.panel1.Controls.Add(this.lbl1x);
+            this.panel1.Controls.Add(this.lbl2x);
+            this.panel1.Controls.Add(this.lbl1y);
+            this.panel1.Location = new System.Drawing.Point(9, 498);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(325, 437);
+            this.panel1.TabIndex = 50;
             // 
             // FormControl
             // 
@@ -332,6 +403,7 @@ namespace ThermoGroupSample
             this.Controls.Add(this.comboBoxOnlineDevice);
             this.Controls.Add(this.groupBoxPLCContrl);
             this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("微软雅黑", 11F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MainMenuStrip = this.menuStrip1;
@@ -348,6 +420,8 @@ namespace ThermoGroupSample
             this.groupBoxPLCContrl.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -378,5 +452,11 @@ namespace ThermoGroupSample
         private System.Windows.Forms.CheckBox checkAuotuoConn;
         private System.Windows.Forms.ToolStripMenuItem 系统XToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 密码管理MToolStripMenuItem;
+        private System.Windows.Forms.Label lbl1x;
+        private System.Windows.Forms.Label lbl1y;
+        private System.Windows.Forms.Label lbl2x;
+        private System.Windows.Forms.Label lbl2y;
+        private System.Windows.Forms.Label lbldetail;
+        private System.Windows.Forms.Panel panel1;
     }
 }

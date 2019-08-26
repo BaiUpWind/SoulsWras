@@ -107,7 +107,7 @@ namespace ThermoGroupSample
         {
            
             InitializeComponent();
-            Text="热点采集["+ System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()+"]";
+            Text="热点采集，版本["+ System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()+"]";
             InitializeAllWindows();
 
             DataControl.UpdateDisplayPostion += new DataControl.delegateUpdateDisplayPostion(OnUpdateDisplayPostion);
@@ -299,8 +299,8 @@ namespace ThermoGroupSample
                 if(readIndex != -1)
                 {
 
-                    _FormControl.calculator.BotDiameter =   rw.IniReadValue("ZG" + (i), "锅底直径").CastTo<double>(-1);
-                    _FormControl.calculator.PotDiamerter = rw.IniReadValue("ZG" + (i), "锅口直径").CastTo<double>(-1);
+                    _FormControl.calculator.BotDiameter =   rw.IniReadValue("ZG" + (i), "锅底半径").CastTo<double>(-1);
+                    _FormControl.calculator.PotDiamerter = rw.IniReadValue("ZG" + (i), "锅口半径").CastTo<double>(-1);
                     _FormControl.calculator.Axis_Camera_Distance = rw.IniReadValue("ZG" + (i), "相机与柱心距离").CastTo<double>(-1);
                     _FormControl.calculator.AtoB_Distance = rw.IniReadValue("ZG" + (i), "相机与物料距离").CastTo<double>(-1);
                     _FormControl.calculator.CamerPXLenght =   rw.IniReadValue("ZG" + (i), "相机像素长").CastTo<double>(-1);

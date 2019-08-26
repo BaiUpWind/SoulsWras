@@ -54,6 +54,7 @@ namespace ThermoGroupSample
             AsyncConnectionPlc();//创建服务
             FormMain.GetOPCTaskInfo("与PLC建立连接中！");
             ChangeBtnCursor(1);
+            CreateThread();
         }
 
         private void FormControl_Load(object sender, EventArgs e)
@@ -70,6 +71,7 @@ namespace ThermoGroupSample
         void OnDestroy()
         {
             _DataControl.DestroyService();//必须调用
+            thread.Abort();
         }
 
         private void FormControl_Paint(object sender, PaintEventArgs e)
@@ -300,6 +302,8 @@ namespace ThermoGroupSample
                     frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
                     frmDisplay.Invalidate(false);
                     isThreadRun = false;
+                    
+                    FormMain.GetOPCTaskInfo("线程停止！");
                     FormMain.GetOPCTaskInfo("视频停止播放，热点信息停止采集，任务停止发送！");
                     ChangeBtnCursor(1);
                 }
@@ -409,7 +413,23 @@ namespace ThermoGroupSample
                 e.Handled = true;
             }
         }
- 
+    
+        /// <summary>
+        /// 创建线程
+        /// </summary>
+        void CreateThread()
+        {
+            if (thread == null)
+            {
+                thread = new Thread(ThreadReadServer);
+                thread.Start();
+                FormMain.GetOPCTaskInfo("成功创建一个线程！");
+            }
+            else
+            {
+                FormMain.GetOPCTaskInfo("线程错误，请重启程序！");
+            }
+        }
         /// <summary>
         /// 机器人任务下载块
         /// </summary>
@@ -439,11 +459,8 @@ namespace ThermoGroupSample
                     timeSleep = 100;
                 }
                 isThreadRun = true;
-                thread = new Thread(ThreadReadServer)
-                {
-                    IsBackground = true
-                };
-                thread.Start();
+                FormMain.GetOPCTaskInfo("开始采集热点信息！");
+
                 timeSleep = txtTimetim.Text.CastTo(1000);
             } 
 
@@ -463,13 +480,17 @@ namespace ThermoGroupSample
         /// </summary>
         List<RobotPositionSort> listRobot = new List<RobotPositionSort>();
         /// <summary>
+        /// 存放已经剔除的热点
+        /// </summary>
+        List<ImgPosition> outlist = new List<ImgPosition>();
+        /// <summary>
         /// 线程读取DB块
         /// </summary>
         private void ThreadReadServer()
-        {
-            while (isThreadRun) //线程的运行状态
+        { 
+        aa: while (isThreadRun) //线程的运行状态
             {
-            aa: flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
+                flag = s7Postion.Read(0).CastTo<int>(-1);//获取标志位
                 listRobot.Clear();
                 list.Clear();
                 if (flag == 1 && isThreadRun)//允许采集热点信息
@@ -495,10 +516,31 @@ namespace ThermoGroupSample
                                 try
                                 {
                                     calculator.GetCameraPosition(AngleTheta, AngleAlpha, axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//计算当前相机所在的位置 
+                                    if(i == 0)
+                                    {
+
+                                        //相机与柱心距离=515.5
+                                        lbl1x.Text ="相机1X"+ axis_3_x + "-" + 515.5 + "*Math.Cos((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_x - 515.5 * Math.Cos((AngleTheta + AngleAlpha) * (Math.PI / 180)));
+                                        lbl1y.Text ="相机1Y"+ axis_3_y + "-" + 515.5 + "*Math.Sin((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_y - 515.5 * Math.Sin((AngleTheta + AngleAlpha) * (Math.PI / 180)));
+                                        FormMain.GetOPCTaskInfo(lbl1x.Text);
+                                        FormMain.GetOPCTaskInfo(lbl1y.Text);
+                                        LogManager.WriteLog(LogFile.Trace,"相机1坐标X"+ lbl1x.Text);
+                                        LogManager.WriteLog(LogFile.Trace, "相机2坐标Y"+lbl1y.Text);
+                                    }
+                                    else if( i==1)
+                                    {
+                                        lbl2x.Text ="相机2x"+ axis_3_x + "+" + 515.5 + "*Math.Cos((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_x + 515.5 * Math.Cos((AngleTheta + AngleAlpha) * (Math.PI / 180)));
+                                        lbl2y.Text ="相机2y"+ axis_3_y + "+" + 515.5 + "*Math.Sin((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_y + 515.5 * Math.Sin((AngleTheta + AngleAlpha) * (Math.PI / 180)));
+                                        FormMain.GetOPCTaskInfo(lbl2x.Text);
+                                        FormMain.GetOPCTaskInfo(lbl2y.Text);
+                                        LogManager.WriteLog(LogFile.Trace,"相机2坐标X"+ lbl2x.Text);
+                                        LogManager.WriteLog(LogFile.Trace, "相机2坐标Y"+ lbl2y.Text);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
                                     FormMain.GetOPCTaskInfo( ex.Message);
+                                    LogManager.WriteLog(LogFile.Error, ex.Message);
                                 } 
                                 list.Add(frmDisplay.NewGetInfo()); //获取温度信息  
                                 //FormMain.GetOPCTaskInfo("窗体:" + frmDisplay.Name + ",IP:" + _LstEnumInfo[i].intCamIp);
@@ -509,17 +551,33 @@ namespace ThermoGroupSample
                             //FormMain.GetOPCTaskInfo("此相机不处于连接状态：" + comboBoxOnlineDevice.Items[i].ToString());
                         }
                     }
+                   
                     for (int i = 0; i < list.Count; i++)
                     {
-                        List<ImgPosition> outlist = new List<ImgPosition>();
+                        if(list[i].Count == 0)
+                        {
+                            continue;
+                        }
+                        outlist.Clear();
                         //1.移除在一个区间内的温度点(现在取出来的都是相机里面的坐标)
                         calculator.RecursiveDeduplication(list[i], Globals.ComparisonInterval, outlist);
                         //2.将相机温度坐标转换成实际坐标 
-                        List<RobotPositionSort> realTmper = calculator.GetRobotPositionByImagePoint(outlist, (AngleTheta + AngleAlpha), axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp);//将一个相机的热点进行实际值的换算
+                        try
+                        { 
+                            List<RobotPositionSort> realTmper = calculator.GetRobotPositionByImagePoint(outlist, (AngleTheta + AngleAlpha), axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp, out string OutStr);//将一个相机的热点进行实际值的换算
 
-                        foreach (var item in realTmper)
+                            FormMain.GetOPCTaskInfo(OutStr);
+                            lbldetail.Text = "计算明细：" + OutStr;
+                            foreach (var item in realTmper)
+                            {
+                                listRobot.Add(item);//将实际坐标放到一个集合里面
+                            }
+                        }
+                        catch (Exception ex)
                         {
-                            listRobot.Add(item);//将实际坐标放到一个集合里面
+                            LogManager.WriteLog(LogFile.Error, "计算热点发生致命错误：" + ex.Message);
+                            FormMain.GetOPCTaskInfo("计算热点发生致命错误，停止采集,错误信息：" + ex.Message);
+                            goto bb;
                         }
                     } 
                     listRobot.Sort(new RobotPositionSort());//温度从高到低排序 
@@ -535,9 +593,14 @@ namespace ThermoGroupSample
                 else
                 {
                     FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，0.5秒后再次读取！");
-                    Thread.Sleep(500);//5秒后重新再读取
+                    Thread.Sleep(500);//0.5秒后重新再读取
                 } 
             }
+            Thread.Sleep(500); 
+            goto aa;
+            
+          bb:  FormMain.GetOPCTaskInfo("因为错误，停止采集热点信息！");
+           
         }
  
         /// <summary>
@@ -681,8 +744,8 @@ namespace ThermoGroupSample
                             {
                                 frmDisplay.Stop = false;
                                 frmDisplay.GetDateDisplay().GetDevice().StopProcessImage();
-                                frmDisplay.Invalidate(false);
-                                isThreadRun = false;
+                                frmDisplay.Invalidate(false); 
+                                isThreadRun = false; 
                                 ChangeBtnCursor(1);
                             }
                         }
@@ -721,6 +784,13 @@ namespace ThermoGroupSample
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+         
+
+            
+        }
+
         private void btnStOP_Click(object sender, EventArgs e)
         {
              
@@ -738,7 +808,8 @@ namespace ThermoGroupSample
 
             if (MsgBoxResult == DialogResult.Yes)
             {
-                isThreadRun = false;//线程停止
+                isThreadRun = false;//线程停止 
+
                 FormMain.GetOPCTaskInfo("热点信息停止采集，任务停止发送！");
               
             }
