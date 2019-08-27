@@ -885,16 +885,23 @@ namespace ThermoGroupSample.Pub
                 double[] valuesX = new double[20];//存放坐标X
                 double[] valuesY = new double[20];//存放坐标Y
                 object[] valuesUnion = new object[41];
-                valuesHead[0] = list.Count;//多少个热点 
+                valuesHead[0] = list.Count+1;//多少个热点 
                 for (int i = 0; i < valuesUnion.Length; i++)
                 {
                     valuesUnion[i] = 0;
-                } 
-                for (int i = 0; i < list.Count; i++)
-                {
-                    valuesX[i] = list[i].x;//先放X
-                    valuesY[i] = list[i].y;//后放Y
                 }
+                int index = 0;
+                foreach (var item in list)
+                {
+                    valuesX[index] = item.x;//先放X
+                    valuesY[index] = item.y;//后放Y
+                    index++;
+                }
+                //for (int i = 0; i < list.Count; i++)
+                //{
+                //    valuesX[i] = list[i].x;//先放X
+                //    valuesY[i] = list[i].y;//后放Y
+                //}
                 valuesHead.CopyTo(valuesUnion, 0);
                 valuesX.CopyTo(valuesUnion, 1);
                 valuesY.CopyTo(valuesUnion, 21);

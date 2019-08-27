@@ -495,7 +495,7 @@ namespace ThermoGroupSample
                 list.Clear();
                 if (flag == 1 && isThreadRun)//允许采集热点信息
                 {
-                     
+                    SendFlag = flag;
                     axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
                     axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标 
                     //获取相机所在的位置
@@ -586,13 +586,19 @@ namespace ThermoGroupSample
                         FormMain.GetOPCTaskInfo("未采集到热点，重新采集");
                         goto aa;
                     }
-                    s7Task.Write(calculator.ReplaceIndex(listRobot));//写入任务 
-                    FormMain.GetOPCTaskInfo("写入任务！");
+                    FormMain.GetOPCTaskInfo("采集到热点个数："+listRobot.Count);
+                    object[] values = calculator.ReplaceIndex(listRobot);
+                    s7Task.Write(values);//写入任务 
+                    FormMain.GetOPCTaskInfo("写入任务！热点个数："+values[0]);
                     Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取 
                 }
                 else
                 {
-                    FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，0.5秒后再次读取！");
+                    if(SendFlag.GetHashCode() != flag.GetHashCode())
+                    {
+                        FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，0.5秒后重复读取，直到标志位变化！");
+                        SendFlag = flag; 
+                    }
                     Thread.Sleep(500);//0.5秒后重新再读取
                 } 
             }
@@ -602,7 +608,7 @@ namespace ThermoGroupSample
           bb:  FormMain.GetOPCTaskInfo("因为错误，停止采集热点信息！");
            
         }
- 
+        int SendFlag = -1;
         /// <summary>
         /// 创建S7协议服务器
         /// </summary>
