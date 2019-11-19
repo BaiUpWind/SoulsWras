@@ -205,7 +205,7 @@ namespace ThermoGroupSample.Server
                         if (arr.Length > 1)
                         {
                             string types = Regex.Replace(arr[1], "[0-9]", "", RegexOptions.IgnoreCase).Trim();//获取地址块的类型
-                            checked
+                            unchecked
                             {
                                 switch (types.ToLower())
                                 {
@@ -216,8 +216,8 @@ namespace ThermoGroupSample.Server
                                         SiemensTcpNet.Write(GetNewItem(item), Convert.ToByte(values[i]));
                                         break;
                                     case "w":
-                                        SiemensTcpNet.Write(GetNewItem(item), short.Parse(string.Format("{0:0}" , values[i]) ));//string.Format( "0.##"", values[i])
-                                break;
+                                        SiemensTcpNet.Write(GetNewItem(item), short.Parse(values[i].ToString()));//string.Format( "0.##"", values[i])
+                                        break;
                                     case "ushort"://ushort
                                         SiemensTcpNet.Write(GetNewItem(item), ushort.Parse(values[i].ToString()));
                                         break;
