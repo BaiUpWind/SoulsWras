@@ -57,6 +57,8 @@ namespace ThermoGroupSample
             this.lbl2y = new System.Windows.Forms.Label();
             this.lbldetail = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblrealreidan = new System.Windows.Forms.Label();
+            this.lblOutTime = new System.Windows.Forms.Label();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxPLCContrl.SuspendLayout();
@@ -234,7 +236,7 @@ namespace ThermoGroupSample
             this.txtTimetim.Name = "txtTimetim";
             this.txtTimetim.Size = new System.Drawing.Size(97, 27);
             this.txtTimetim.TabIndex = 45;
-            this.txtTimetim.Text = "100";
+            this.txtTimetim.Text = "50";
             // 
             // label2
             // 
@@ -368,7 +370,7 @@ namespace ThermoGroupSample
             // 
             this.lbldetail.AutoSize = true;
             this.lbldetail.Font = new System.Drawing.Font("Î¢ÈíÑÅºÚ", 9F);
-            this.lbldetail.Location = new System.Drawing.Point(4, 116);
+            this.lbldetail.Location = new System.Drawing.Point(2, 156);
             this.lbldetail.Name = "lbldetail";
             this.lbldetail.Size = new System.Drawing.Size(68, 17);
             this.lbldetail.TabIndex = 49;
@@ -379,6 +381,8 @@ namespace ThermoGroupSample
             this.panel1.AutoScroll = true;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel1.Controls.Add(this.lbldetail);
+            this.panel1.Controls.Add(this.lblOutTime);
+            this.panel1.Controls.Add(this.lblrealreidan);
             this.panel1.Controls.Add(this.lbl2y);
             this.panel1.Controls.Add(this.lbl1x);
             this.panel1.Controls.Add(this.lbl2x);
@@ -387,6 +391,26 @@ namespace ThermoGroupSample
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(325, 437);
             this.panel1.TabIndex = 50;
+            // 
+            // lblrealreidan
+            // 
+            this.lblrealreidan.AutoSize = true;
+            this.lblrealreidan.Font = new System.Drawing.Font("Î¢ÈíÑÅºÚ", 9F);
+            this.lblrealreidan.Location = new System.Drawing.Point(6, 111);
+            this.lblrealreidan.Name = "lblrealreidan";
+            this.lblrealreidan.Size = new System.Drawing.Size(68, 17);
+            this.lblrealreidan.TabIndex = 49;
+            this.lblrealreidan.Text = "ÊµÊ±°ë¾¶£º";
+            // 
+            // lblOutTime
+            // 
+            this.lblOutTime.AutoSize = true;
+            this.lblOutTime.Font = new System.Drawing.Font("Î¢ÈíÑÅºÚ", 9F);
+            this.lblOutTime.Location = new System.Drawing.Point(6, 133);
+            this.lblOutTime.Name = "lblOutTime";
+            this.lblOutTime.Size = new System.Drawing.Size(68, 17);
+            this.lblOutTime.TabIndex = 49;
+            this.lblOutTime.Text = "ÕûÌåºÄÊ±£º";
             // 
             // FormControl
             // 
@@ -458,5 +482,7 @@ namespace ThermoGroupSample
         private System.Windows.Forms.Label lbl2y;
         private System.Windows.Forms.Label lbldetail;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label lblrealreidan;
+        private System.Windows.Forms.Label lblOutTime;
     }
 }

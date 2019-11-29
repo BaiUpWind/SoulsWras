@@ -492,11 +492,11 @@ namespace ThermoGroupSample.Pub
             CmaerIp2 = Globals.CameraIp2;
         }
         /// <summary>
-        /// 锅底直径
+        /// 锅底半径
         /// </summary>
        public double BotDiameter { get; set; } 
         /// <summary>
-        /// 锅口直径
+        /// 锅口半径
         /// </summary>
         public double PotDiamerter { get; set; } 
         /// <summary>
@@ -689,9 +689,16 @@ namespace ThermoGroupSample.Pub
                         info += "二号相机：实际坐标的点 X=( " + CamerPXLenght + "* sqrt * Math.Cos(ThetaSum) + RobotP1.x) + " + Cmaer2x + "=" + RobotP3.x + "\n\r";
                         info += "二号相机：实际坐标的点 Y=( " + CamerPXWidth + "* sqrt * Math.Sin(ThetaSum) + RobotP1.y)+ " + Cmaer2y + " =" + RobotP3.y + "\n\r";
                     }
-                    if (Math.Abs(RobotP3.x) <= PotDiamerter && Math.Abs(RobotP3.y) <= PotDiamerter)//如果坐标在指定区间内 添加
+                    //if (Math.Abs(RobotP3.x) <= PotDiamerter && Math.Abs(RobotP3.y) <= PotDiamerter)//如果坐标在指定区间内 添加
+                    //{
+                    //    info += "最终热点坐标 热点温度："+ RobotP3.tmper +" X:" + RobotP3.x + "Y:" + RobotP3.y + "\n\r";
+                    //    RobotP3List.Add(RobotP3);//添加热点到集合
+                    //}
+                    // - 1672 +  698896 + 245025  943921  < 722500
+                    //89401 + 185761 
+                    if (((0-RobotP3.x) * (0 - RobotP3.x)) +(( 0-RobotP3.y ) * (0 - RobotP3.y)) < PotDiamerter * PotDiamerter)//如果坐标在指定区间内 添加
                     {
-                        info += "最终热点坐标 热点温度："+ RobotP3.tmper +" X:" + RobotP3.x + "Y:" + RobotP3.y + "\n\r";
+                        info += "最终热点坐标 热点温度：" + RobotP3.tmper + " X:" + RobotP3.x + "Y:" + RobotP3.y + "\n\r";
                         RobotP3List.Add(RobotP3);//添加热点到集合
                     }
                 }
@@ -700,7 +707,7 @@ namespace ThermoGroupSample.Pub
             }
             catch (Exception ex)
             {
-                throw ex ;
+                throw new Exception("计算错误:"+ ex.Message );
             }
             
         }

@@ -15,7 +15,7 @@ namespace ThermoGroupSample
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Process[] localNmae = Process.GetProcessesByName("热点采集程序");
+            Process[] localNmae = Process.GetProcessesByName(System.Diagnostics.Process.GetCurrentProcess().ProcessName);
             if (localNmae.Length > 1)
             {
                 MessageBox.Show("热点采集程序已经打开,请勿重复开启!");

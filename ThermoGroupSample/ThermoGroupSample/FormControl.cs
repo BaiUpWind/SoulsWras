@@ -454,9 +454,9 @@ namespace ThermoGroupSample
                     MessageBox.Show("请输入采集的间隔！");
                     return;
                 }
-               if(timeSleep < 100)//如果小于100毫秒， 默认最低间隔是100毫秒
+               if(timeSleep < 50)//如果小于100毫秒， 默认最低间隔是100毫秒
                 {
-                    timeSleep = 100;
+                    timeSleep = 50;
                 }
                 isThreadRun = true;
                 FormMain.GetOPCTaskInfo("开始采集热点信息！");
@@ -468,7 +468,7 @@ namespace ThermoGroupSample
         /// <summary>
         /// 存放机器人位置计算所需的参数
         /// </summary>
-        double axis_3_x, axis_3_y, AngleTheta, AngleAlpha;
+        double axis_3_x, axis_3_y, AngleTheta, AngleAlpha,shishibanjing;
         int flag;//标志位
         object[] values = new object[82];//任务发送数组
         /// <summary>
@@ -483,6 +483,9 @@ namespace ThermoGroupSample
         /// 存放已经剔除的热点
         /// </summary>
         List<ImgPosition> outlist = new List<ImgPosition>();
+
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+
         /// <summary>
         /// 线程读取DB块
         /// </summary>
@@ -495,12 +498,24 @@ namespace ThermoGroupSample
                 list.Clear();
                 if (flag == 1 && isThreadRun)//允许采集热点信息
                 {
+                    stopwatch.Reset();
+                    stopwatch.Start();
                     SendFlag = flag;
-                    axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
-                    axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标 
-                    //获取相机所在的位置
-                    AngleTheta = s7Postion.Read(3).CastTo<double>(-1) / 1000;// 角度 theta θ
-                    AngleAlpha = s7Postion.Read(4).CastTo<double>(-1) / 1000;//角度2 alpha α 
+                    try
+                    {
+                        axis_3_x = s7Postion.Read(1).CastTo<double>(-1);//axis 3 x 轴三点中心点X坐标
+                        axis_3_y = s7Postion.Read(2).CastTo<double>(-1);//axis 3  y 轴三点中心点Y坐标 
+                                                                        //获取相机所在的位置
+                        AngleTheta = s7Postion.Read(3).CastTo<double>(-1) / 1000;// 角度 theta θ
+                        AngleAlpha = s7Postion.Read(4).CastTo<double>(-1) / 1000;//角度2 alpha α 
+                        shishibanjing = s7Postion.Read(5).CastTo<double>(-1);//实时半径
+                        UpdataLabel(lblrealreidan, "实时半径：" + shishibanjing);
+                    }
+                    catch (Exception ex)
+                    {
+                        FormMain.GetOPCTaskInfo("读取PLC错误："+ex.Message);
+                    }
+                    calculator.PotDiamerter = shishibanjing;
                     for (int i = 0; i < comboBoxOnlineDevice.Items.Count; i++)//获取到在线相机
                     {
                         if (comboBoxOnlineDevice.Items[i].ToString().Contains("conn")) 
@@ -520,21 +535,21 @@ namespace ThermoGroupSample
                                     {
 
                                         //相机与柱心距离=515.5
-                                        lbl1x.Text ="相机1X"+ axis_3_x + "-" + 515.5 + "*Math.Cos((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_x - 515.5 * Math.Cos((AngleTheta + AngleAlpha) * (Math.PI / 180)));
-                                        lbl1y.Text ="相机1Y"+ axis_3_y + "-" + 515.5 + "*Math.Sin((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_y - 515.5 * Math.Sin((AngleTheta + AngleAlpha) * (Math.PI / 180)));
+                                        UpdataLabel( lbl1x,"相机1X"+ axis_3_x + "-" + 515.5 + "*Math.Cos((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_x - 515.5 * Math.Cos((AngleTheta + AngleAlpha) * (Math.PI / 180))));
+                                        UpdataLabel(lbl1y, "相机1Y"+ axis_3_y + "-" + 515.5 + "*Math.Sin((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_y - 515.5 * Math.Sin((AngleTheta + AngleAlpha) * (Math.PI / 180))));
                                         FormMain.GetOPCTaskInfo(lbl1x.Text);
                                         FormMain.GetOPCTaskInfo(lbl1y.Text);
-                                        LogManager.WriteLog(LogFile.Trace,"相机1坐标X"+ lbl1x.Text);
-                                        LogManager.WriteLog(LogFile.Trace, "相机2坐标Y"+lbl1y.Text);
+                                       // LogManager.WriteLog(LogFile.Trace,"相机1坐标X"+ lbl1x.Text);
+                                        //LogManager.WriteLog(LogFile.Trace, "相机2坐标Y"+lbl1y.Text);
                                     }
                                     else if( i==1)
                                     {
-                                        lbl2x.Text ="相机2x"+ axis_3_x + "+" + 515.5 + "*Math.Cos((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_x + 515.5 * Math.Cos((AngleTheta + AngleAlpha) * (Math.PI / 180)));
-                                        lbl2y.Text ="相机2y"+ axis_3_y + "+" + 515.5 + "*Math.Sin((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_y + 515.5 * Math.Sin((AngleTheta + AngleAlpha) * (Math.PI / 180)));
+                                        UpdataLabel(lbl2x,"相机2x"+ axis_3_x + "+" + 515.5 + "*Math.Cos((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_x + 515.5 * Math.Cos((AngleTheta + AngleAlpha) * (Math.PI / 180))));
+                                        UpdataLabel(lbl2y,"相机2y"+ axis_3_y + "+" + 515.5 + "*Math.Sin((" + AngleTheta + "+" + AngleAlpha + ")*(" + (Math.PI / 180) + "))=" + (axis_3_y + 515.5 * Math.Sin((AngleTheta + AngleAlpha) * (Math.PI / 180))));
                                         FormMain.GetOPCTaskInfo(lbl2x.Text);
                                         FormMain.GetOPCTaskInfo(lbl2y.Text);
-                                        LogManager.WriteLog(LogFile.Trace,"相机2坐标X"+ lbl2x.Text);
-                                        LogManager.WriteLog(LogFile.Trace, "相机2坐标Y"+ lbl2y.Text);
+                                       // LogManager.WriteLog(LogFile.Trace,"相机2坐标X"+ lbl2x.Text);
+                                       // LogManager.WriteLog(LogFile.Trace, "相机2坐标Y"+ lbl2y.Text);
                                     }
                                 }
                                 catch (Exception ex)
@@ -567,7 +582,7 @@ namespace ThermoGroupSample
                             List<RobotPositionSort> realTmper = calculator.GetRobotPositionByImagePoint(outlist, (AngleTheta + AngleAlpha), axis_3_x, axis_3_y, _LstEnumInfo[i].intCamIp, out string OutStr);//将一个相机的热点进行实际值的换算
 
                             FormMain.GetOPCTaskInfo(OutStr);
-                            lbldetail.Text = "计算明细：" + OutStr;
+                            UpdataLabel(lbldetail, "计算明细：" + OutStr);
                             foreach (var item in realTmper)
                             {
                                 listRobot.Add(item);//将实际坐标放到一个集合里面
@@ -575,8 +590,8 @@ namespace ThermoGroupSample
                         }
                         catch (Exception ex)
                         {
-                            LogManager.WriteLog(LogFile.Error, "计算热点发生致命错误：" + ex.Message);
-                            FormMain.GetOPCTaskInfo("计算热点发生致命错误，停止采集,错误信息：" + ex.Message);
+                            LogManager.WriteLog(LogFile.Error, GetSaveStringFromException("计算热点发生致命错误：" , ex));
+                            FormMain.GetOPCTaskInfo("计算热点发生致命错误，停止采集,错误信息：" + GetSaveStringFromException("计算热点发生致命错误：", ex));
                             goto bb;
                         }
                     } 
@@ -590,6 +605,8 @@ namespace ThermoGroupSample
                     object[] values = calculator.ReplaceIndex(listRobot);
                     s7Task.Write(values);//写入任务 
                     FormMain.GetOPCTaskInfo("写入任务！热点个数："+values[0]);
+                    stopwatch.Stop();
+                    UpdataLabel(lblOutTime, "整体耗时：" + stopwatch.Elapsed.TotalMilliseconds + "毫秒");
                     Thread.Sleep(timeSleep);//未取到数据时 根据间隔再取 
                 }
                 else
@@ -608,6 +625,55 @@ namespace ThermoGroupSample
           bb:  FormMain.GetOPCTaskInfo("因为错误，停止采集热点信息！");
            
         }
+        public static string GetSaveStringFromException(string text, Exception ex)
+        {
+            StringBuilder builder = new StringBuilder(text);
+
+            if (ex != null)
+            {
+                if (!string.IsNullOrEmpty(text))
+                {
+                    builder.Append(" : ");
+                }
+
+                try
+                {
+                    builder.Append("错误信息：");
+                    builder.Append(ex.Message);
+                    builder.Append(Environment.NewLine);
+                    builder.Append("错误源:");
+                    builder.Append(ex.Source);
+                    builder.Append(Environment.NewLine);
+                    builder.Append("错误栈区:");
+                    builder.Append(ex.StackTrace);
+                    builder.Append(Environment.NewLine);
+                    builder.Append("错误类型：");
+                    builder.Append(ex.GetType().ToString());
+                    builder.Append(Environment.NewLine);
+                    builder.Append("错误方法");
+                    builder.Append(ex.TargetSite?.ToString());
+                }
+                catch
+                {
+
+                }
+                builder.Append(Environment.NewLine);
+                builder.Append("\u0002/=================================================[    Exception    ]================================================/");
+            }
+
+            return builder.ToString();
+        }
+        void UpdataLabel(Label lb, string txt)
+        {
+            if (lb.InvokeRequired)
+            {
+                lb.Invoke(new Action<Label, string>(UpdataLabel), lb, txt);
+            }
+            else
+            {
+                lb.Text = txt;
+            }
+        } 
         int SendFlag = -1;
         /// <summary>
         /// 创建S7协议服务器

@@ -68,3 +68,4 @@ D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupS
 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csproj.CopyComplete
 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\热点采集程序.exe
 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\热点采集程序.pdb
+D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\obj\Release\ThermoGroupSample.csprojAssemblyReference.cache

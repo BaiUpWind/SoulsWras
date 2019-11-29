@@ -95,7 +95,8 @@ namespace ThermoGroupSample.Modle
                 "DB31.Real2",//axis3 x  1
                 "DB31.Real6",//axis3 y 2 
                 "DB31.dint10",//angle 3 3 
-                "DB31.dint14"//angle 3 4
+                "DB31.dint14",//angle 3 4
+                "DB31.dint18"//实时半径
             };
             return list;
 
