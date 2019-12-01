@@ -260,6 +260,8 @@ namespace ThermoGroupSample
             {
                 return 0;
             }
+            //创建新的实例
+            GroupSDK.ENUM_INFO[] camers = new GroupSDK.ENUM_INFO[32];
 
             uint size = (uint)Marshal.SizeOf(typeof(GroupSDK.CAMERA_INFO)) * unit_count;
 
@@ -270,15 +272,52 @@ namespace ThermoGroupSample
 
             for (int i = 0; i < dev_num; i++)
             {
-                list[i] = (GroupSDK.ENUM_INFO)Marshal.PtrToStructure(ptr, typeof(GroupSDK.ENUM_INFO));
+                camers[i] = (GroupSDK.ENUM_INFO)Marshal.PtrToStructure(ptr, typeof(GroupSDK.ENUM_INFO));
                 ptr = (IntPtr)((int)ptr + Marshal.SizeOf(typeof(GroupSDK.ENUM_INFO)));
             }
 
             Marshal.FreeHGlobal(ptrBackup);
-
+            int index = 0;
+            for (int i = 0; i < dev_num; i++)
+            {
+                string nowip = IntToIP(camers[i].intCamIp);
+                if(nowip == Globals.CameraIp1 || nowip  == Globals.CameraIp2)//如果相机属于配置文件里面的IP
+                {
+                    list[index] = camers[i];
+                    index++;
+                    if(index == 2)
+                    {
+                        break;
+                    }
+                }
+            }
+            if(dev_num >= 2)
+            {
+                dev_num = 2;
+            }
+        
             return dev_num;
         }
-
+        /// <summary>
+        /// IP地址转换
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <returns></returns>
+        public string IntToIP(uint ipAddress)
+        {
+            long ui1 = ipAddress & 0xFF000000;
+            ui1 = ui1 >> 24;
+            long ui2 = ipAddress & 0x00FF0000;
+            ui2 = ui2 >> 16;
+            long ui3 = ipAddress & 0x0000FF00;
+            ui3 = ui3 >> 8;
+            long ui4 = ipAddress & 0x000000FF;
+            string IPstr = System.Convert.ToString(ui4) + "."
+            + System.Convert.ToString(ui3) + "."
+            + System.Convert.ToString(ui2)
+            + "." + System.Convert.ToString(ui1);
+            return IPstr;
+        }
         public uint GetTerminalCount()
         {
             return m_bIsIntialized ? GroupSDK.MAG_GetTerminalList(IntPtr.Zero, 0) : 0;
