@@ -454,9 +454,9 @@ namespace ThermoGroupSample
                     MessageBox.Show("请输入采集的间隔！");
                     return;
                 }
-               if(timeSleep < 50)//如果小于100毫秒， 默认最低间隔是100毫秒
+               if(timeSleep < 0)//如果小于0毫秒， 默认最低间隔是0毫秒
                 {
-                    timeSleep = 50;
+                    timeSleep = 0;
                 }
                 isThreadRun = true;
                 FormMain.GetOPCTaskInfo("开始采集热点信息！");
@@ -616,7 +616,7 @@ namespace ThermoGroupSample
                         FormMain.GetOPCTaskInfo("读取到标志位为" + flag + "，0.5秒后重复读取，直到标志位变化！");
                         SendFlag = flag; 
                     }
-                    Thread.Sleep(500);//0.5秒后重新再读取
+                    Thread.Sleep(timeSleep);//根据间隔再取 标志位数据  
                 } 
             }
             Thread.Sleep(500); 
