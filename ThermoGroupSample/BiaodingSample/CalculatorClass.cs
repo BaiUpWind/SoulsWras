@@ -852,6 +852,7 @@ namespace BiaodingSample
                     {
                         continue;
                     }
+                    //增加 两点实际坐标 ，实际距离 ，和450半径角度判断
                     if (Math.Abs((item.x + item.y) - (postion.x + postion.y)) <= chazhi)//作比较
                     {
                         list2.Add(item);//添加重复的坐标值

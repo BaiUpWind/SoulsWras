@@ -1,0 +1,11 @@
+2019-12-01 17:16:59: 计算热点发生致命错误： : 错误信息：没有足够的内存继续执行程序。
+错误源:System.Windows.Forms
+错误栈区:   在 System.Windows.Forms.Control.MarshaledInvoke(Control caller, Delegate method, Object[] args, Boolean synchronous)
+   在 System.Windows.Forms.Control.Invoke(Delegate method, Object[] args)
+   在 ThermoGroupSample.FormMain.updateListBox(String info) 位置 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\FormMain.cs:行号 97
+   在 ThermoGroupSample.FormMain.upDateList(String info) 位置 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\FormMain.cs:行号 87
+   在 ThermoGroupSample.FormMain.GetOPCTaskInfo(String Info) 位置 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\FormMain.cs:行号 83
+   在 ThermoGroupSample.FormControl.ThreadReadServer() 位置 D:\GitHub\SoulsWras\ThermoGroupSample\ThermoGroupSample\FormControl.cs:行号 582
+错误类型：System.OutOfMemoryException
+错误方法System.Object MarshaledInvoke(System.Windows.Forms.Control, System.Delegate, System.Object[], Boolean)
+/=================================================[    Exception    ]================================================/

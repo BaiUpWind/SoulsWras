@@ -162,7 +162,7 @@ namespace ThermoGroupSample
 
 
         /// <summary>
-        /// 排除区间 （两个坐标间距离小于区间，视为同一个温度点 排除）
+        /// 排除距离区间 （两个坐标间距离小于区间，视为同一个温度点 排除）
         /// </summary>
         public static double ComparisonInterval
         {
@@ -196,7 +196,41 @@ namespace ThermoGroupSample
 
             }
         }
+        /// <summary>
+        /// 排除角度区间  
+        /// </summary>
+        public static double AngleInterval
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["AngleInterval"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
 
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
         /// <summary>
         /// 检测精度 检测精度 默认1  有60*80的点 精度越高时间越长
         /// </summary>

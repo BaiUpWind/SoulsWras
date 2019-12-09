@@ -275,13 +275,12 @@ namespace ThermoGroupSample.Pub
         public double GetDegress(double x, double y)
         {
             double atan = Math.Atan2(y, x);
-            double degress = atan * 180 / Math.PI;
+            double degress = atan * (180 / Math.PI);
             return degress;
         }
         /// <summary>
         /// 坐标 求距离
         /// </summary>
-        /// <param name="degress">角度</param>
         /// <param name="ydx">原点x</param>
         /// <param name="ydy">原点y</param>
         /// <param name="x">新坐标x</param>
@@ -603,7 +602,7 @@ namespace ThermoGroupSample.Pub
         {
             try
             {
-              
+                info = string.Empty;
                 RobotP3List.Clear();
                 ip = IntToIP(camerIp);
              
@@ -834,14 +833,16 @@ namespace ThermoGroupSample.Pub
         /// 临时集合 存放重复的坐标点
         /// </summary>
         List<ImgPosition> list2 = new List<ImgPosition>();
+
         /// <summary>
         /// 递归调用取出范围的的坐标，视为重复 剔除
         /// </summary>
         /// <param name="inlist">采集的热点</param>
         /// <param name="chazhi">取值范围</param>
         /// <param name="outlist">最终的结果</param>
+        /// <param name="angle">角度</param>
         /// <returns></returns>
-        public  List<ImgPosition> RecursiveDeduplication(List<ImgPosition> inlist, double chazhi, List<ImgPosition> outlist)
+        public List<ImgPosition> RecursiveDeduplication(List<ImgPosition> inlist, double chazhi, List<ImgPosition> outlist,double angle )
         {
             try
             { 
@@ -860,7 +861,9 @@ namespace ThermoGroupSample.Pub
                     {
                         continue;
                     }
-                    if (Math.Abs((item.x + item.y) - (postion.x + postion.y)) <= chazhi)//作比较
+                    //增加两点实际距离判断， 角度 判断（半径450)
+                    if (Math.Abs( GetVd(item.x * CamerPXLenght, item.y * CamerPXWidth,  postion.x * CamerPXLenght, postion.y * CamerPXWidth)) <= chazhi // 两点之间的距离做比较
+                        && Math.Abs( GetDegress(item.x,item.y) - GetDegress(postion.x,postion.y)) <= angle)//两个点之间的角度做比较
                     {
                         list2.Add(item);//添加重复的坐标值
                     }
@@ -871,7 +874,7 @@ namespace ThermoGroupSample.Pub
                 }
                 inlist.Remove(postion);//移除已经参与比对的坐标值
                 outlist.Add(postion);//添加已经参与对比的坐标值 是最终的坐标值
-                return RecursiveDeduplication(inlist, chazhi, outlist);
+                return RecursiveDeduplication(inlist, chazhi, outlist,angle);
             }
             catch (Exception ex)
             {

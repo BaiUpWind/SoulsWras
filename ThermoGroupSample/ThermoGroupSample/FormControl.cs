@@ -575,7 +575,7 @@ namespace ThermoGroupSample
                         }
                         outlist.Clear();
                         //1.移除在一个区间内的温度点(现在取出来的都是相机里面的坐标)
-                        calculator.RecursiveDeduplication(list[i], Globals.ComparisonInterval, outlist);
+                        calculator.RecursiveDeduplication(list[i], Globals.ComparisonInterval, outlist,Globals.AngleInterval);
                         //2.将相机温度坐标转换成实际坐标 
                         try
                         { 
