@@ -57,8 +57,8 @@ namespace ThermoGroupSample
             this.lbl2y = new System.Windows.Forms.Label();
             this.lbldetail = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblrealreidan = new System.Windows.Forms.Label();
             this.lblOutTime = new System.Windows.Forms.Label();
+            this.lblrealreidan = new System.Windows.Forms.Label();
             this.groupBoxDevice.SuspendLayout();
             this.groupBoxTras.SuspendLayout();
             this.groupBoxPLCContrl.SuspendLayout();
@@ -330,11 +330,12 @@ namespace ThermoGroupSample
             // 
             this.lbl1x.AutoSize = true;
             this.lbl1x.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.lbl1x.Location = new System.Drawing.Point(6, 7);
+            this.lbl1x.Location = new System.Drawing.Point(4, 113);
             this.lbl1x.Name = "lbl1x";
             this.lbl1x.Size = new System.Drawing.Size(57, 17);
             this.lbl1x.TabIndex = 49;
             this.lbl1x.Text = "相机1x：";
+            this.lbl1x.Visible = false;
             // 
             // lbl1y
             // 
@@ -345,6 +346,7 @@ namespace ThermoGroupSample
             this.lbl1y.Size = new System.Drawing.Size(57, 17);
             this.lbl1y.TabIndex = 49;
             this.lbl1y.Text = "相机1y：";
+            this.lbl1y.Visible = false;
             // 
             // lbl2x
             // 
@@ -355,6 +357,7 @@ namespace ThermoGroupSample
             this.lbl2x.Size = new System.Drawing.Size(57, 17);
             this.lbl2x.TabIndex = 49;
             this.lbl2x.Text = "相机2x：";
+            this.lbl2x.Visible = false;
             // 
             // lbl2y
             // 
@@ -365,6 +368,7 @@ namespace ThermoGroupSample
             this.lbl2y.Size = new System.Drawing.Size(57, 17);
             this.lbl2y.TabIndex = 49;
             this.lbl2y.Text = "相机2y：";
+            this.lbl2y.Visible = false;
             // 
             // lbldetail
             // 
@@ -375,6 +379,7 @@ namespace ThermoGroupSample
             this.lbldetail.Size = new System.Drawing.Size(68, 17);
             this.lbldetail.TabIndex = 49;
             this.lbldetail.Text = "计算明细：";
+            this.lbldetail.Visible = false;
             // 
             // panel1
             // 
@@ -392,25 +397,25 @@ namespace ThermoGroupSample
             this.panel1.Size = new System.Drawing.Size(325, 437);
             this.panel1.TabIndex = 50;
             // 
-            // lblrealreidan
-            // 
-            this.lblrealreidan.AutoSize = true;
-            this.lblrealreidan.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.lblrealreidan.Location = new System.Drawing.Point(6, 111);
-            this.lblrealreidan.Name = "lblrealreidan";
-            this.lblrealreidan.Size = new System.Drawing.Size(68, 17);
-            this.lblrealreidan.TabIndex = 49;
-            this.lblrealreidan.Text = "实时半径：";
-            // 
             // lblOutTime
             // 
             this.lblOutTime.AutoSize = true;
             this.lblOutTime.Font = new System.Drawing.Font("微软雅黑", 9F);
-            this.lblOutTime.Location = new System.Drawing.Point(6, 133);
+            this.lblOutTime.Location = new System.Drawing.Point(160, 11);
             this.lblOutTime.Name = "lblOutTime";
             this.lblOutTime.Size = new System.Drawing.Size(68, 17);
             this.lblOutTime.TabIndex = 49;
             this.lblOutTime.Text = "整体耗时：";
+            // 
+            // lblrealreidan
+            // 
+            this.lblrealreidan.AutoSize = true;
+            this.lblrealreidan.Font = new System.Drawing.Font("微软雅黑", 9F);
+            this.lblrealreidan.Location = new System.Drawing.Point(6, 11);
+            this.lblrealreidan.Name = "lblrealreidan";
+            this.lblrealreidan.Size = new System.Drawing.Size(68, 17);
+            this.lblrealreidan.TabIndex = 49;
+            this.lblrealreidan.Text = "实时半径：";
             // 
             // FormControl
             // 

@@ -903,6 +903,10 @@ namespace ThermoGroupSample.Pub
                 int index = 0;
                 foreach (var item in list)
                 {
+                    if (index > 19)
+                    {
+                        break;
+                    }
                     valuesX[index] = Math.Round(item.x);//先放X
                     valuesY[index] = Math.Round(item.y);//后放Y
                     index++;
