@@ -152,6 +152,7 @@ namespace ThermoGroupSample
         List<ImgPosition> list = new List<ImgPosition>();
         GroupSDK.CAMERA_INFO cAMERA_INFO ;
         ImgPosition img;
+        int[] tempr  ;
         /// <summary>
         /// 检测大于极限温度的值 
         /// </summary>
@@ -163,11 +164,13 @@ namespace ThermoGroupSample
                 list.Clear();
                 device = _DataDisplay.GetDevice();
                 cAMERA_INFO = device.GetCamInfo();
+                tempr = new int[cAMERA_INFO.intFPAHeight * cAMERA_INFO.intFPAWidth];//可以优化，改成固定值
+                device.GetTemperatureData(tempr, (uint)( cAMERA_INFO.intFPAHeight * cAMERA_INFO.intFPAWidth), 1);//获取整帧图像热点
                 for (int x = 1; x <= cAMERA_INFO.intFPAWidth; x+=  Globals.DetectionAccuracy)//X轴
                 {
                     for (int y = 1; y <= cAMERA_INFO.intFPAHeight; y+= Globals.DetectionAccuracy)//Y轴
-                    { 
-                        float temper = device.GetTemperatureProbe((uint)x, (uint)y,(uint)Globals.DetectionAccuracy) * 0.001f;//获取温度 检测精度 1  有60*80的点 精度越高时间越长
+                    {
+                        float temper = tempr[x*y] * 0.001f;// device.GetTemperatureProbe((uint)x, (uint)y,(uint)Globals.DetectionAccuracy) * 0.001f;//获取温度 检测精度 1  有60*80的点 精度越高时间越长
                         if (temper >= LimitTmper)//如果大于等于极限温度
                         {
                             img.tmper = temper; 

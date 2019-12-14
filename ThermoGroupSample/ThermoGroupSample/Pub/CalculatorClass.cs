@@ -627,8 +627,7 @@ namespace ThermoGroupSample.Pub
 
                 //标定第二个点
                 ImageP2.x = 40;//相机坐标
-                ImageP2.y = 11.15;
-                // var radian = (Math.PI / 180) * 45;//根据角度求出弧度
+                ImageP2.y = 11.15; 
                 RobotP2.x = axis3_x;// 0.501 ; //AtoB_Distance * Math.Cos(radian);
                 RobotP2.y = axis3_y ; //0.862;   // AtoB_Distance * Math.Sin(radian);  
 
@@ -879,6 +878,113 @@ namespace ThermoGroupSample.Pub
             catch (Exception ex)
             {
                 throw ex ;
+            }
+        }
+        /// <summary>
+        /// 临时集合 存放重复的坐标点(机器人坐标使用)
+        /// </summary>
+        List<RobotPositionSort> list3 = new List<RobotPositionSort>();
+        /// <summary>
+        /// 递归剔除实际坐标，重复 临近 剔除
+        /// </summary>
+        /// <param name="inlist">实际坐标值</param>
+        /// <param name="chazhi">差值</param>
+        /// <param name="outlist"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public List<RobotPositionSort> RecursiveDeduplicationReal(List<RobotPositionSort> inlist, double chazhi, List<RobotPositionSort> outlist, double angle)
+        {
+            try
+            {
+                list3.Clear();
+                RobotPositionSort postion;//比对的坐标值  
+                if (inlist.Count == 0)//当全部比对完成后返回最终的坐标值
+                {
+                    return outlist;
+                }
+                postion.tmper = inlist[0].tmper;
+                postion.x = inlist[0].x;
+                postion.y = inlist[0].y;
+                foreach (var item in inlist)//比对 
+                {
+                    if (item.Equals(postion))//比对象等于 比对象
+                    {
+                        continue;
+                    }
+                    //增加两点实际距离判断， 角度 判断（半径450)
+                    if (Math.Abs(GetVd(item.x , item.y , postion.x , postion.y )) <= chazhi // 两点之间的距离做比较
+                        && Math.Abs(GetDegress(item.x, item.y) - GetDegress(postion.x, postion.y)) <= angle)//两个点之间的角度做比较
+                    {
+                        list3.Add(item);//添加重复的坐标值
+                    }
+                }
+                foreach (var item in list3)//移除
+                {
+                    inlist.Remove(item);//移除重复的坐标值
+                }
+                inlist.Remove(postion);//移除已经参与比对的坐标值
+                outlist.Add(postion);//添加已经参与对比的坐标值 是最终的坐标值
+                return RecursiveDeduplicationReal(inlist, chazhi, outlist, angle);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 存放滤波之后的坐标值
+        /// </summary>
+        List<RobotPositionSort> ListFilter = new List<RobotPositionSort>();
+
+        /// <summary>
+        /// 进行滤波转换
+        /// </summary>
+        /// <param name="inList">坐标</param>
+        /// <param name="fictor">系数</param>
+        /// <returns></returns>
+        public List<RobotPositionSort> Filtering(List<RobotPositionSort> inList,double fictor)
+        {
+            ListFilter.Clear();
+            if(inList.Count == 1)//如果只有一个热点 则不需要运算
+            { 
+                return inList;
+            }
+            ListFilter.Add(inList[0]);//第一个不需要滤波
+            inList.Remove(inList[0]);//移除 剩下的都是需要滤波的值
+            while (inList .Count > 0)
+            { 
+                RobotPositionSort now = inList[0];//当前
+                RobotPositionSort last = ListFilter[ListFilter.Count - 1];//上一个
+                var result =   FilteringFirst(now, last, fictor);//进行滤波
+                ListFilter.Add(result);
+                inList.Remove(now);//移除已经参与运算的值
+            }
+            return ListFilter;
+        }
+        /// <summary>
+        /// 滤波后的值
+        /// </summary>
+        RobotPositionSort NewRp;
+        /// <summary>
+        /// 滤波
+        /// </summary>
+        /// <param name="now">当前坐标</param>
+        /// <param name="last">上个坐标</param>
+        /// <param name="fictor">系数</param>
+        /// <returns></returns>
+        private RobotPositionSort FilteringFirst(RobotPositionSort now, RobotPositionSort last , double fictor)
+        {
+            if(now.Equals(last))//如果两个值相等 则直接返回当前值
+            {
+                return now;
+            }
+            else
+            {
+                NewRp.tmper = now.tmper;
+                NewRp.x = fictor * now.x + (1 - fictor) * last.x;
+                NewRp.y = fictor * now.y + (1 - fictor) * last.y;
+                return NewRp;
             }
         }
 

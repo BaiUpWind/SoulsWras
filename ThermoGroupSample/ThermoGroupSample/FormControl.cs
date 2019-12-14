@@ -150,9 +150,21 @@ namespace ThermoGroupSample
         /// </summary>
         private void RefreshOnlineDevice()
         {
-            _DataControl.GetService().EnumCameras();
-            Thread.Sleep(100);
-            UpdateOnlineDevComboLst();
+            try
+            {
+                _DataControl.GetService().EnumCameras();
+                Thread.Sleep(100);
+                UpdateOnlineDevComboLst();
+            }
+            catch(ArgumentNullException anulex)
+            {
+                MessageBox.Show("未找到对应的相机名称"+anulex.Message);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("未知异常:"+ex.Message);
+            }
+           
         }
 
         private void comboBoxOnlineDevice_DropDownClosed(object sender, EventArgs e)
@@ -605,7 +617,22 @@ namespace ThermoGroupSample
                         goto aa;
                     }
                     FormMain.GetOPCTaskInfo("采集到热点个数："+listRobot.Count);
-                    object[] values = calculator.ReplaceIndex(listRobot.Take(20).ToList());
+                    try
+                    {
+
+                        //移除实际坐标相近的点
+                        listRobot = calculator.RecursiveDeduplicationReal(listRobot, Globals.ComparisonIntervalReal, new List<RobotPositionSort>(), Globals.AngleIntervalReal);
+
+                        listRobot = calculator.Filtering(listRobot, 1);//滤波 
+                    }
+                    catch (Exception ex)
+                    {
+                        LogManager.WriteLog(LogFile.Error, GetSaveStringFromException("滤波或者移除相近坐标时发生致命错误，停止采集,错误信息：", ex));
+                        FormMain.GetOPCTaskInfo("滤波或者移除相近坐标时发生致命错误，停止采集,错误信息：" + GetSaveStringFromException("滤波或者移除相近坐标时发生致命错误：", ex));
+                        goto bb;
+                    }
+
+                    object[] values = calculator.ReplaceIndex(listRobot.Take(20).ToList());//重新排序 
                     s7Task.Write(values);//写入任务 
                     FormMain.GetOPCTaskInfo("写入任务！热点个数："+values[0]);
                     stopwatch.Stop();

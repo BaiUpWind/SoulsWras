@@ -231,6 +231,78 @@ namespace ThermoGroupSample
 
             }
         }
+
+
+        /// <summary>
+        /// 排除距离区间 （两个坐标间距离小于区间，视为同一个温度点 排除）
+        /// </summary>
+        public static double ComparisonIntervalReal
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["ComparisonIntervalReal"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
+        /// <summary>
+        /// 排除角度区间  
+        /// </summary>
+        public static double AngleIntervalReal
+        {
+            get
+            {
+                if (config != null)
+                {
+                    try
+                    {
+                        double result = Convert.ToDouble(config.AppSettings.Settings["AngleIntervalReal"].Value);
+                        if (result > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        return -1;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+
+            }
+        }
         /// <summary>
         /// 检测精度 检测精度 默认1  有60*80的点 精度越高时间越长
         /// </summary>
